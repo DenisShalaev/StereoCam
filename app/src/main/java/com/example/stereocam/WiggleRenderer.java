@@ -34,7 +34,10 @@ final class WiggleRenderer {
     }
 
     /** Ein Bild der Ansicht (t, v) in out (Groesse s.w x s.h). */
-    static void render(final Scene s, final double t, final double v, final int[] out) {
+    static void render(Scene s, double t, double v, int[] out) { render(s, t, v, out, 1f); }
+
+    /** @param k Tiefenstaerke: 1 = volle Disparitaeten, <1 stauchen die Tiefe um die Ruheebene (0 = flach, nur Kamerabewegung ohne Parallaxe). */
+    static void render(final Scene s, final double t, final double v, final int[] out, final float k) {
         final int w = s.w, h = s.h; final double tc = Math.max(0, Math.min(1, t));
         final double offX = t * s.d0, offY = v * s.d0;
         IntStream.range(0, h).parallel().forEach(y -> {
@@ -42,13 +45,13 @@ final class WiggleRenderer {
                 double X = x + offX, Y = y + offY;
                 // linke Seite
                 double xl = X, yl = Y;
-                for (int it = 0; it < 4; it++) { float d = samp(s.dL, w, h, xl, yl); xl = X - t * d; yl = Y - v * d; }
-                float dl = samp(s.dL, w, h, xl, yl);
+                for (int it = 0; it < 4; it++) { float d = ds(s.dL, w, h, xl, yl, s.d0, k); xl = X - t * d; yl = Y - v * d; }
+                float dl = ds(s.dL, w, h, xl, yl, s.d0, k);
                 double errL = Math.max(Math.abs(xl + t * dl - X), Math.abs(yl + v * dl - Y)) + out(xl, yl, w, h);
                 // rechte Seite
                 double xr = X, yr = Y;
-                for (int it = 0; it < 4; it++) { float d = samp(s.dR, w, h, xr, yr); xr = X + (1 - t) * d; yr = Y - v * d; }
-                float dr = samp(s.dR, w, h, xr, yr);
+                for (int it = 0; it < 4; it++) { float d = ds(s.dR, w, h, xr, yr, s.d0, k); xr = X + (1 - t) * d; yr = Y - v * d; }
+                float dr = ds(s.dR, w, h, xr, yr, s.d0, k);
                 double errR = Math.max(Math.abs(xr - (1 - t) * dr - X), Math.abs(yr + v * dr - Y)) + out(xr, yr, w, h);
                 int cl = StereoAligner.bilinear(s.left, w, h, xl, yl), cr = StereoAligner.bilinear(s.right, w, h, xr, yr);
                 double eL = errL / 0.8, eR = errR / 0.8, wL = (1 - tc) * Math.exp(-eL * eL) + 1e-4, wR = tc * Math.exp(-eR * eR) + 1e-4;
@@ -60,6 +63,8 @@ final class WiggleRenderer {
 
     /** Strafe fuer Positionen ausserhalb des Bildes (gilt als unstimmig). */
     private static double out(double x, double y, int w, int h) { return (x < 0 || y < 0 || x > w - 1 || y > h - 1) ? 100 : 0; }
+
+    private static float ds(float[] m, int w, int h, double x, double y, float d0, float k) { return d0 + k * (samp(m, w, h, x, y) - d0); }
 
     private static float samp(float[] m, int w, int h, double x, double y) {
         if (x < 0) x = 0; else if (x > w - 1) x = w - 1; if (y < 0) y = 0; else if (y > h - 1) y = h - 1;

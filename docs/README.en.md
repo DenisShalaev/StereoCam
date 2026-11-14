@@ -94,6 +94,18 @@ Honestly: lens correction is approximate and not calibrated for any particular h
 
 In the viewer, next / previous file of the gallery: swipe up / down (when not zoomed) or the volume keys (down = next, up = previous). The back arrow at the top left returns to the gallery.
 
+### 5.4. Focus while shooting
+
+Tap the camera screen to focus and meter exposure at that spot (a ring appears). The vertical slider on the right sets the distance by hand: top = infinity, bottom = the lens's closest focus; the "AF" label returns to autofocus. The slider is shown only if the lens can change focus. With two cameras at once the setting goes to the logical camera and applies to both lenses as far as the phone passes it on; in shift mode the focus is locked for the second photo after the first. Not verified on a device.
+
+### 5.5. Animation export and depth strength
+
+The film button in Motion mode (and the "Convert" entries in the gallery) saves the motion as an **animated GIF** (Pictures/StereoCam, up to 480 px wide, one loop) or an **MP4 video** (Movies/StereoCam, up to 720 px, two loops, H.264). The current settings are used: swing, speed, path and depth strength. The "Depth strength" slider (0–150 %) compresses or exaggerates pixel displacement around the focal plane: if some areas move too much or the depth map is wrong there, lower it (0 % moves the picture as if flat, with no parallax). GIF is limited to 256 colours; MP4 is encoded by the phone's hardware codec and was not tried on a device.
+
+### 5.6 Lenticular print
+
+The printer button in the viewer (or Convert → Lenticular print… in the gallery, for one selected file) prepares an image for printing behind a lenticular sheet: N views (8–24) are built from the L/R pair and interleaved in strips at the lens pitch (DPI / LPI). Adjustable: frame window (drag and pinch), 75 or 100 LPI, real LPI from the test sheet, A4/A5/A6, orientation, DPI, number of views, depth strength, alignment marks, reverse. Output is a PNG with the chosen DPI in Pictures/StereoCam/Lenticular. Ported from StereoPano; not tested on a real print or on a device.
+
 ## 6. Tips for good stereo
 
 - The baseline is fixed, so choose your distance accordingly: a good stereo pair has the subject no closer than about 30× the baseline.

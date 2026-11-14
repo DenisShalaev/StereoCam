@@ -10,11 +10,13 @@ import java.io.IOException;
 
 /** Wandelt ein gespeichertes Stereopaar in ein anderes Format um (Original bleibt unveraendert, das Ergebnis ist eine neue Datei). */
 final class StereoExport {
-    static final int SBS = 0, ANAGLYPH = 1, LR = 2, MPO = 3;
+    static final int SBS = 0, ANAGLYPH = 1, LR = 2, MPO = 3, GIF = 4, MP4 = 5;
     private StereoExport() {}
 
     /** @return Anzahl geschriebener Dateien. @throws IOException wenn die Datei kein Stereopaar ist. */
     static int run(Context c, Uri src, String name, int kind) throws Exception {
+        if (kind == GIF) { AnimExport.run(c, src, name, AnimExport.GIF); return 1; }
+        if (kind == MP4) { AnimExport.run(c, src, name, AnimExport.MP4); return 1; }
         byte[] data = StereoFile.readAll(c, src);
         StereoFile.Pair p = StereoFile.load(data, name, 8192);
         if (p == null) throw new IOException(c.getString(R.string.wig_not_stereo));

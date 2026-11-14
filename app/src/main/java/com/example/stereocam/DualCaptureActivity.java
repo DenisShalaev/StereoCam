@@ -61,6 +61,7 @@ public class DualCaptureActivity extends Activity {
     private int level = 0; private boolean busy = false, closed = false;
     private byte[] gotA, gotB; private Size usedA, usedB;
     private final MediaActionSound sound = new MediaActionSound();
+    private FocusControl focus; private Surface pvS;
     private android.net.Uri lastUri; private String cfgAtStart = "";
 
     @Override protected void onCreate(Bundle b) {
@@ -90,6 +91,7 @@ public class DualCaptureActivity extends Activity {
         root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
         Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);
+        focus = new FocusControl(this, root, tv, this::refocus);
 
         TextView swap = Ui.text(this, getString(R.string.swap_eyes), 13, Ui.TEXT); swap.setBackground(Ui.round(this, 18, Ui.alpha(Ui.BG, 200), Ui.EDGE));
         swap.setPadding(Ui.dp(this, 14), Ui.dp(this, 8), Ui.dp(this, 14), Ui.dp(this, 8));
@@ -189,11 +191,13 @@ public class DualCaptureActivity extends Activity {
             Executor ex = r -> bg.post(r);
             SessionConfiguration sc = new SessionConfiguration(SessionConfiguration.SESSION_REGULAR, outs, ex, new CameraCaptureSession.StateCallback() {
                 @Override public void onConfigured(CameraCaptureSession s) {
-                    if (closed || cam == null) return; sess = s;
+                    if (closed || cam == null) return; sess = s; pvS = pv;
                     try {
+                        focus.setCharacteristics(((CameraManager) getSystemService(CAMERA_SERVICE)).getCameraCharacteristics(pair.logicalId));
                         CaptureRequest.Builder rb = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); rb.addTarget(pv);
                         rb.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
                         rb.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);   // bei einigen Geraeten (z. B. Xiaomi/POCO) bricht die Sitzung mit Stabilisierung auf physischen Kameras ab
+                        focus.apply(rb, false);
                         s.setRepeatingRequest(rb.build(), null, bg);
                         sayUi(getString(R.string.cap_mode, String.valueOf(level + 1), usedA.getWidth() + "x" + usedA.getHeight(), usedB.getWidth() + "x" + usedB.getHeight()));
                     } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
@@ -208,6 +212,20 @@ public class DualCaptureActivity extends Activity {
         }
     }
 
+    /** Fokus geaendert (Tippen oder Regler): Vorschauanfrage neu setzen, ggf. einmal den Autofokus ausloesen. */
+    private void refocus() {
+        if (sess == null || cam == null || pvS == null) return;
+        try {
+            CaptureRequest.Builder rb = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); rb.addTarget(pvS);
+            rb.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
+            boolean trig = focus.takeTrigger(); focus.apply(rb, false); sess.setRepeatingRequest(rb.build(), null, bg);
+            if (trig) {
+                CaptureRequest.Builder t = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); t.addTarget(pvS);
+                t.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF); focus.apply(t, true); sess.capture(t.build(), null, bg);
+            }
+        } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
+    }
+
     // ------------------------------------------------------------------ Aufnahme
 
     private void shoot() {
@@ -219,6 +237,7 @@ public class DualCaptureActivity extends Activity {
             b.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
             b.set(CaptureRequest.JPEG_QUALITY, (byte) 95);
             b.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
+            focus.apply(b, false);
             sound.play(MediaActionSound.SHUTTER_CLICK);
             sess.capture(b.build(), null, bg);
             say(getString(R.string.cap_processing));

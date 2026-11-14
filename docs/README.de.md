@@ -94,6 +94,18 @@ Ehrlich: Die Linsenkorrektur ist eine Näherung und nicht für eine bestimmte Br
 
 In der Ansicht wechselt man zur nächsten / vorherigen Datei der Galerie per Wischen nach oben / unten (ohne Zoom) oder mit den Lautstärketasten (leiser = nächste, lauter = vorherige). Der Zurück-Pfeil oben links führt zur Galerie.
 
+### 5.4. Fokus bei der Aufnahme
+
+Tippen auf den Kamerabildschirm fokussiert und misst die Belichtung an dieser Stelle (ein Ring erscheint). Der senkrechte Regler rechts stellt die Entfernung von Hand ein: oben unendlich, unten die Naheinstellgrenze des Objektivs; „AF“ schaltet auf Autofokus zurück. Der Regler erscheint nur, wenn das Objektiv den Fokus verstellen kann. Bei zwei Kameras gleichzeitig geht die Einstellung an die logische Kamera und wirkt auf beide Objektive, soweit das Telefon sie weitergibt; im Verschiebungsmodus wird der Fokus nach dem ersten Foto für das zweite gesperrt. Nicht auf einem Gerät geprüft.
+
+### 5.5. Animationsexport und Tiefenstärke
+
+Der Filmknopf im Modus „Bewegung“ (und die Einträge unter „Umwandeln“ in der Galerie) speichert die Bewegung als **animiertes GIF** (Pictures/StereoCam, bis 480 px breit, ein Durchlauf) oder als **MP4-Video** (Movies/StereoCam, bis 720 px, zwei Durchläufe, H.264). Es gelten die aktuellen Einstellungen: Ausschlag, Tempo, Bahn und Tiefenstärke. Der Regler „Tiefenstärke“ (0–150 %) staucht oder verstärkt die Pixelverschiebung um die Fokusebene: Bewegen sich Stellen zu stark oder ist die Tiefenkarte dort falsch, den Wert senken (0 % bewegt das Bild wie flach, ohne Parallaxe). GIF ist auf 256 Farben begrenzt; MP4 wird vom Hardware-Codec des Telefons kodiert und wurde nicht auf einem Gerät geprüft.
+
+### 5.6 Rasterdruck (Lentikular)
+
+Die Drucker-Taste im Viewer (oder Konvertieren → Rasterdruck … in der Galerie, für eine gewählte Datei) bereitet ein Bild für den Druck unter einer Linsenrasterfolie vor: Aus dem L/R-Paar werden N Ansichten (8–24) berechnet und streifenweise im Linsenraster (DPI / LPI) verschachtelt. Einstellbar: Bildfenster (Ziehen und Zoomen), 75 oder 100 LPI, reales LPI per Testblatt, A4/A5/A6, Ausrichtung, DPI, Anzahl Ansichten, Tiefenstärke, Passermarken, Umkehren. Ergebnis ist ein PNG mit gewählter DPI in Pictures/StereoCam/Lenticular. Aus StereoPano übernommen; weder im echten Druck noch auf dem Gerät getestet.
+
 ## 6. Tipps für gutes Stereo
 
 - Die Basis ist fest; wählen Sie die Entfernung entsprechend: Ein gutes Stereopaar hat das Motiv nicht näher als etwa das 30-Fache der Basis.

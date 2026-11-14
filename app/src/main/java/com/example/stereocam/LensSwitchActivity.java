@@ -57,7 +57,7 @@ public class LensSwitchActivity extends Activity {
     private Range<Float> zoomRange; private String refId; private float equivRef = 0;
     private volatile String lastActive; private volatile String waitFor; private volatile int okCount;
     private float zA = 1, zB = 1;                      // Zoomfaktoren der beiden Linsen
-    private float zNow = 1;
+    private float zNow = 1; private FocusControl focus;
     private byte[] jpegA, jpegB; private float usedZA, usedZB; private String actA, actB; private long tA, tB; private int rotShot;
     private Runnable onReady;
 
@@ -84,6 +84,7 @@ public class LensSwitchActivity extends Activity {
         FrameLayout.LayoutParams tp = new FrameLayout.LayoutParams(Ui.dp(this, 60), Ui.dp(this, 60), Gravity.BOTTOM | Gravity.START); tp.leftMargin = Ui.dp(this, 24); tp.bottomMargin = Ui.dp(this, 30); root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
         Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);
+        focus = new FocusControl(this, root, tv, this::refocus);
 
         TextView swap = Ui.text(this, getString(R.string.swap_eyes), 13, Ui.TEXT); swap.setBackground(Ui.round(this, 18, Ui.alpha(Ui.BG, 200), Ui.EDGE));
         swap.setPadding(Ui.dp(this, 14), Ui.dp(this, 8), Ui.dp(this, 14), Ui.dp(this, 8));
@@ -173,12 +174,23 @@ public class LensSwitchActivity extends Activity {
         }
     };
 
+    private void refocus() {
+        if (sess == null || cam == null || pv == null) return;
+        boolean trig = focus.takeTrigger(); setZoomPreview(zNow);
+        if (trig) {
+            try {
+                CaptureRequest.Builder t = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); t.addTarget(pv); t.set(CaptureRequest.CONTROL_ZOOM_RATIO, zNow);
+                t.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF); focus.apply(t, true); sess.capture(t.build(), previewCb, bg);
+            } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
+        }
+    }
+
     private void setZoomPreview(float z) {
         if (sess == null || cam == null) return;
         try {
             zNow = z;
             CaptureRequest.Builder b = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); b.addTarget(pv);
-            b.set(CaptureRequest.CONTROL_ZOOM_RATIO, z); b.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+            b.set(CaptureRequest.CONTROL_ZOOM_RATIO, z); b.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE); focus.apply(b, false);
             b.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
             sess.setRepeatingRequest(b.build(), previewCb, bg);
         } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
@@ -210,7 +222,7 @@ public class LensSwitchActivity extends Activity {
     private void stillAt(final float z, final boolean first) {
         try {
             CaptureRequest.Builder b = cam.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE); b.addTarget(reader.getSurface());
-            b.set(CaptureRequest.CONTROL_ZOOM_RATIO, z); b.set(CaptureRequest.JPEG_QUALITY, (byte) 95);
+            b.set(CaptureRequest.CONTROL_ZOOM_RATIO, z); b.set(CaptureRequest.JPEG_QUALITY, (byte) 95); focus.apply(b, false);
             b.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
             rotShot = (logicalOrient - getWindowManager().getDefaultDisplay().getRotation() * 90 + 360) % 360;
             if (first) { usedZA = z; } else { usedZB = z; }

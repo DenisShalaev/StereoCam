@@ -122,6 +122,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
         root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
         Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);
+        focus = new FocusControl(this, root, tv, this::refocus);
         root.setOnApplyWindowInsetsListener((v, in) -> { v.setPadding(in.getSystemWindowInsetLeft(), in.getSystemWindowInsetTop(), in.getSystemWindowInsetRight(), in.getSystemWindowInsetBottom()); return in; });
         updateDist(); updateStatus();
     }
@@ -206,6 +207,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
             CameraCharacteristics cc = cm.getCameraCharacteristics(camId);
             Integer so = cc.get(CameraCharacteristics.SENSOR_ORIENTATION); orient = so == null ? 90 : so;
             Float mf = cc.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE); minFocusDioptre = mf == null ? 0 : mf;
+            focus.setCharacteristics(cc);
             Boolean ae = cc.get(CameraCharacteristics.CONTROL_AE_LOCK_AVAILABLE); aeLockOk = ae != null && ae;
             StreamConfigurationMap map = cc.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             Size best = null;
@@ -241,9 +243,18 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
     private void startPreview() {
         try {
             previewReq = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); previewReq.addTarget(pvSurface);
-            applyLocks(previewReq, shot1 != null);
+            applyLocks(previewReq, shot1 != null); if (shot1 == null) focus.apply(previewReq, false);
             sess.setRepeatingRequest(previewReq.build(), null, bg);
         } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
+    }
+
+    /** Fokus geaendert: nur vor dem ersten Foto (danach ist der Fokus fuer das zweite Foto gesperrt). */
+    private void refocus() {
+        if (sess == null || cam == null || shot1 != null) return;
+        boolean trig = focus.takeTrigger(); startPreview();
+        if (trig && previewReq != null) {
+            try { CaptureRequest.Builder t = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); t.addTarget(pvSurface); applyLocks(t, false); focus.apply(t, true); sess.capture(t.build(), null, bg); } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
+        }
     }
 
     private void applyLocks(CaptureRequest.Builder b, boolean lock) {
@@ -264,7 +275,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
         final boolean first = shot1 == null;
         try {
             CaptureRequest.Builder b = cam.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE); b.addTarget(reader.getSurface());
-            applyLocks(b, !first); b.set(CaptureRequest.JPEG_QUALITY, (byte) 95);
+            applyLocks(b, !first); if (first) focus.apply(b, false); b.set(CaptureRequest.JPEG_QUALITY, (byte) 95);
             sound.play(MediaActionSound.SHUTTER_CLICK);
             final float[] rAtShot = haveRot ? rNow.clone() : null;
             sess.capture(b.build(), new CameraCaptureSession.CaptureCallback() {
@@ -276,6 +287,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
         } catch (Exception e) { busy = false; shutter.setAlpha(1f); say(getString(R.string.cap_error, e.toString())); }
     }
 
+    private FocusControl focus;
     private boolean pendingFirst; private int pendingRot;
 
     private void got(ImageReader r) {

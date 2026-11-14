@@ -143,8 +143,11 @@ public class StereoGalleryActivity extends Activity {
 
     private void convertDialog() {
         if (sel.isEmpty()) return;
-        String[] names = {getString(R.string.fmt_sbs_t), getString(R.string.fmt_ana_t), getString(R.string.fmt_pair_t), getString(R.string.fmt_mpo_t)};
-        new Ui.Dlg(this).setTitle(getString(R.string.gal_convert)).setItems(names, (d, w) -> convert(w)).show();
+        String[] names = {getString(R.string.fmt_sbs_t), getString(R.string.fmt_ana_t), getString(R.string.fmt_pair_t), getString(R.string.fmt_mpo_t), getString(R.string.exp_gif), getString(R.string.exp_mp4), getString(R.string.lenti_menu)};
+        new Ui.Dlg(this).setTitle(getString(R.string.gal_convert)).setItems(names, (d, w) -> {
+            if (w == 6) { StereoItems.Item it = chosen().get(0); startActivity(new Intent(this, LentiActivity.class).setData(it.uri).putExtra("name", it.name)); endSelect(); }
+            else convert(w);
+        }).show();
     }
 
     private void convert(final int kind) {
