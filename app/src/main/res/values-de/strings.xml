@@ -30,6 +30,17 @@
     <string name="cap_missing">Das Telefon hat nur eines der beiden Bilder geliefert. Mit diesem Paar sind keine gleichzeitigen Aufnahmen möglich.</string>
     <string name="cap_open_fail">Die Kamera ließ sich nicht öffnen: %1$s</string>
     <string name="cap_cfg_fail">Dieses Telefon verweigert den gleichzeitigen Betrieb beider Kameras (alle Auflösungsstufen fehlgeschlagen).</string>
+    <string name="shift_start">Aufnahme mit Verschiebung (eine Kamera)</string>
+    <string name="shift_intro">Funktioniert auf jedem Telefon: zwei Fotos aus leicht verschobenen Positionen. Am besten für ruhende Motive.</string>
+    <string name="shift_step1">Schritt 1: Motiv einrichten und tippen. Das erste Foto ist das linke Auge.</string>
+    <string name="shift_step2">Schritt 2: Telefon seitlich verschieben, ohne es zu drehen. Das Geisterbild mit der Live-Ansicht zur Deckung bringen, dann tippen.</string>
+    <string name="shift_reset">Neu beginnen</string>
+    <string name="shift_dist">Motivabstand %1$s → Telefon etwa %2$s %3$s verschieben</string>
+    <string name="dir_right">nach rechts</string>
+    <string name="dir_left">nach links</string>
+    <string name="shift_no_sensor">Kein Drehsensor: Drehung kann nicht geprüft werden.</string>
+    <string name="shift_angles_wait">Drehung seit dem ersten Foto: erscheint nach Schritt 1</string>
+    <string name="shift_angles">Drehung: Nicken %1$s°  Schwenk %2$s°  Rollen %3$s°  (Ziel: ±1°)</string>
     <string name="swap_eyes">L/R tauschen</string>
     <string name="swapped_on">Augen getauscht: links und rechts vertauscht</string>
     <string name="swapped_off">Augen in normaler Reihenfolge</string>

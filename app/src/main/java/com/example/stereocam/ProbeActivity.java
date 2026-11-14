@@ -25,6 +25,7 @@ public class ProbeActivity extends Activity {
     private String selected = "";
     private LinearLayout pairBox;
     private TextView reportView;
+    private Button shiftBtn;
 
     @Override protected void onCreate(Bundle b) {
         super.onCreate(b);
@@ -42,6 +43,10 @@ public class ProbeActivity extends Activity {
 
         Button start = Ui.pill(this, R.string.start, true); start.setOnClickListener(v -> start());
         root.addView(start, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        root.addView(Ui.space(this, 8));
+        shiftBtn = Ui.pill(this, R.string.shift_start, false); shiftBtn.setOnClickListener(v -> startActivity(new Intent(this, ShiftCaptureActivity.class)));
+        root.addView(shiftBtn, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        root.addView(Ui.text(this, getString(R.string.shift_intro), 12, Ui.GREY));
         root.addView(Ui.space(this, 12));
 
         LinearLayout fmt = Ui.card(this);
@@ -79,7 +84,7 @@ public class ProbeActivity extends Activity {
         res = DualProbe.scan(this);
         reportView.setText(res.report.toString());
         pairBox.removeAllViews();
-        if (res.pairs.isEmpty()) { pairBox.addView(Ui.text(this, getString(R.string.probe_no_pairs), 14, Ui.TEXT)); selected = ""; return; }
+        if (res.pairs.isEmpty()) { pairBox.addView(Ui.text(this, getString(R.string.probe_no_pairs), 14, Ui.TEXT)); selected = ""; shiftBtn.setTextColor(0xFF0B1220); shiftBtn.setBackground(Ui.round(this, 24, Ui.ACCENT, 0)); return; }
         RadioGroup g = new RadioGroup(this);
         String saved = Prefs.str(this, Prefs.PAIR_KEY); selected = res.pairs.get(0).key();
         for (DualProbe.Pair q : res.pairs) if (q.key().equals(saved)) selected = saved;

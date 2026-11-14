@@ -30,6 +30,17 @@
     <string name="cap_missing">The phone delivered only one of the two images. Simultaneous shooting is not possible with this pair.</string>
     <string name="cap_open_fail">The camera could not be opened: %1$s</string>
     <string name="cap_cfg_fail">This phone refuses to stream both cameras at once (all resolution levels failed).</string>
+    <string name="shift_start">Shoot with shift (one camera)</string>
+    <string name="shift_intro">Works on every phone: two photos from slightly different positions. Best for still subjects.</string>
+    <string name="shift_step1">Step 1: frame the subject and tap. The first photo is the left eye.</string>
+    <string name="shift_step2">Step 2: move the phone sideways without turning it. Align the ghost image with the live view, then tap.</string>
+    <string name="shift_reset">Start over</string>
+    <string name="shift_dist">Subject distance %1$s → move the phone about %2$s %3$s</string>
+    <string name="dir_right">to the right</string>
+    <string name="dir_left">to the left</string>
+    <string name="shift_no_sensor">No rotation sensor: turning cannot be checked.</string>
+    <string name="shift_angles_wait">Turn since the first photo: shown after step 1</string>
+    <string name="shift_angles">Turn: tilt %1$s°  pan %2$s°  roll %3$s°  (aim: ±1°)</string>
     <string name="swap_eyes">Swap L/R</string>
     <string name="swapped_on">Eyes swapped: left and right are exchanged</string>
     <string name="swapped_off">Eyes in normal order</string>

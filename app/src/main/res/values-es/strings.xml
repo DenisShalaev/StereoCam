@@ -30,6 +30,17 @@
     <string name="cap_missing">El teléfono entregó solo una de las dos imágenes. Con este par no es posible disparar a la vez.</string>
     <string name="cap_open_fail">No se pudo abrir la cámara: %1$s</string>
     <string name="cap_cfg_fail">Este teléfono se niega a usar ambas cámaras a la vez (fallaron todos los niveles de resolución).</string>
+    <string name="shift_start">Disparo con desplazamiento (una cámara)</string>
+    <string name="shift_intro">Funciona en cualquier teléfono: dos fotos desde posiciones ligeramente distintas. Ideal para motivos inmóviles.</string>
+    <string name="shift_step1">Paso 1: encuadre el motivo y toque. La primera foto es el ojo izquierdo.</string>
+    <string name="shift_step2">Paso 2: desplace el teléfono hacia un lado sin girarlo. Haga coincidir la imagen fantasma con la vista en directo y toque.</string>
+    <string name="shift_reset">Empezar de nuevo</string>
+    <string name="shift_dist">Distancia al motivo %1$s → desplace el teléfono unos %2$s %3$s</string>
+    <string name="dir_right">hacia la derecha</string>
+    <string name="dir_left">hacia la izquierda</string>
+    <string name="shift_no_sensor">Sin sensor de rotación: no se puede comprobar el giro.</string>
+    <string name="shift_angles_wait">Giro desde la primera foto: se muestra tras el paso 1</string>
+    <string name="shift_angles">Giro: inclinación %1$s°  giro lateral %2$s°  alabeo %3$s°  (objetivo ±1°)</string>
     <string name="swap_eyes">Cambiar I/D</string>
     <string name="swapped_on">Ojos cambiados: izquierda y derecha intercambiadas</string>
     <string name="swapped_off">Ojos en orden normal</string>

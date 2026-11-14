@@ -30,6 +30,17 @@
     <string name="cap_missing">Телефон видав лише одне з двох зображень. З цією парою одночасна зйомка неможлива.</string>
     <string name="cap_open_fail">Не вдалося відкрити камеру: %1$s</string>
     <string name="cap_cfg_fail">Цей телефон відмовляється запускати обидві камери одночасно (усі рівні роздільності не спрацювали).</string>
+    <string name="shift_start">Зйомка зі зсувом (одна камера)</string>
+    <string name="shift_intro">Працює на будь-якому телефоні: два знімки з трохи різних положень. Найкраще для нерухомих сцен.</string>
+    <string name="shift_step1">Крок 1: наведіть на сцену й натисніть. Перший знімок — лівий глаз.</string>
+    <string name="shift_step2">Крок 2: зсуньте телефон убік, не повертаючи його. Сумістіть напівпрозорий перший кадр із живим зображенням і натисніть.</string>
+    <string name="shift_reset">Спочатку</string>
+    <string name="shift_dist">Відстань до об’єкта %1$s → зсуньте телефон приблизно на %2$s %3$s</string>
+    <string name="dir_right">праворуч</string>
+    <string name="dir_left">ліворуч</string>
+    <string name="shift_no_sensor">Немає датчика обертання: поворот перевірити не можна.</string>
+    <string name="shift_angles_wait">Поворот від першого знімка: з’явиться після кроку 1</string>
+    <string name="shift_angles">Поворот: нахил %1$s°  розворот %2$s°  крен %3$s°  (мета: ±1°)</string>
     <string name="swap_eyes">Поміняти Л/П</string>
     <string name="swapped_on">Очі поміняно: лівий і правий кадри навпаки</string>
     <string name="swapped_off">Очі в звичайному порядку</string>

@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [Deutsch](README.de.md)
 
-> **Status: build 1. The app has never been run on a phone.** The Android code has not been compiled (the development environment has no Android SDK). Only the pair alignment and the MPO writer were tested, on a desktop JVM. Everything that involves the phone's cameras is untested.
+> **Status: build 3. The app has never been run on a phone.** The Android code has not been compiled (the development environment has no Android SDK). Only the pair alignment and the MPO writer were tested, on a desktop JVM. Everything that involves the phone's cameras is untested.
 
 ## 1. What it is
 
@@ -21,6 +21,18 @@ The idea: the two lenses of a phone already form a stereo pair with a fixed base
    - The zero-parallax plane is set to the median of the scene and the edges are cropped with a common frame.
    - Left and right are determined from the lens positions and the screen rotation. The "Swap L/R" button exchanges them by hand.
 4. **Saving** to `Pictures/StereoCam` (Android 10+ via MediaStore).
+
+### 2.1 Shift mode (one camera)
+
+Works on **any** phone, including those where two cameras cannot be used at once. Use the "Shoot with shift (one camera)" button on the start screen; if no camera pairs were found it becomes the main action.
+
+1. The "subject distance" slider (5 cm to about 16 m) shows **how far to move the phone**: about 1/30 of the distance (for example 3 m → 10 cm, 1 m → 3.3 cm).
+2. The **first shot** is the left eye. Afterwards exposure, white balance and (if the phone allows manual focus) focus are locked; optical and video stabilisation are switched off so they do not cancel the shift.
+3. A **semi-transparent copy of the first shot** (the "ghost") is overlaid on the live view: move the phone to the right **without turning it** and bring the two pictures into line.
+4. The "Turn: tilt / pan / roll" line (rotation sensor) shows the deviation from the position of the first shot. Green means under 1°, yellow under 2.5°, red more.
+5. The **second shot** goes through the same alignment and is saved in the same formats. "Start over" discards the first shot. "Swap L/R" reverses the direction: the first shot becomes the right eye and the phone must be moved to the left.
+
+Honest limits: the phone's sensors cannot measure the shift accurately — it is judged by eye from the hint; moving subjects (people, branches, water) cause errors; the alignment corrects vertical offset, tilt and scale, but not a wrong baseline. The mode has not been tested on a phone. For macro (5 cm distance → shift ≈ 1.7 mm) the shift cannot be held by hand; a turntable is better for macro — that mode does not exist yet.
 
 ## 3. File formats
 
@@ -96,7 +108,7 @@ This information ages quickly: firmware updates change behaviour. Use the table 
 Install the app and open the start screen:
 
 - **Pairs listed** — the phone shows two physical cameras to the app (necessary, but not sufficient).
-- **"No usable camera pair"** — the phone does not expose the physical cameras: StereoCam will not work on it.
+- **"No usable camera pair"** — the phone does not expose the physical cameras: the two-camera mode is unavailable, use the shift mode (section 2.1).
 - Then you need a real shot. If the app shows `Mode 1/2/3: …` and saves a file, simultaneous capture works. The mode is the resolution step (1 — maximum, 2 — up to 3264, 3 — up to 2048).
 - If it says the phone refuses to run both cameras at once, or that only one of the two images arrived, the pair does not work.
 
@@ -111,7 +123,7 @@ Empty for now. If you tested StereoCam on your phone, send the report ("Share re
 ## 8. Limitations
 
 - Nothing that involves Android has been tested on a phone: camera discovery, the session with two physical streams, the preview and its rotation, saving through MediaStore.
-- Macro: the fixed lens baseline (1–2 cm) is too large for subjects closer than about 30 cm. A two-shot mode and a turntable mode are not implemented in this project yet.
+- Macro: the fixed lens baseline (1–2 cm) is too large for subjects closer than about 30 cm. A shift mode exists (section 2.1), but for macro a shift of a few millimetres cannot be held by hand; a turntable mode is not implemented yet.
 - The automatic alignment has been tested only on a synthetic pair. Real scenes (glare, repetitive textures, little detail) may produce a wrong fit. The alignment can be switched off in the settings.
 - Left/right is derived from the lens positions; on a phone without position data the order "A is left" is assumed and can be corrected with the button.
 - Memory: photos are limited to 3600 pixels on the long side; the app requests a large heap.

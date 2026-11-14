@@ -23,5 +23,8 @@
 
         <activity android:name=".DualCaptureActivity" android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout" />
+    
+        <activity android:name=".ShiftCaptureActivity" android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout" />
     </application>
 </manifest>

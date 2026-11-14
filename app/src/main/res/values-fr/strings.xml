@@ -30,6 +30,17 @@
     <string name="cap_missing">Le téléphone n’a fourni qu’une des deux images. La prise de vue simultanée est impossible avec cette paire.</string>
     <string name="cap_open_fail">Impossible d’ouvrir la caméra : %1$s</string>
     <string name="cap_cfg_fail">Ce téléphone refuse de faire fonctionner les deux caméras en même temps (tous les niveaux de résolution ont échoué).</string>
+    <string name="shift_start">Prise de vue avec décalage (une caméra)</string>
+    <string name="shift_intro">Fonctionne sur tous les téléphones : deux photos prises depuis des positions légèrement différentes. Idéal pour les sujets immobiles.</string>
+    <string name="shift_step1">Étape 1 : cadrez le sujet et touchez. La première photo est l’œil gauche.</string>
+    <string name="shift_step2">Étape 2 : déplacez le téléphone latéralement sans le tourner. Faites coïncider l’image fantôme avec la vue en direct, puis touchez.</string>
+    <string name="shift_reset">Recommencer</string>
+    <string name="shift_dist">Distance au sujet %1$s → déplacez le téléphone d’environ %2$s %3$s</string>
+    <string name="dir_right">vers la droite</string>
+    <string name="dir_left">vers la gauche</string>
+    <string name="shift_no_sensor">Pas de capteur de rotation : la rotation ne peut pas être vérifiée.</string>
+    <string name="shift_angles_wait">Rotation depuis la première photo : affichée après l’étape 1</string>
+    <string name="shift_angles">Rotation : inclinaison %1$s°  panoramique %2$s°  roulis %3$s°  (visez ±1°)</string>
     <string name="swap_eyes">Inverser G/D</string>
     <string name="swapped_on">Yeux inversés : gauche et droite échangés</string>
     <string name="swapped_off">Yeux dans l’ordre normal</string>

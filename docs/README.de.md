@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [English](README.en.md)
 
-> **Stand: Build 1. Die App wurde noch nie auf einem Telefon ausgeführt.** Der Android-Code wurde nicht kompiliert (in der Entwicklungsumgebung gibt es kein Android SDK). Nur die Ausrichtung des Bildpaars und der MPO-Writer wurden auf einer Desktop-JVM getestet. Alles, was die Kameras des Telefons betrifft, ist ungetestet.
+> **Stand: Build 3. Die App wurde noch nie auf einem Telefon ausgeführt.** Der Android-Code wurde nicht kompiliert (in der Entwicklungsumgebung gibt es kein Android SDK). Nur die Ausrichtung des Bildpaars und der MPO-Writer wurden auf einer Desktop-JVM getestet. Alles, was die Kameras des Telefons betrifft, ist ungetestet.
 
 ## 1. Was ist das?
 
@@ -21,6 +21,18 @@ Die Idee: Die beiden Objektive eines Telefons bilden bereits ein Stereopaar mit 
    - Die Ebene ohne Parallaxe wird auf den Median der Szene gelegt, die Ränder werden mit einem gemeinsamen Rahmen beschnitten.
    - Links und rechts werden aus den Linsenpositionen und der Bildschirmdrehung bestimmt. Die Taste „L/R tauschen" vertauscht sie von Hand.
 4. **Speichern** nach `Pictures/StereoCam` (ab Android 10 über MediaStore).
+
+### 2.1 Verschiebungsmodus (eine Kamera)
+
+Funktioniert auf **jedem** Telefon, auch wenn zwei Kameras nicht gleichzeitig nutzbar sind. Dazu dient die Taste „Aufnahme mit Verschiebung (eine Kamera)" auf dem Startbildschirm; wurden keine Kamerapaare gefunden, wird sie zur Hauptaktion.
+
+1. Der Regler „Motivabstand" (5 cm bis etwa 16 m) zeigt, **wie weit das Telefon verschoben werden soll**: etwa 1/30 des Abstands (z. B. 3 m → 10 cm, 1 m → 3,3 cm).
+2. Die **erste Aufnahme** ist das linke Auge. Danach werden Belichtung, Weißabgleich und (wenn das Telefon manuellen Fokus erlaubt) der Fokus gesperrt; optische und Videostabilisierung werden abgeschaltet, damit sie die Verschiebung nicht aufheben.
+3. Über der Live-Ansicht liegt eine **halbtransparente Kopie der ersten Aufnahme** („Geisterbild"): Telefon nach rechts verschieben, **ohne es zu drehen**, und beide Bilder zur Deckung bringen.
+4. Die Zeile „Drehung: Nicken / Schwenk / Rollen" (Drehsensor) zeigt die Abweichung von der Lage der ersten Aufnahme. Grün bedeutet unter 1°, gelb unter 2,5°, rot mehr.
+5. Die **zweite Aufnahme** durchläuft dieselbe Ausrichtung und wird in denselben Formaten gespeichert. „Neu beginnen" verwirft die erste Aufnahme. „L/R tauschen" kehrt die Richtung um: Die erste Aufnahme wird das rechte Auge, das Telefon wird nach links verschoben.
+
+Ehrliche Grenzen: Die Sensoren des Telefons messen die Verschiebung nicht genau — sie wird nach Augenmaß anhand des Hinweises bestimmt; bewegte Motive (Personen, Zweige, Wasser) verursachen Fehler; die Ausrichtung korrigiert Höhenversatz, Neigung und Maßstab, aber keine falsche Basis. Der Modus wurde nicht auf einem Telefon getestet. Für Makro (5 cm Abstand → Verschiebung ≈ 1,7 mm) lässt sich die Verschiebung von Hand nicht halten; für Makro ist ein Drehteller besser — diesen Modus gibt es noch nicht.
 
 ## 3. Dateiformate
 
@@ -96,7 +108,7 @@ Diese Angaben veralten schnell: Firmware-Updates ändern das Verhalten. Verwende
 App installieren und den Startbildschirm öffnen:
 
 - **Paare aufgelistet** — das Telefon zeigt der App zwei physische Kameras (notwendig, aber nicht hinreichend).
-- **„Kein nutzbares Kamerapaar"** — das Telefon gibt die physischen Kameras nicht frei: StereoCam funktioniert darauf nicht.
+- **„Kein nutzbares Kamerapaar"** — das Telefon gibt die physischen Kameras nicht frei: der Zwei-Kamera-Modus ist nicht verfügbar, nutzen Sie den Verschiebungsmodus (Abschnitt 2.1).
 - Danach braucht es eine echte Aufnahme. Zeigt die App `Modus 1/2/3: …` und speichert eine Datei, funktioniert die gleichzeitige Aufnahme. Der Modus ist die Auflösungsstufe (1 — Maximum, 2 — bis 3264, 3 — bis 2048).
 - Meldet die App, das Telefon verweigere den gleichzeitigen Betrieb beider Kameras oder es sei nur eines der beiden Bilder eingetroffen, funktioniert das Paar nicht.
 
@@ -111,7 +123,7 @@ Vorerst leer. Haben Sie StereoCam auf Ihrem Telefon getestet, senden Sie den Ber
 ## 8. Einschränkungen
 
 - Nichts, was Android betrifft, wurde auf einem Telefon getestet: Kamerasuche, Sitzung mit zwei physischen Streams, Vorschau und deren Drehung, Speichern über MediaStore.
-- Makro: Die feste Linsenbasis (1–2 cm) ist für Motive näher als etwa 30 cm zu groß. Ein Zwei-Aufnahmen-Modus und ein Drehtellermodus sind in diesem Projekt noch nicht umgesetzt.
+- Makro: Die feste Linsenbasis (1–2 cm) ist für Motive näher als etwa 30 cm zu groß. Ein Verschiebungsmodus existiert (Abschnitt 2.1), aber für Makro lässt sich eine Verschiebung von wenigen Millimetern von Hand nicht halten; ein Drehtellermodus ist noch nicht umgesetzt.
 - Die automatische Ausrichtung wurde nur an einem synthetischen Paar getestet. Reale Szenen (Spiegelungen, sich wiederholende Texturen, wenig Details) können zu einer falschen Anpassung führen. Die Ausrichtung lässt sich in den Einstellungen abschalten.
 - Links/rechts wird aus den Linsenpositionen bestimmt; bei einem Telefon ohne Positionsdaten wird die Reihenfolge „A ist links" angenommen und lässt sich per Taste korrigieren.
 - Speicher: Fotos sind auf 3600 Pixel an der langen Seite begrenzt; die App fordert einen großen Heap an.

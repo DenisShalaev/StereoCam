@@ -30,6 +30,17 @@
     <string name="cap_missing">Il telefono ha fornito una sola delle due immagini. Con questa coppia lo scatto simultaneo non è possibile.</string>
     <string name="cap_open_fail">Impossibile aprire la fotocamera: %1$s</string>
     <string name="cap_cfg_fail">Questo telefono rifiuta l’uso simultaneo di entrambe le fotocamere (tutti i livelli di risoluzione sono falliti).</string>
+    <string name="shift_start">Scatto con spostamento (una fotocamera)</string>
+    <string name="shift_intro">Funziona su ogni telefono: due foto da posizioni leggermente diverse. Ideale per soggetti fermi.</string>
+    <string name="shift_step1">Passo 1: inquadra il soggetto e tocca. La prima foto è l’occhio sinistro.</string>
+    <string name="shift_step2">Passo 2: sposta il telefono lateralmente senza ruotarlo. Fai coincidere l’immagine fantasma con la vista dal vivo, poi tocca.</string>
+    <string name="shift_reset">Ricomincia</string>
+    <string name="shift_dist">Distanza dal soggetto %1$s → sposta il telefono di circa %2$s %3$s</string>
+    <string name="dir_right">verso destra</string>
+    <string name="dir_left">verso sinistra</string>
+    <string name="shift_no_sensor">Nessun sensore di rotazione: la rotazione non può essere controllata.</string>
+    <string name="shift_angles_wait">Rotazione dalla prima foto: mostrata dopo il passo 1</string>
+    <string name="shift_angles">Rotazione: inclinazione %1$s°  panoramica %2$s°  rollio %3$s°  (obiettivo ±1°)</string>
     <string name="swap_eyes">Scambia S/D</string>
     <string name="swapped_on">Occhi scambiati: sinistro e destro invertiti</string>
     <string name="swapped_off">Occhi in ordine normale</string>

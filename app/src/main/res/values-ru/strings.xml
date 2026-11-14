@@ -30,6 +30,17 @@
     <string name="cap_missing">Телефон выдал только одно из двух изображений. С этой парой одновременная съёмка невозможна.</string>
     <string name="cap_open_fail">Не удалось открыть камеру: %1$s</string>
     <string name="cap_cfg_fail">Этот телефон отказывается запускать обе камеры одновременно (все уровни разрешения не сработали).</string>
+    <string name="shift_start">Съёмка со сдвигом (одна камера)</string>
+    <string name="shift_intro">Работает на любом телефоне: два снимка из слегка разных положений. Лучше всего для неподвижных сцен.</string>
+    <string name="shift_step1">Шаг 1: наведите на сцену и нажмите. Первый снимок — левый глаз.</string>
+    <string name="shift_step2">Шаг 2: сдвиньте телефон вбок, не поворачивая его. Совместите полупрозрачный первый кадр с живым изображением и нажмите.</string>
+    <string name="shift_reset">Заново</string>
+    <string name="shift_dist">Расстояние до объекта %1$s → сдвиньте телефон примерно на %2$s %3$s</string>
+    <string name="dir_right">вправо</string>
+    <string name="dir_left">влево</string>
+    <string name="shift_no_sensor">Нет датчика вращения: поворот проверить нельзя.</string>
+    <string name="shift_angles_wait">Поворот с первого снимка: появится после шага 1</string>
+    <string name="shift_angles">Поворот: наклон %1$s°  разворот %2$s°  крен %3$s°  (цель: ±1°)</string>
     <string name="swap_eyes">Поменять Л/П</string>
     <string name="swapped_on">Глаза поменяны: левый и правый кадры наоборот</string>
     <string name="swapped_off">Глаза в обычном порядке</string>
