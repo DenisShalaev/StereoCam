@@ -89,6 +89,10 @@ final class Processor {
                 if (W != rect[2] - rect[0] || H != rect[3] - rect[1]) { int[] r3 = {0, 0, W, H}; left = cropTL(left, rect[2] - rect[0], W, H); right = cropTL(right, rect[2] - rect[0], W, H); }
             }
         }
+        if (Prefs.get(ctx, Prefs.COLOR)) {
+            int[] sh = ColorMatch.apply(left, right, W, H);
+            out.align = out.align + " | colour match: R " + sh[0] + " G " + sh[1] + " B " + sh[2];
+        }
         write(ctx, left, right, W, H, out);
         return out;
     }

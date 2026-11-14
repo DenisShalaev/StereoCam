@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [English](README.en.md)
 
-> **Stand: Build 22.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
+> **Stand: Build 25.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
 
 ## 1. Was ist das?
 
@@ -59,7 +59,7 @@ Standardmäßig sind MPO, Side-by-Side und automatische Ausrichtung eingeschalte
 
 ## 4. Installation
 
-1. Projektordner in Android Studio (Hedgehog oder neuer) öffnen.
+1. Projektordner in Android Studio (Narwhal 3 2025.1.3 oder neuer, JDK 17) öffnen. Das Projekt nutzt Android Gradle Plugin 8.13.2 und Gradle 8.13.
 2. Gradle-Synchronisierung abwarten (bietet Studio an, den Gradle-Wrapper zu erstellen, zustimmen).
 3. Telefon anschließen (Android 9 oder neuer, `minSdk 28`) und Run drücken.
 
@@ -115,6 +115,14 @@ Der Regler am unteren Rand der Ansicht (wird mit der Knopfleiste ausgeblendet) l
 Auf dem Aufnahmebildschirm gibt es rechts unter dem Zahnrad zwei Knöpfe. **Raster** schaltet um: aus → Drittelregel → goldener Schnitt (Linien bei 38,2 % und 61,8 %). Die **Horizont-Wasserwaage** zeigt mit dem Beschleunigungssensor eine Linie, die sich mit der Neigung des Telefons dreht: gelb unter 5°, grün unter 1°; sie funktioniert im Hoch- und Querformat. Oben wird die Fokusentfernung angezeigt (aus den Ergebnissen der Kamera); bei der Betrachtung treten Dinge, die näher als der Fokuspunkt sind, vor den Bildschirm, weiter entfernte liegen dahinter (wenn das Hauptmotiv auf die Bildebene gelegt wird, siehe 5.7). Ist der Fokus näher als etwa 15 Basislängen (standardmäßig ≈30 cm), erscheint eine Warnung. Ehrlich: In der Live-Vorschau gibt es keine Tiefenkarte, daher keine Linien, was an welcher Bildstelle aus dem Bildschirm tritt, nur die Fokusentfernung; nicht jedes Telefon meldet die Fokusentfernung an Apps. Nicht auf einem Gerät geprüft.
 
 **Brille (Cardboard / SBS).** Meldungen (Moduswechsel, Dateinummer, Listenenden) werden in beiden Bildschirmhälften gezeichnet statt als System-Popups. Der Regler für die Bildebene ist in diesen Modi ausgeblendet: Die Ebene ändert man mit einer waagerechten Wischgeste (Schritte von 0,5 %, der Wert erscheint in beiden Augen) oder in den Modi Bewegung/2D. Zusammenziehen verkleinert das Bild bis auf 50 %, Auseinanderziehen vergrößert bis ×6. Die Systemleisten (Uhr, Akku, WLAN, Navigation) sind immer ausgeblendet und erscheinen nur per Antippen zusammen mit der Knopfleiste. Nicht auf einem Gerät geprüft; die Knopfleiste per Antippen bleibt ein einziger Streifen über den ganzen Bildschirm, daher am besten ohne Brille aufrufen.
+
+### 5.9 Farbangleichung
+
+Die zwei Kameras eines Telefons (zwei Sensoren) geben den Weißabgleich oft unterschiedlich wieder, daher wird ein Bild des Paars wärmer als das andere. Nach der geometrischen Ausrichtung gleicht die App die Farben des zweiten Bildes an das erste an: je Kanal werden die Histogramme in der Bildmitte angeglichen, die Kennlinie ist geglättet und begrenzt (höchstens ±40 Stufen), damit unterschiedliche Szenenteile sie nicht verfälschen. Einschalten in den Einstellungen („Farben beider Bilder angleichen“, standardmäßig an); im Ausrichtungsbericht stehen die Verschiebungen je Kanal. An einem synthetischen Paar geprüft (Abweichung R +10, B −13 sinkt unter 0,3); nicht an echten Fotos und nicht auf einem Gerät. Das Sperren des Weißabgleichs der Kameras ersetzt es nicht: verschiedene Sensoren liefern trotzdem verschiedene Farben, daher erfolgt die Angleichung per Software.
+
+### 5.10 Galerie sortieren
+
+Die Sortiertaste rechts neben dem Galerietitel bietet: Datum (neueste zuerst / älteste zuerst), Name (A–Z), Dateigröße (größte zuerst). Die Auswahl wird gemerkt. Nicht auf einem Gerät geprüft.
 
 ## 6. Tipps für gutes Stereo
 

@@ -157,4 +157,12 @@
     <string name="grid_golden">Золотий перетин</string>
     <string name="compose_focus_fmt">Фокус ≈ %1$s м · ближче — перед екраном, далі — за екраном</string>
     <string name="compose_near_fmt">Фокус ≈ %1$s м: занадто близько (ближче ~%2$d см пара погано дивиться)</string>
+    <string name="color_t">Вирівнювати кольори двох кадрів</string>
+    <string name="color_d">Дві камери часто по-різному передають баланс білого; другий кадр підганяється під перший.</string>
+    <string name="cd_sort">Сортування</string>
+    <string name="sort_title">Сортувати за</string>
+    <string name="sort_date_new">Датою (спершу нові)</string>
+    <string name="sort_date_old">Датою (спершу старі)</string>
+    <string name="sort_name">Назвою (А–Я)</string>
+    <string name="sort_size">Розміром файлу</string>
 </resources>

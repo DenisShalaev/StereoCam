@@ -157,4 +157,12 @@
     <string name="grid_golden">Nombre d’or</string>
     <string name="compose_focus_fmt">Mise au point ≈ %1$s m · plus près : devant l’écran, plus loin : derrière</string>
     <string name="compose_near_fmt">Mise au point ≈ %1$s m : trop près (sous ~%2$d cm la paire est difficile à regarder)</string>
+    <string name="color_t">Harmoniser les couleurs des deux images</string>
+    <string name="color_d">Deux caméras rendent souvent la balance des blancs un peu différemment ; la deuxième image est ajustée à la première.</string>
+    <string name="cd_sort">Trier</string>
+    <string name="sort_title">Trier par</string>
+    <string name="sort_date_new">Date (plus récent d\'abord)</string>
+    <string name="sort_date_old">Date (plus ancien d\'abord)</string>
+    <string name="sort_name">Nom (A–Z)</string>
+    <string name="sort_size">Taille du fichier</string>
 </resources>

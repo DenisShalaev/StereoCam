@@ -157,4 +157,12 @@
     <string name="grid_golden">Golden ratio</string>
     <string name="compose_focus_fmt">Focus ≈ %1$s m · closer: in front of the screen, farther: behind it</string>
     <string name="compose_near_fmt">Focus ≈ %1$s m: too close (under ~%2$d cm the pair is hard to view)</string>
+    <string name="color_t">Match colours of both images</string>
+    <string name="color_d">Two cameras often render white balance slightly differently; the second image is adjusted to the first.</string>
+    <string name="cd_sort">Sort</string>
+    <string name="sort_title">Sort by</string>
+    <string name="sort_date_new">Date (newest first)</string>
+    <string name="sort_date_old">Date (oldest first)</string>
+    <string name="sort_name">Name (A–Z)</string>
+    <string name="sort_size">File size</string>
 </resources>

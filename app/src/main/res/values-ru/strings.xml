@@ -157,4 +157,12 @@
     <string name="grid_golden">Золотое сечение</string>
     <string name="compose_focus_fmt">Фокус ≈ %1$s м · ближе — перед экраном, дальше — за экраном</string>
     <string name="compose_near_fmt">Фокус ≈ %1$s м: слишком близко (ближе ~%2$d см пара плохо смотрится)</string>
+    <string name="color_t">Выравнивать цвета двух кадров</string>
+    <string name="color_d">Две камеры часто по-разному передают баланс белого; второй кадр подгоняется под первый.</string>
+    <string name="cd_sort">Сортировка</string>
+    <string name="sort_title">Сортировать по</string>
+    <string name="sort_date_new">Дата (сначала новые)</string>
+    <string name="sort_date_old">Дата (сначала старые)</string>
+    <string name="sort_name">Имя (А–Я)</string>
+    <string name="sort_size">Размер файла</string>
 </resources>

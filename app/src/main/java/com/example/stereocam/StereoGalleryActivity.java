@@ -33,10 +33,10 @@ public class StereoGalleryActivity extends Activity {
     private LinearLayout list, bar; private TextView count;
     private final ExecutorService pool = Executors.newFixedThreadPool(2);
     private List<StereoItems.Item> items = new ArrayList<>();
-    private final Set<Uri> sel = new HashSet<>(); private boolean selecting;
+    private final Set<Uri> sel = new HashSet<>(); private boolean selecting; private int sortMode;
 
     @Override protected void onCreate(Bundle b) {
-        super.onCreate(b);
+        super.onCreate(b); sortMode = Prefs.getInt(this, "gal_sort", 0);
         LinearLayout page = new LinearLayout(this); page.setOrientation(LinearLayout.VERTICAL); page.setBackgroundColor(Ui.BG);
         page.setOnApplyWindowInsetsListener((v, in) -> { v.setPadding(in.getSystemWindowInsetLeft(), in.getSystemWindowInsetTop(), in.getSystemWindowInsetRight(), in.getSystemWindowInsetBottom()); return in; });
         int p = Ui.dp(this, 16);
@@ -45,7 +45,9 @@ public class StereoGalleryActivity extends Activity {
         ImageView back = new ImageView(this); back.setImageResource(R.drawable.ic_back); int bp = Ui.dp(this, 10); back.setPadding(bp, bp, bp, bp);
         back.setBackground(Ui.round(this, 22, Ui.CARD, Ui.EDGE)); back.setContentDescription(getString(R.string.back)); back.setOnClickListener(v -> onBackPressed());
         LinearLayout.LayoutParams bl = new LinearLayout.LayoutParams(Ui.dp(this, 44), Ui.dp(this, 44)); bl.rightMargin = Ui.dp(this, 12); top.addView(back, bl);
-        top.addView(Ui.text(this, getString(R.string.gal_title), 22, Ui.TEXT)); head.addView(top);
+        top.addView(Ui.text(this, getString(R.string.gal_title), 22, Ui.TEXT), new LinearLayout.LayoutParams(0, -2, 1));
+        ImageView sortBtn = Ui.iconBtn(this, R.drawable.ic_sort, R.string.cd_sort); sortBtn.setOnClickListener(v -> sortDialog());
+        top.addView(sortBtn, new LinearLayout.LayoutParams(Ui.dp(this, 44), Ui.dp(this, 44))); head.addView(top);
         head.addView(Ui.text(this, getString(R.string.gal_intro), 13, Ui.GREY));
         head.addView(Ui.space(this, 8));
         Button open = Ui.pill(this, R.string.gal_open, false);
@@ -93,6 +95,8 @@ public class StereoGalleryActivity extends Activity {
 
     private void fill() {
         items = StereoItems.query(this);
+        final int m = sortMode;
+        java.util.Collections.sort(items, (a, c) -> m == 1 ? Long.compare(a.date, c.date) : m == 2 ? a.name.compareToIgnoreCase(c.name) : m == 3 ? Long.compare(c.size, a.size) : Long.compare(c.date, a.date));
         Set<Uri> keep = new HashSet<>(); for (StereoItems.Item it : items) if (sel.contains(it.uri)) keep.add(it.uri); sel.retainAll(keep);
         list.removeAllViews();
         if (items.isEmpty()) { list.addView(Ui.text(this, getString(R.string.gal_empty), 14, Ui.GREY)); bar.setVisibility(View.GONE); selecting = false; return; }
@@ -109,7 +113,7 @@ public class StereoGalleryActivity extends Activity {
             final ImageView th = new ImageView(this); th.setScaleType(ImageView.ScaleType.CENTER_CROP); th.setBackground(Ui.round(this, 8, Ui.BG, 0)); th.setClipToOutline(true);
             row.addView(th, new LinearLayout.LayoutParams(Ui.dp(this, 72), Ui.dp(this, 54)));
             LinearLayout tx = new LinearLayout(this); tx.setOrientation(LinearLayout.VERTICAL); tx.setPadding(Ui.dp(this, 12), 0, 0, 0);
-            tx.addView(Ui.text(this, it.name, 14, Ui.TEXT)); tx.addView(Ui.text(this, df.format(new Date(it.date)), 12, Ui.GREY));
+            tx.addView(Ui.text(this, it.name, 14, Ui.TEXT)); tx.addView(Ui.text(this, df.format(new Date(it.date)) + String.format(java.util.Locale.US, "  \u00B7  %.1f MB", it.size / 1048576.0), 12, Ui.GREY));
             row.addView(tx, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
             row.setOnClickListener(v -> { if (selecting) toggle(it.uri); else open(it.uri, it.name); });
             row.setOnLongClickListener(v -> { if (!selecting) { selecting = true; sel.clear(); } toggle(it.uri); return true; });
@@ -122,6 +126,13 @@ public class StereoGalleryActivity extends Activity {
             });
         }
         updateBar();
+    }
+
+    private void sortDialog() {
+        String[] opt = {getString(R.string.sort_date_new), getString(R.string.sort_date_old), getString(R.string.sort_name), getString(R.string.sort_size)};
+        new Ui.Dlg(this).setTitle(getString(R.string.sort_title)).setSingleChoiceItems(opt, sortMode, (d, w) -> {
+            sortMode = w; Prefs.setInt(this, "gal_sort", w); d.dismiss(); fill();
+        }).show();
     }
 
     private void toggle(Uri u) { if (!sel.remove(u)) sel.add(u); if (sel.isEmpty()) { endSelect(); return; } refreshSel(); }

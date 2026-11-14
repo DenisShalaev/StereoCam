@@ -57,6 +57,7 @@ public class ProbeActivity extends Activity {
         fmt.addView(row(Prefs.PAIR, R.string.fmt_pair_t, 0));
         fmt.addView(Ui.space(this, 6));
         fmt.addView(row(Prefs.ALIGN, R.string.align_t, R.string.align_d));
+        fmt.addView(row(Prefs.COLOR, R.string.color_t, R.string.color_d));
         root.addView(fmt); root.addView(Ui.space(this, 12));
 
         LinearLayout rep = Ui.card(this);

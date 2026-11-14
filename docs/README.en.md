@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [Deutsch](README.de.md)
 
-> **Status: build 22.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
+> **Status: build 25.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
 
 ## 1. What it is
 
@@ -59,7 +59,7 @@ MPO, side-by-side and automatic alignment are on by default. The MPO is first wr
 
 ## 4. Installation
 
-1. Open the project folder in Android Studio (Hedgehog or newer).
+1. Open the project folder in Android Studio (Narwhal 3 2025.1.3 or newer, JDK 17). The project uses Android Gradle Plugin 8.13.2 and Gradle 8.13.
 2. Wait for the Gradle sync (if Studio offers to create the Gradle wrapper, accept).
 3. Connect a phone (Android 9 or newer, `minSdk 28`) and press Run.
 
@@ -115,6 +115,14 @@ The slider at the bottom of the viewer (hidden together with the button bar) set
 On the shooting screen there are two buttons under the gear on the right. **Grid** cycles: off → rule of thirds → golden ratio (lines at 38.2 % and 61.8 %). **Horizon level** shows, from the accelerometer, a line that turns with the tilt of the phone: yellow under 5°, green under 1°; it works in portrait and landscape. The top of the screen shows the focus distance (from the camera's results); when viewing, things closer than the focus point come out in front of the screen and farther ones go behind it (if the main subject is put on the screen plane, see 5.7). A warning appears when the focus is closer than about 15 baselines (≈30 cm by default). Honestly: the live preview has no depth map, so there are no lines showing what comes out of the screen for each part of the frame, only the focus distance; not every phone reports the focus distance to apps. Not tested on a device.
 
 **Goggles (Cardboard / SBS).** Messages (mode change, file number, list limits) are drawn in both halves of the screen instead of system pop-ups. The screen-plane slider is hidden in these modes: change the plane with a horizontal swipe (0.5 % steps, the value is shown in both eyes), or in Motion/2D modes. Pinch shrinks the image down to 50 % and enlarges up to ×6. The system bars (clock, battery, Wi-Fi, navigation) are always hidden and appear only on a tap, together with the button bar. Not tested on a device; the button bar on tap remains a single strip across the whole screen, so it is best to call it up with the goggles off.
+
+### 5.9 Colour matching
+
+The two cameras of a phone (two sensors) often render white balance differently, so one frame of the pair comes out warmer than the other. After the geometric alignment the app adjusts the colours of the second frame to the first: the histograms of each channel are matched in the centre of the frame, and the curve is smoothed and limited (at most ±40 levels) so that different parts of the scene cannot distort it. It is switched on in settings ("Match colours of both images", on by default); the alignment report lists the shifts per channel. Tested on a synthetic pair (a shift of R +10, B −13 is reduced to under 0.3); not tested on real photos or on a device. It does not replace locking the cameras' own white balance: different sensors would still give different colours, so the matching is done in software.
+
+### 5.10 Gallery sorting
+
+The sort button to the right of the gallery title offers: date (newest first / oldest first), name (A–Z), file size (largest first). The choice is remembered. Not tested on a device.
 
 ## 6. Tips for good stereo
 

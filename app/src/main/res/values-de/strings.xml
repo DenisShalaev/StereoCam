@@ -157,4 +157,12 @@
     <string name="grid_golden">Goldener Schnitt</string>
     <string name="compose_focus_fmt">Fokus ≈ %1$s m · näher: vor dem Bildschirm, weiter: dahinter</string>
     <string name="compose_near_fmt">Fokus ≈ %1$s m: zu nah (unter ~%2$d cm ist das Paar schwer zu betrachten)</string>
+    <string name="color_t">Farben beider Bilder angleichen</string>
+    <string name="color_d">Zwei Kameras geben den Weißabgleich oft leicht unterschiedlich wieder; das zweite Bild wird dem ersten angeglichen.</string>
+    <string name="cd_sort">Sortieren</string>
+    <string name="sort_title">Sortieren nach</string>
+    <string name="sort_date_new">Datum (neueste zuerst)</string>
+    <string name="sort_date_old">Datum (älteste zuerst)</string>
+    <string name="sort_name">Name (A–Z)</string>
+    <string name="sort_size">Dateigröße</string>
 </resources>

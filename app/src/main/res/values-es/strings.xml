@@ -157,4 +157,12 @@
     <string name="grid_golden">Proporción áurea</string>
     <string name="compose_focus_fmt">Enfoque ≈ %1$s m · más cerca: delante de la pantalla, más lejos: detrás</string>
     <string name="compose_near_fmt">Enfoque ≈ %1$s m: demasiado cerca (por debajo de ~%2$d cm el par es difícil de ver)</string>
+    <string name="color_t">Igualar los colores de ambas imágenes</string>
+    <string name="color_d">Dos cámaras suelen reproducir el balance de blancos de forma algo distinta; la segunda imagen se ajusta a la primera.</string>
+    <string name="cd_sort">Ordenar</string>
+    <string name="sort_title">Ordenar por</string>
+    <string name="sort_date_new">Fecha (más recientes primero)</string>
+    <string name="sort_date_old">Fecha (más antiguos primero)</string>
+    <string name="sort_name">Nombre (A–Z)</string>
+    <string name="sort_size">Tamaño del archivo</string>
 </resources>
