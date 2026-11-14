@@ -34,7 +34,8 @@ final class FocusControl {
     FocusControl(Activity a, FrameLayout root, TextureView tv, Callback cb) {
         act = a; this.cb = cb; this.tv = tv;
         ring = new Ring(a); root.addView(ring, new FrameLayout.LayoutParams(Ui.dp(a, 72), Ui.dp(a, 72))); ring.setVisibility(View.GONE);
-        slider = new Slider(a); FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(Ui.dp(a, 64), Ui.dp(a, 270), Gravity.END | Gravity.CENTER_VERTICAL); lp.rightMargin = Ui.dp(a, 6);
+        slider = new Slider(a);                                                // links, zwischen oberem Rand und der Galerie-Vorschau (Klapphandys: Aussendisplay ist schmal, rechts liegen die Knoepfe)
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(Ui.dp(a, 76), -1, Gravity.START | Gravity.CENTER_VERTICAL); lp.leftMargin = Ui.dp(a, 6); lp.topMargin = Ui.dp(a, 12); lp.bottomMargin = Ui.dp(a, 104);
         root.addView(slider, lp); slider.setVisibility(View.GONE);
         final float[] down = new float[2];
         tv.setOnTouchListener((v, e) -> {
@@ -98,18 +99,19 @@ final class FocusControl {
     private final class Slider extends View {
         private final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         Slider(Context c) { super(c); }
+        @Override protected void onMeasure(int wms, int hms) { int h = Math.min(Ui.dp(getContext(), 270), MeasureSpec.getSize(hms)); super.onMeasure(wms, MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY)); }
         private float top() { return Ui.dp(getContext(), 44); }
         @Override protected void onDraw(Canvas c) {
-            Context ctx = getContext(); int w = getWidth(), h = getHeight(); float cx = w - Ui.dp(ctx, 22), t = top(), b = h - Ui.dp(ctx, 12);
+            Context ctx = getContext(); int w = getWidth(), h = getHeight(); float cx = Ui.dp(ctx, 22), t = top(), b = h - Ui.dp(ctx, 12);
             p.setStyle(Paint.Style.FILL); p.setColor(manual ? Ui.alpha(Ui.BG, 200) : Ui.ACCENT);
-            RectF chip = new RectF(w - Ui.dp(ctx, 44), 0, w, Ui.dp(ctx, 34)); c.drawRoundRect(chip, Ui.dp(ctx, 17), Ui.dp(ctx, 17), p);
+            RectF chip = new RectF(0, 0, Ui.dp(ctx, 44), Ui.dp(ctx, 34)); c.drawRoundRect(chip, Ui.dp(ctx, 17), Ui.dp(ctx, 17), p);
             p.setColor(manual ? Ui.TEXT : 0xFF0B1220); p.setTextSize(Ui.dp(ctx, 13)); p.setTextAlign(Paint.Align.CENTER); c.drawText("AF", chip.centerX(), chip.centerY() + Ui.dp(ctx, 5), p);
             p.setColor(Ui.alpha(Ui.TEXT, 140)); p.setStrokeWidth(Ui.dp(ctx, 3)); c.drawLine(cx, t, cx, b, p);
             if (manual && minFocus > 0) {
                 float f = Math.max(0, Math.min(1, diopter / minFocus)), y = t + (b - t) * f;
                 p.setColor(Ui.ACCENT); c.drawCircle(cx, y, Ui.dp(ctx, 11), p);
-                p.setColor(Ui.TEXT); p.setTextAlign(Paint.Align.RIGHT); p.setTextSize(Ui.dp(ctx, 12)); p.setShadowLayer(4, 0, 1, 0xFF000000);
-                c.drawText(diopter < 0.05f ? "∞" : String.format(Locale.ROOT, "%.2f m", 1f / diopter), cx - Ui.dp(ctx, 16), y + Ui.dp(ctx, 4), p); p.clearShadowLayer();
+                p.setColor(Ui.TEXT); p.setTextAlign(Paint.Align.LEFT); p.setTextSize(Ui.dp(ctx, 12)); p.setShadowLayer(4, 0, 1, 0xFF000000);
+                c.drawText(diopter < 0.05f ? "∞" : String.format(Locale.ROOT, "%.2f m", 1f / diopter), cx + Ui.dp(ctx, 16), y + Ui.dp(ctx, 4), p); p.clearShadowLayer();
             } else { p.setColor(Ui.alpha(Ui.TEXT, 200)); c.drawCircle(cx, t + (b - t) / 2, Ui.dp(ctx, 5), p); }
         }
         @Override public boolean onTouchEvent(MotionEvent e) {

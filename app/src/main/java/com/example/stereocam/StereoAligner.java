@@ -244,6 +244,43 @@ final class StereoAligner {
         return best;
     }
 
+    /**
+     * Bildwinkel ohne Vorwissen suchen: welches der beiden Bilder (0 = a, 1 = b) wird mittig auf welchen Anteil zugeschnitten, damit beide
+     * gleich aussehen? Grobe Suche ueber 0,25..1,0 in logarithmischen Schritten, dann feiner; NCC mit kleiner Verschiebungssuche.
+     * @return {welches, anteil, score, scoreOhneZuschnitt}
+     */
+    static double[] searchCrop(int[] a, int aw, int ah, int[] b, int bw, int bh) {
+        final int tw = 128, th = Math.max(16, (int) Math.round(128.0 * bh / bw));
+        float[] ga = gray(resample(a, aw, ah, 0, 0, aw, ah, tw, th), tw * th), gb = gray(resample(b, bw, bh, 0, 0, bw, bh, tw, th), tw * th);
+        double s1 = bestShiftNcc(ga, gb, tw, th, 6, 2);
+        double[] best = {0, 1, s1, s1};
+        for (int which = 0; which < 2; which++) {
+            int[] w = which == 0 ? a : b; int ww = which == 0 ? aw : bw, wh = which == 0 ? ah : bh; float[] ref = which == 0 ? gb : ga;
+            double bf = 1, bs = -2;
+            for (double fr = 0.97; fr >= 0.25; fr *= 0.965) {
+                double sc = cropScore(w, ww, wh, ref, tw, th, fr); if (sc > bs) { bs = sc; bf = fr; }
+            }
+            for (double fr = bf * 0.97; fr <= Math.min(1.0, bf * 1.03) + 1e-9; fr += bf * 0.006) {
+                double sc = cropScore(w, ww, wh, ref, tw, th, fr); if (sc > bs) { bs = sc; bf = fr; }
+            }
+            if (bs > best[2]) { best[0] = which; best[1] = bf; best[2] = bs; }
+        }
+        return best;
+    }
+
+    private static double cropScore(int[] src, int sw, int sh, float[] ref, int tw, int th, double fr) {
+        double cw = sw * fr, ch = sh * fr; if (cw < 8 || ch < 8) return -2;
+        return bestShiftNcc(gray(resample(src, sw, sh, (sw - cw) / 2, (sh - ch) / 2, cw, ch, tw, th), tw * th), ref, tw, th, 6, 2);
+    }
+
+    /** Aehnlichkeit (NCC) zweier Bilder bei gegebenen Zuschnittanteilen (mittig). */
+    static double pairScore(int[] a, int aw, int ah, double ca, int[] b, int bw, int bh, double cb) {
+        final int tw = 128, th = Math.max(16, (int) Math.round(128.0 * bh / bw));
+        float[] ga = gray(resample(a, aw, ah, (aw - aw * ca) / 2, (ah - ah * ca) / 2, aw * ca, ah * ca, tw, th), tw * th);
+        float[] gb = gray(resample(b, bw, bh, (bw - bw * cb) / 2, (bh - bh * cb) / 2, bw * cb, bh * cb, tw, th), tw * th);
+        return bestShiftNcc(ga, gb, tw, th, 6, 2);
+    }
+
     private static double bestShiftNcc(float[] a, float[] b, int w, int h, int mx, int my) {
         double best = -2;
         for (int dy = -my; dy <= my; dy++) for (int dx = -mx; dx <= mx; dx++) {

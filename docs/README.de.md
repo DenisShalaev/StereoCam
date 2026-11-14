@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [English](README.en.md)
 
-> **Stand: Build 25.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
+> **Stand: Build 26.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
 
 ## 1. Was ist das?
 
@@ -123,6 +123,10 @@ Die zwei Kameras eines Telefons (zwei Sensoren) geben den Weißabgleich oft unte
 ### 5.10 Galerie sortieren
 
 Die Sortiertaste rechts neben dem Galerietitel bietet: Datum (neueste zuerst / älteste zuerst), Name (A–Z), Dateigröße (größte zuerst). Die Auswahl wird gemerkt. Nicht auf einem Gerät geprüft.
+
+### 5.11 Fokusregler und Bildwinkelabgleich (Samsung Fold)
+
+Der senkrechte Regler für den manuellen Fokus und die Taste „AF“ sitzen jetzt links (die Höhe passt sich dem Bildschirm an, damit er auf dem schmalen Außendisplay von Klapphandys nicht in die Knöpfe ragt). Der Bildwinkelabgleich hat eine unabhängige Prüfung: Nach der Berechnung aus den Brennweiten vergleicht die App die Bilder und sucht bei schlechter Übereinstimmung allein aus den Bildern, welches Bild auf welchen Anteil (25–100 %) zugeschnitten werden muss. Das ist nötig, wenn das Telefon falsche oder fehlende Brennweiten meldet. Das Ergebnis (im Ausrichtungsbericht): „crop searched …“ = gefunden und angewendet, „crop check … kept“ = unverändert gelassen. An einem synthetischen Paar geprüft (ein Zuschnitt von 55 % wird auf 0,1 % genau gefunden); nicht auf einem Samsung Galaxy Fold geprüft; bei erneutem Auftreten bitte den Ausrichtungsbericht senden.
 
 ## 6. Tipps für gutes Stereo
 

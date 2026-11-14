@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [Deutsch](README.de.md)
 
-> **Status: build 25.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
+> **Status: build 26.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
 
 ## 1. What it is
 
@@ -123,6 +123,10 @@ The two cameras of a phone (two sensors) often render white balance differently,
 ### 5.10 Gallery sorting
 
 The sort button to the right of the gallery title offers: date (newest first / oldest first), name (A–Z), file size (largest first). The choice is remembered. Not tested on a device.
+
+### 5.11 Focus slider and field-of-view matching (Samsung Fold)
+
+The vertical manual-focus slider and the "AF" button are now on the left (its height adapts to the screen so it does not run into the buttons on the narrow cover screen of foldables). Field-of-view matching has an independent check: after the calculation from the focal lengths the app compares the frames and, if the match is poor, searches from the images alone which frame must be cropped and to what share (25–100 %). This is needed when the phone reports wrong or missing focal lengths. The result (in the alignment report): "crop searched …" means found and applied, "crop check … kept" means left as it was. Tested on a synthetic pair (a 55 % crop is found to within 0.1 %); not tested on a Samsung Galaxy Fold, so if the problem recurs please send the alignment report.
 
 ## 6. Tips for good stereo
 

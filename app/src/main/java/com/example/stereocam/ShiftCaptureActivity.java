@@ -301,7 +301,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
             final byte[] second = data, first = shot1; final int rot2 = pendingRot;
             ui.post(() -> say(getString(R.string.cap_processing)));
             Processor.Input in = new Processor.Input();
-            in.jpegA = first; in.jpegB = second; in.rotA = rot1; in.rotB = rot2; in.equivA = in.equivB = 1;
+            in.jpegA = first; in.jpegB = second; in.rotA = rot1; in.rotB = rot2; in.equivA = in.equivB = 1; in.sameCamera = true;
             in.aIsLeft = !secondFirst();                                // erstes Bild = linkes Auge (Telefon nach rechts), ausser "L/R tauschen"
             new Thread(() -> {
                 try {

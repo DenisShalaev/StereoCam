@@ -27,6 +27,7 @@ final class Processor {
         int rotA, rotB;                  // noetige Drehung im Uhrzeigersinn (Grad), damit das Bild aufrecht steht
         float equivA, equivB;            // kleinbildaequivalente Brennweiten
         boolean aIsLeft = true;          // aus Pose und Bildschirmdrehung
+        boolean sameCamera;              // zwei Aufnahmen derselben Kamera (Schiebemodus): kein Bildwinkelabgleich noetig
     }
 
     static final class Output {
@@ -58,6 +59,18 @@ final class Processor {
                 if (r[1] > r[2] + 0.02 && r[1] > 0.3) { if (aWide) cropA = r[0]; else cropB = r[0]; note.append(String.format(Locale.ROOT, "crop refined %.3f -> %.3f (ncc %.2f -> %.2f)\n", nom, r[0], r[2], r[1])); }
                 else note.append(String.format(Locale.ROOT, "crop nominal %.3f kept (ncc %.2f)\n", nom, r[2]));
             } catch (Throwable e) { note.append("crop refine failed: ").append(e).append('\n'); }
+        }
+        // 1b) Sicherheitsnetz: Brennweitenangaben koennen fehlen oder nicht zu den tatsaechlichen Bildern passen (z. B. Samsung-Klapphandys mit
+        //     zugeschnittenem Ultraweitwinkel). Wirkt der Zuschnitt schlecht, den Bildwinkel ohne Vorwissen aus den Bildern suchen.
+        if (!in.sameCamera) {
+            try {
+                double cur = StereoAligner.pairScore(pa, wa, ha, cropA, pb, wb, hb, cropB);
+                double[] g = StereoAligner.searchCrop(pa, wa, ha, pb, wb, hb);
+                if (g[2] > cur + 0.05 && g[2] > 0.35 && (g[1] < 0.97)) {
+                    cropA = g[0] == 0 ? g[1] : 1; cropB = g[0] == 1 ? g[1] : 1;
+                    note.append(String.format(Locale.ROOT, "crop searched: %s cropped to %.3f (ncc %.2f -> %.2f)\n", g[0] == 0 ? "A" : "B", g[1], cur, g[2]));
+                } else note.append(String.format(Locale.ROOT, "crop check: current ncc %.2f, search best %.2f at %.3f - kept\n", cur, g[2], g[1]));
+            } catch (Throwable e) { note.append("crop search failed: ").append(e).append('\n'); }
         }
         double aw = wa * cropA, ah = ha * cropA, bw = wb * cropB, bh = hb * cropB;
         // Seitenverhaeltnis angleichen (falls Sensoren verschieden)
