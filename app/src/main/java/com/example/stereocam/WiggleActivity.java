@@ -110,6 +110,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         bar.addView(btn(R.drawable.ic_center, R.string.cd_center, v -> { view.reset(); baseYaw = Float.NaN; }));
         bar.addView(btn(R.drawable.ic_settings, R.string.set_title, v -> startActivity(new Intent(this, ProbeActivity.class))));
         root.addView(bar, new FrameLayout.LayoutParams(-1, -2, Gravity.TOP));
+        bar.addOnLayoutChangeListener((v, l, t, r, bot, ol, ot, or, obot) -> { if (r - l != or - ol) fitBar(); });
 
         panel = Ui.card(this); panel.setVisibility(View.GONE);
         panel.addView(label(R.string.wig_amp)); panel.addView(chips(ampChips, new String[] {"×1", "×2", "×3", "×4", "×6"}, ampIdx, i -> { ampIdx = i; Prefs.setInt(this, "wig_amp2", i); }));
@@ -176,6 +177,19 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         halfBtn.setVisibility(mode == StereoView.SBS ? View.VISIBLE : View.GONE); lensBtn.setVisibility(mode == StereoView.CARDBOARD ? View.VISIBLE : View.GONE);
         Ui.state(gyroBtn, gyro ? Ui.ST_ON : Ui.ST_OFF); Ui.state(halfBtn, half ? Ui.ST_ON : Ui.ST_OFF); Ui.state(lensBtn, lens ? Ui.ST_ON : Ui.ST_OFF);
         playBtn.setImageResource(playing ? R.drawable.ic_pause : R.drawable.ic_play);
+        fitBar();
+    }
+
+    /** Knopfgroesse an die Breite anpassen, damit alle sichtbaren Knoepfe in die Leiste passen (Hochformat). */
+    private void fitBar() {
+        int n = 0; for (int i = 0; i < bar.getChildCount(); i++) if (bar.getChildAt(i).getVisibility() == View.VISIBLE) n++;
+        int avail = (bar.getWidth() > 0 ? bar.getWidth() : getResources().getDisplayMetrics().widthPixels) - bar.getPaddingLeft() - bar.getPaddingRight();
+        if (n == 0 || avail <= 0) return;
+        int margin = Ui.dp(this, 3), size = Math.max(Ui.dp(this, 30), Math.min(Ui.dp(this, 42), avail / n - 2 * margin));
+        for (int i = 0; i < bar.getChildCount(); i++) {
+            View c = bar.getChildAt(i); ViewGroup.LayoutParams lp = c.getLayoutParams();
+            if (lp != null && (lp.width != size || lp.height != size)) { lp.width = size; lp.height = size; c.setLayoutParams(lp); }
+        }
     }
 
     private TextView label(int res) { TextView t = Ui.text(this, getString(res), 13, Ui.ACCENT); t.setPadding(0, Ui.dp(this, 6), 0, Ui.dp(this, 4)); return t; }

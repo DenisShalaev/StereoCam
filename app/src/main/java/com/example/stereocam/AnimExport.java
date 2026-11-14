@@ -44,15 +44,20 @@ final class AnimExport {
             WiggleRenderer.Scene s = WiggleRenderer.build(l, r, w, h, 720); l = r = null;
             int vw = Math.max(160, s.w & ~15), vh = Math.max(160, s.h & ~15), fps = 24, n = (int) Math.round(period * fps);
             File tmp = new File(c.getCacheDir(), "motion_" + System.nanoTime() + ".mp4");
-            VideoWriter vwr = new VideoWriter(tmp.getAbsolutePath(), vw, vh, fps);
+            String stage = "encoder start";
+            VideoWriter vwr;
+            try { vwr = new VideoWriter(tmp.getAbsolutePath(), vw, vh, fps); } catch (Throwable e) { throw new IOException("MP4 (" + stage + ", " + vw + "x" + vh + "): " + e, e); }
             int[] f = new int[s.w * s.h], crop = new int[vw * vh];
             try {
+                stage = "frames";
                 for (int loop = 0; loop < 2; loop++) for (int i = 0; i < n; i++) {
                     double[] tv = WigglePath.at(period * i / n, period, amp, shape); WiggleRenderer.render(s, tv[0], tv[1], f, k);
                     int ox = (s.w - vw) / 2, oy = (s.h - vh) / 2; for (int y = 0; y < vh; y++) System.arraycopy(f, (y + oy) * s.w + ox, crop, y * vw, vw);
                     vwr.frame(crop);
                 }
+            } catch (Throwable e) { tmp.delete(); throw new IOException("MP4 (" + stage + "): " + e, e);
             } finally { vwr.finish(); }
+            if (!vwr.hasOutput() || tmp.length() < 1000) { tmp.delete(); throw new IOException("MP4: encoder produced no video data"); }
             try { byte[] bytes = new byte[(int) tmp.length()]; try (FileInputStream in = new FileInputStream(tmp)) { int off = 0, nn; while (off < bytes.length && (nn = in.read(bytes, off, bytes.length - off)) > 0) off += nn; }
                 save(c, base + "_motion.mp4", "video/mp4", bytes, true); } finally { tmp.delete(); }
         }

@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [English](README.en.md)
 
-> **Stand: Build 15.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
+> **Stand: Build 17.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
 
 ## 1. Was ist das?
 

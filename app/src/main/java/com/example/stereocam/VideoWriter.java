@@ -26,21 +26,26 @@ final class VideoWriter {
     void frame(int[] argb) {
         int idx;
         while ((idx = codec.dequeueInputBuffer(10_000)) < 0) drain(false);
-        Image im = codec.getInputImage(idx); fill(im, argb); im.close();
+        Image im = codec.getInputImage(idx); if (im == null) throw new IllegalStateException("encoder gives no input image (" + codec.getName() + ")");
+        fill(im, argb); im.close();
         codec.queueInputBuffer(idx, 0, w * h * 3 / 2, n * 1_000_000L / fps, 0); n++; drain(false);
     }
+
+    boolean hasOutput() { return started; }
 
     void finish() {
         int idx; while ((idx = codec.dequeueInputBuffer(10_000)) < 0) drain(false);
         codec.queueInputBuffer(idx, 0, 0, n * 1_000_000L / fps, MediaCodec.BUFFER_FLAG_END_OF_STREAM); drain(true);
         try { codec.stop(); } catch (Exception ignored) {} codec.release();
-        if (started) { try { muxer.stop(); } catch (Exception ignored) {} } muxer.release();
+        if (started) { try { muxer.stop(); } catch (Exception ignored) {} } try { muxer.release(); } catch (Exception ignored) {}
     }
 
     private void drain(boolean eos) {
+        int idle = 0;
         while (true) {
             int o = codec.dequeueOutputBuffer(info, eos ? 10_000 : 0);
-            if (o == MediaCodec.INFO_TRY_AGAIN_LATER) { if (!eos) return; else continue; }
+            if (o == MediaCodec.INFO_TRY_AGAIN_LATER) { if (!eos) return; if (++idle > 500) return; continue; }
+            idle = 0;
             if (o == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) { track = muxer.addTrack(codec.getOutputFormat()); muxer.start(); started = true; continue; }
             if (o < 0) continue;
             ByteBuffer b = codec.getOutputBuffer(o);

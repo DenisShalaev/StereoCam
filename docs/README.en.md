@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [Deutsch](README.de.md)
 
-> **Status: build 15.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
+> **Status: build 17.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
 
 ## 1. What it is
 
