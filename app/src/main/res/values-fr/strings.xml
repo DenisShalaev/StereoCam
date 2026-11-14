@@ -102,7 +102,7 @@
     <string name="gyro_on">Gyro activé (avec zoom)</string>
     <string name="gyro_off">Gyro désactivé</string>
     <string name="gyro_none">Ce téléphone n’a pas de capteur de rotation.</string>
-    <string name="half_on">Demi-SBS : chaque œil remplit sa moitié d’écran</string>
+    <string name="half_on">Demi-SBS : chaque œil réduit de moitié en largeur (les lunettes l’étirent)</string>
     <string name="half_off">SBS complet : proportions d’origine</string>
     <string name="lens_on">Correction des lentilles activée</string>
     <string name="lens_off">Correction des lentilles désactivée</string>

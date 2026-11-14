@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [Deutsch](README.de.md)
 
-> **Status: build 20.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
+> **Status: build 22.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
 
 ## 1. What it is
 
@@ -88,7 +88,7 @@ The app opens straight on the camera image (the mode is chosen automatically: tw
 
 ### 5.3. View modes (as in StereoPano)
 
-The top bar of round buttons matches StereoPano: back, mode, pause and motion settings (Motion mode only), save animation, lenticular print, gyro, half SBS (SBS mode only), lens correction (Cardboard only), reset zoom, settings. The mode button cycles: **Motion** → **2D** → **Cardboard** (two eyes side by side, landscape, gentle barrel correction) → **SBS glasses** (full or "half": each eye fills its half of the screen). Double-tap toggles 2D ↔ the last stereo mode; pinch zooms; a tap shows/hides the bar. The gyro pans the zoomed image as you tilt the phone (rough estimate: 60° ≈ one image width).
+The top bar of round buttons matches StereoPano: back, mode, pause and motion settings (Motion mode only), save animation, lenticular print, gyro, half SBS (SBS mode only; on by default — each eye is squeezed to half width, as SBS glasses expect that stretch each half to the full screen; turn it off for phone goggles of the Cardboard type, which need the original proportions), lens correction (Cardboard only), reset zoom, settings. The mode button cycles: **Motion** → **2D** → **Cardboard** (two eyes side by side, landscape, gentle barrel correction) → **SBS glasses** (full or "half": each eye fills its half of the screen). Double-tap toggles 2D ↔ the last stereo mode; pinch zooms; a tap shows/hides the bar. The gyro pans the zoomed image as you tilt the phone (rough estimate: 60° ≈ one image width).
 
 Honestly: lens correction is approximate and not calibrated for any particular headset; not verified on a device.
 
@@ -113,6 +113,8 @@ The slider at the bottom of the viewer (hidden together with the button bar) set
 ### 5.8 Composition aids
 
 On the shooting screen there are two buttons under the gear on the right. **Grid** cycles: off → rule of thirds → golden ratio (lines at 38.2 % and 61.8 %). **Horizon level** shows, from the accelerometer, a line that turns with the tilt of the phone: yellow under 5°, green under 1°; it works in portrait and landscape. The top of the screen shows the focus distance (from the camera's results); when viewing, things closer than the focus point come out in front of the screen and farther ones go behind it (if the main subject is put on the screen plane, see 5.7). A warning appears when the focus is closer than about 15 baselines (≈30 cm by default). Honestly: the live preview has no depth map, so there are no lines showing what comes out of the screen for each part of the frame, only the focus distance; not every phone reports the focus distance to apps. Not tested on a device.
+
+**Goggles (Cardboard / SBS).** Messages (mode change, file number, list limits) are drawn in both halves of the screen instead of system pop-ups. The screen-plane slider is hidden in these modes: change the plane with a horizontal swipe (0.5 % steps, the value is shown in both eyes), or in Motion/2D modes. Pinch shrinks the image down to 50 % and enlarges up to ×6. The system bars (clock, battery, Wi-Fi, navigation) are always hidden and appear only on a tap, together with the button bar. Not tested on a device; the button bar on tap remains a single strip across the whole screen, so it is best to call it up with the goggles off.
 
 ## 6. Tips for good stereo
 

@@ -102,7 +102,7 @@
     <string name="gyro_on">Gyro on (use with zoom)</string>
     <string name="gyro_off">Gyro off</string>
     <string name="gyro_none">No rotation sensor in this phone.</string>
-    <string name="half_on">Half SBS: each eye fills its half of the screen</string>
+    <string name="half_on">Half SBS: each eye squeezed to half width (the glasses stretch it back)</string>
     <string name="half_off">Full SBS: original proportions</string>
     <string name="lens_on">Lens correction on</string>
     <string name="lens_off">Lens correction off</string>

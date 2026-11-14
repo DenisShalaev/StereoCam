@@ -102,7 +102,7 @@
     <string name="gyro_on">Гироскоп включён (вместе с зумом)</string>
     <string name="gyro_off">Гироскоп выключен</string>
     <string name="gyro_none">В этом телефоне нет датчика поворота.</string>
-    <string name="half_on">Половинный SBS: каждый глаз занимает свою половину экрана</string>
+    <string name="half_on">Half SBS: каждый глаз сжат вдвое по ширине (очки растягивают обратно)</string>
     <string name="half_off">Полный SBS: исходные пропорции</string>
     <string name="lens_on">Коррекция линз включена</string>
     <string name="lens_off">Коррекция линз выключена</string>

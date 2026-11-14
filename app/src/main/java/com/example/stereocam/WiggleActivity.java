@@ -45,7 +45,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
     private final ExecutorService worker = Executors.newSingleThreadExecutor();
     private StereoView view; private TextView status; private LinearLayout bar, panel;
     private ImageView exportBtn, modeBtn, playBtn, tuneBtn, gyroBtn, halfBtn, lensBtn;
-    private float planeAdj; private LinearLayout planeCard; private TextView planeLabel; private android.widget.SeekBar planeBar;
+    private boolean sysShown; private float planeAdj; private LinearLayout planeCard; private TextView planeLabel; private android.widget.SeekBar planeBar;
     private WiggleRenderer.Scene scene; private Bitmap frame, left, right; private int[] buf;
     private volatile boolean playing = true, alive = true, busy, paused;
     private volatile int depthPct = 100;
@@ -64,7 +64,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         ampIdx = Prefs.getInt(this, "wig_amp2", 1); depthPct = Prefs.getInt(this, "wig_depth", 100); perIdx = Prefs.getInt(this, "wig_per", 1); shape = Prefs.getInt(this, "wig_shape", 0);
         mode = Prefs.getInt(this, "view_mode", StereoView.MOTION); lastStereo = Prefs.getInt(this, "view_last", StereoView.CARDBOARD);
-        half = Prefs.get(this, "view_half"); lens = !Prefs.str(this, "view_lens_off").equals("1"); gyro = false;
+        half = Prefs.getInt(this, "view_half2", 1) == 1; lens = !Prefs.str(this, "view_lens_off").equals("1"); gyro = false;
 
         Intent in = getIntent();
         ArrayList<String> us = in.getStringArrayListExtra("uris"), ns = in.getStringArrayListExtra("names");
@@ -78,11 +78,15 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         root.addView(status, new FrameLayout.LayoutParams(-1, -2, Gravity.CENTER));
 
         final GestureDetector gd = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
-            @Override public boolean onSingleTapConfirmed(MotionEvent e) { boolean on = bar.getVisibility() == View.VISIBLE; bar.setVisibility(on ? View.GONE : View.VISIBLE); planeCard.setVisibility(on ? View.GONE : View.VISIBLE); if (on) panel.setVisibility(View.GONE); return true; }
+            @Override public boolean onSingleTapConfirmed(MotionEvent e) { boolean on = bar.getVisibility() == View.VISIBLE; bar.setVisibility(on ? View.GONE : View.VISIBLE); planeCard.setVisibility(on || isStereo() ? View.GONE : View.VISIBLE); showSystemBars(!on); if (on) panel.setVisibility(View.GONE); return true; }
             @Override public boolean onFling(MotionEvent a, MotionEvent b2, float vx, float vy) {
                 if (a == null || b2 == null || view.getZoom() > 1.02f) return false;
                 float dy = b2.getY() - a.getY(), dx = b2.getX() - a.getX();
                 if (Math.abs(dy) > Ui.dp(WiggleActivity.this, 80) && Math.abs(dy) > 1.5f * Math.abs(dx)) { step(dy < 0 ? 1 : -1); return true; }
+                if (isStereo() && Math.abs(dx) > Ui.dp(WiggleActivity.this, 80) && Math.abs(dx) > 1.5f * Math.abs(dy)) {
+                    float na = Math.max(-0.06f, Math.min(0.06f, planeAdj + (dx > 0 ? 0.005f : -0.005f))); planeBar.setProgress(Math.round(na / 0.06f * 50f + 50f));
+                    view.flash(getString(R.string.plane_fmt, na * 100f)); return true;
+                }
                 return false;
             }
             @Override public boolean onDoubleTap(MotionEvent e) { setMode(mode == StereoView.FLAT ? lastStereo : StereoView.FLAT); return true; }
@@ -105,9 +109,9 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         exportBtn = btn(R.drawable.ic_movie, R.string.cd_export, v -> exportDialog()); bar.addView(exportBtn);
         bar.addView(btn(R.drawable.ic_print, R.string.lenti_menu, v -> { if (!uris.isEmpty()) startActivity(new Intent(this, LentiActivity.class).setData(uris.get(index)).putExtra("name", names.get(index))); }));
         tuneBtn = btn(R.drawable.ic_tune, R.string.cd_tune, v -> panel.setVisibility(panel.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE)); bar.addView(tuneBtn);
-        gyroBtn = btn(R.drawable.ic_gyro, R.string.cd_gyro, v -> { gyro = !gyro; baseYaw = Float.NaN; refresh(); listen(); Toast.makeText(this, gyro ? R.string.gyro_on : R.string.gyro_off, Toast.LENGTH_SHORT).show(); }); bar.addView(gyroBtn);
-        halfBtn = btn(R.drawable.ic_half, R.string.cd_half, v -> { half = !half; Prefs.set(this, "view_half", half); view.setHalf(half); refresh(); Toast.makeText(this, half ? R.string.half_on : R.string.half_off, Toast.LENGTH_SHORT).show(); }); bar.addView(halfBtn);
-        lensBtn = btn(R.drawable.ic_lens, R.string.cd_lens, v -> { lens = !lens; Prefs.setStr(this, "view_lens_off", lens ? "" : "1"); view.setLens(lens); refresh(); Toast.makeText(this, lens ? R.string.lens_on : R.string.lens_off, Toast.LENGTH_SHORT).show(); }); bar.addView(lensBtn);
+        gyroBtn = btn(R.drawable.ic_gyro, R.string.cd_gyro, v -> { gyro = !gyro; baseYaw = Float.NaN; refresh(); listen(); say(gyro ? R.string.gyro_on : R.string.gyro_off); }); bar.addView(gyroBtn);
+        halfBtn = btn(R.drawable.ic_half, R.string.cd_half, v -> { half = !half; Prefs.setInt(this, "view_half2", half ? 1 : 0); view.setHalf(half); refresh(); say(half ? R.string.half_on : R.string.half_off); }); bar.addView(halfBtn);
+        lensBtn = btn(R.drawable.ic_lens, R.string.cd_lens, v -> { lens = !lens; Prefs.setStr(this, "view_lens_off", lens ? "" : "1"); view.setLens(lens); refresh(); say(lens ? R.string.lens_on : R.string.lens_off); }); bar.addView(lensBtn);
         bar.addView(btn(R.drawable.ic_center, R.string.cd_center, v -> { view.reset(); baseYaw = Float.NaN; }));
         bar.addView(btn(R.drawable.ic_settings, R.string.set_title, v -> startActivity(new Intent(this, ProbeActivity.class))));
         root.addView(bar, new FrameLayout.LayoutParams(-1, -2, Gravity.TOP));
@@ -143,18 +147,24 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         FrameLayout.LayoutParams ql = new FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM); ql.setMargins(Ui.dp(this, 12), 0, Ui.dp(this, 12), Ui.dp(this, 12));
         root.addView(planeCard, ql); setPlane(0f);
         pl.bottomMargin = Ui.dp(this, 96); panel.setLayoutParams(pl);
+        if (android.os.Build.VERSION.SDK_INT >= 30) getWindow().setDecorFitsSystemWindows(false);
+        android.view.WindowManager.LayoutParams wlp = getWindow().getAttributes(); wlp.layoutInDisplayCutoutMode = android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES; getWindow().setAttributes(wlp);
         setContentView(root);
-        bar.setOnApplyWindowInsetsListener((v, insets) -> { v.setPadding(insets.getSystemWindowInsetLeft() + Ui.dp(this, 8), insets.getSystemWindowInsetTop() + Ui.dp(this, 8), insets.getSystemWindowInsetRight() + Ui.dp(this, 8), Ui.dp(this, 8)); return insets; });
+        bar.setOnApplyWindowInsetsListener((v, insets) -> {
+            int l = Math.max(insets.getStableInsetLeft(), insets.getSystemWindowInsetLeft()), t = Math.max(insets.getStableInsetTop(), insets.getSystemWindowInsetTop()), r = Math.max(insets.getStableInsetRight(), insets.getSystemWindowInsetRight());
+            android.view.DisplayCutout dc = insets.getDisplayCutout(); if (dc != null) { l = Math.max(l, dc.getSafeInsetLeft()); t = Math.max(t, dc.getSafeInsetTop()); r = Math.max(r, dc.getSafeInsetRight()); }
+            v.setPadding(l + Ui.dp(this, 8), t + Ui.dp(this, 8), r + Ui.dp(this, 8), Ui.dp(this, 8)); return insets; });
+        showSystemBars(false);
         view.setHalf(half); view.setLens(lens); applyMode(false);
         load();
     }
 
     /** Naechste (+1) oder vorherige (-1) Datei der Galerie. */
     private void step(int d) {
-        int n = index + d; if (n < 0 || n >= uris.size()) { Toast.makeText(this, d > 0 ? R.string.nav_last : R.string.nav_first, Toast.LENGTH_SHORT).show(); return; }
+        int n = index + d; if (n < 0 || n >= uris.size()) { say(d > 0 ? R.string.nav_last : R.string.nav_first); return; }
         index = n; gen++; scene = null; if (planeBar != null) planeBar.setProgress(50); busy = false; view.reset(); view.setSingle(null); view.setPair(null, null);
         status.setText(R.string.wig_loading); status.setVisibility(View.VISIBLE);
-        Toast.makeText(this, (index + 1) + "/" + uris.size() + "  " + names.get(index), Toast.LENGTH_SHORT).show();
+        say((index + 1) + "/" + uris.size() + "  " + names.get(index));
         load();
     }
 
@@ -176,13 +186,32 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         applyMode(true);
     }
 
+    /** Systemleisten (Uhr, Akku, WLAN, Navigation) ausblenden; nur per Antippen erscheinen sie zusammen mit der Knopfleiste. */
+    private void showSystemBars(boolean show) {
+        sysShown = show;
+        if (android.os.Build.VERSION.SDK_INT >= 30) {
+            android.view.WindowInsetsController wc = getWindow().getInsetsController(); if (wc == null) return;
+            wc.setSystemBarsBehavior(android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            if (show) wc.show(android.view.WindowInsets.Type.systemBars()); else wc.hide(android.view.WindowInsets.Type.systemBars());
+        } else {
+            getWindow().getDecorView().setSystemUiVisibility(show ? View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    : View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+    }
+    @Override public void onWindowFocusChanged(boolean hasFocus) { super.onWindowFocusChanged(hasFocus); if (hasFocus) showSystemBars(sysShown); }
+
+    private boolean isStereo() { return mode == StereoView.CARDBOARD || mode == StereoView.SBS; }
+    /** Kurzmeldung: in den Stereo-Modi in beiden Augen, sonst als Toast. */
+    private void say(CharSequence s) { if (isStereo()) view.flash(String.valueOf(s)); else Toast.makeText(this, s, Toast.LENGTH_SHORT).show(); }
+    private void say(int res) { say(getString(res)); }
+
     private void applyMode(boolean toast) {
         boolean stereo = mode == StereoView.CARDBOARD || mode == StereoView.SBS;
         setRequestedOrientation(stereo ? ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        view.setMode(mode); modeBtn.setImageResource(MODE_ICON[mode]);
+        view.setMode(mode); modeBtn.setImageResource(MODE_ICON[mode]); if (planeCard != null) planeCard.setVisibility(stereo || bar.getVisibility() != View.VISIBLE ? View.GONE : View.VISIBLE);
         if (mode == StereoView.MOTION) { if (playing && scene != null) tick(); }
         refresh();
-        if (toast) Toast.makeText(this, getString(R.string.v_mode_fmt, getString(MODE_NAME[mode])), Toast.LENGTH_SHORT).show();
+        if (toast) say(getString(R.string.v_mode_fmt, getString(MODE_NAME[mode])));
     }
 
     private void refresh() {
@@ -230,11 +259,11 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         if (uris.isEmpty()) return;
         new Ui.Dlg(this).setTitle(getString(R.string.cd_export)).setItems(new String[] {getString(R.string.exp_gif), getString(R.string.exp_mp4)}, (d, w) -> {
             final Uri u = uris.get(index); final String nm = names.get(index); final int kind = w == 0 ? StereoExport.GIF : StereoExport.MP4;
-            Toast.makeText(this, R.string.gal_converting, Toast.LENGTH_LONG).show();
+            say(R.string.gal_converting);
             new Thread(() -> {
                 String m; try { StereoExport.run(this, u, nm, kind); m = getString(R.string.exp_done); }
                 catch (Throwable e) { m = getString(R.string.gal_conv_failed, String.valueOf(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName())); }
-                final String msg = m; runOnUiThread(() -> Toast.makeText(this, msg, Toast.LENGTH_LONG).show());
+                final String msg = m; runOnUiThread(() -> say(msg));
             }).start();
         }).show();
     }
@@ -305,7 +334,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         sm.unregisterListener(this);
         if (!gyro) return;
         Sensor s = sm.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR); if (s == null) s = sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        if (s == null) { gyro = false; refresh(); Toast.makeText(this, R.string.gyro_none, Toast.LENGTH_SHORT).show(); return; }
+        if (s == null) { gyro = false; refresh(); say(R.string.gyro_none); return; }
         sm.registerListener(this, s, SensorManager.SENSOR_DELAY_GAME);
     }
     @Override public void onSensorChanged(SensorEvent e) {

@@ -102,7 +102,7 @@
     <string name="gyro_on">Giroscopio attivo (con zoom)</string>
     <string name="gyro_off">Giroscopio spento</string>
     <string name="gyro_none">Questo telefono non ha un sensore di rotazione.</string>
-    <string name="half_on">Metà SBS: ogni occhio riempie la sua metà dello schermo</string>
+    <string name="half_on">Metà SBS: ogni occhio dimezzato in larghezza (gli occhiali lo allargano)</string>
     <string name="half_off">SBS completo: proporzioni originali</string>
     <string name="lens_on">Correzione lenti attiva</string>
     <string name="lens_off">Correzione lenti spenta</string>
