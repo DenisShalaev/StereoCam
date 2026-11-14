@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">StereoCam</string>
+    <string name="probe_title">Verifica fotocamera stereo</string>
+    <string name="probe_intro">Trova le coppie di fotocamere di questo telefono che possono scattare contemporaneamente.</string>
+    <string name="probe_no_pairs">Nessuna coppia di fotocamere utilizzabile. Questo telefono non rende disponibili alle app due fotocamere per lo scatto simultaneo. Il rapporto qui sotto mostra cosa è stato trovato.</string>
+    <string name="pair_fmt">Fotocamere %1$s + %2$s · %3$s / %4$s mm (equiv. 35 mm) · base %5$s</string>
+    <string name="baseline_unknown">sconosciuta</string>
+    <string name="start">Inizia a scattare</string>
+    <string name="fmt_title">Salva come</string>
+    <string name="fmt_mpo_t">MPO (file 3D)</string>
+    <string name="fmt_mpo_d">Formato standard di foto stereo per TV e visori 3D</string>
+    <string name="fmt_sbs_t">JPEG affiancato</string>
+    <string name="fmt_sbs_d">Sinistra e destra affiancate, per visori VR e Cardboard</string>
+    <string name="fmt_vr_t">.vr.jpg</string>
+    <string name="fmt_vr_d">Per lo StereoPano Viewer sul computer</string>
+    <string name="fmt_ana_t">Anaglifo rosso-ciano</string>
+    <string name="fmt_ana_d">Visibile con occhiali rosso-ciano</string>
+    <string name="fmt_pair_t">JPEG separati sinistro e destro</string>
+    <string name="align_t">Allineamento automatico</string>
+    <string name="align_d">Corregge inclinazione, scarto verticale e differenza di scala tra le fotocamere e ritaglia i bordi</string>
+    <string name="report_title">Rapporto</string>
+    <string name="share_report">Condividi rapporto</string>
+    <string name="permission_needed">Serve il permesso per la fotocamera.</string>
+    <string name="cap_hint">Tieni fermo, tocca per scattare</string>
+    <string name="cap_mode">Modalità %1$s: %2$s + %3$s</string>
+    <string name="cap_processing">Elaborazione…</string>
+    <string name="cap_saved">Salvato: %1$s</string>
+    <string name="cap_error">Errore: %1$s</string>
+    <string name="cap_missing">Il telefono ha fornito una sola delle due immagini. Con questa coppia lo scatto simultaneo non è possibile.</string>
+    <string name="cap_open_fail">Impossibile aprire la fotocamera: %1$s</string>
+    <string name="cap_cfg_fail">Questo telefono rifiuta l’uso simultaneo di entrambe le fotocamere (tutti i livelli di risoluzione sono falliti).</string>
+    <string name="swap_eyes">Scambia S/D</string>
+    <string name="swapped_on">Occhi scambiati: sinistro e destro invertiti</string>
+    <string name="swapped_off">Occhi in ordine normale</string>
+</resources>

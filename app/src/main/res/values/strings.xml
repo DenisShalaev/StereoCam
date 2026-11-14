@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">StereoCam</string>
+    <string name="app_name" translatable="false">StereoCam</string>
+    <string name="probe_title">Stereo camera check</string>
+    <string name="probe_intro">Finds camera pairs in this phone that can shoot at the same time.</string>
+    <string name="probe_no_pairs">No usable camera pair found. This phone does not expose two cameras for simultaneous shooting to apps. The report below shows what was found.</string>
+    <string name="pair_fmt">Cameras %1$s + %2$s · %3$s / %4$s mm (35 mm equiv.) · baseline %5$s</string>
+    <string name="baseline_unknown">unknown</string>
+    <string name="start">Start shooting</string>
+    <string name="fmt_title">Save as</string>
+    <string name="fmt_mpo_t">MPO (3D file)</string>
+    <string name="fmt_mpo_d">Standard stereo photo format for 3D TVs and viewers</string>
+    <string name="fmt_sbs_t">Side-by-side JPEG</string>
+    <string name="fmt_sbs_d">Left and right next to each other, for VR glasses and cardboard viewers</string>
+    <string name="fmt_vr_t">.vr.jpg</string>
+    <string name="fmt_vr_d">For the StereoPano Viewer on the computer</string>
+    <string name="fmt_ana_t">Red-cyan anaglyph</string>
+    <string name="fmt_ana_d">Viewable with red-cyan glasses</string>
+    <string name="fmt_pair_t">Separate left and right JPEG</string>
+    <string name="align_t">Automatic alignment</string>
+    <string name="align_d">Corrects tilt, vertical offset and scale difference between the two cameras and crops the edges</string>
+    <string name="report_title">Report</string>
+    <string name="share_report">Share report</string>
+    <string name="permission_needed">Camera permission is needed.</string>
+    <string name="cap_hint">Hold still, tap to shoot</string>
+    <string name="cap_mode">Mode %1$s: %2$s + %3$s</string>
+    <string name="cap_processing">Processing…</string>
+    <string name="cap_saved">Saved: %1$s</string>
+    <string name="cap_error">Error: %1$s</string>
+    <string name="cap_missing">The phone delivered only one of the two images. Simultaneous shooting is not possible with this pair.</string>
+    <string name="cap_open_fail">The camera could not be opened: %1$s</string>
+    <string name="cap_cfg_fail">This phone refuses to stream both cameras at once (all resolution levels failed).</string>
+    <string name="swap_eyes">Swap L/R</string>
+    <string name="swapped_on">Eyes swapped: left and right are exchanged</string>
+    <string name="swapped_off">Eyes in normal order</string>
 </resources>

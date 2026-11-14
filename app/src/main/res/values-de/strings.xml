@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">StereoCam</string>
+    <string name="probe_title">Stereokamera-Check</string>
+    <string name="probe_intro">Findet Kamerapaare in diesem Telefon, die gleichzeitig aufnehmen können.</string>
+    <string name="probe_no_pairs">Kein nutzbares Kamerapaar gefunden. Dieses Telefon gibt Apps nicht zwei Kameras für gleichzeitige Aufnahmen frei. Der Bericht unten zeigt, was gefunden wurde.</string>
+    <string name="pair_fmt">Kameras %1$s + %2$s · %3$s / %4$s mm (KB-äquiv.) · Basis %5$s</string>
+    <string name="baseline_unknown">unbekannt</string>
+    <string name="start">Aufnahme starten</string>
+    <string name="fmt_title">Speichern als</string>
+    <string name="fmt_mpo_t">MPO (3D-Datei)</string>
+    <string name="fmt_mpo_d">Standard-Stereofotoformat für 3D-Fernseher und Betrachter</string>
+    <string name="fmt_sbs_t">Side-by-Side-JPEG</string>
+    <string name="fmt_sbs_d">Links und rechts nebeneinander, für VR-Brillen und Cardboard-Betrachter</string>
+    <string name="fmt_vr_t">.vr.jpg</string>
+    <string name="fmt_vr_d">Für den StereoPano Viewer am Computer</string>
+    <string name="fmt_ana_t">Rot-Cyan-Anaglyphe</string>
+    <string name="fmt_ana_d">Mit Rot-Cyan-Brille ansehbar</string>
+    <string name="fmt_pair_t">Getrennte JPEG für links und rechts</string>
+    <string name="align_t">Automatische Ausrichtung</string>
+    <string name="align_d">Korrigiert Neigung, Höhenversatz und Maßstabsunterschied zwischen den Kameras und beschneidet die Ränder</string>
+    <string name="report_title">Bericht</string>
+    <string name="share_report">Bericht teilen</string>
+    <string name="permission_needed">Kameraberechtigung wird benötigt.</string>
+    <string name="cap_hint">Ruhig halten, zum Auslösen tippen</string>
+    <string name="cap_mode">Modus %1$s: %2$s + %3$s</string>
+    <string name="cap_processing">Verarbeitung…</string>
+    <string name="cap_saved">Gespeichert: %1$s</string>
+    <string name="cap_error">Fehler: %1$s</string>
+    <string name="cap_missing">Das Telefon hat nur eines der beiden Bilder geliefert. Mit diesem Paar sind keine gleichzeitigen Aufnahmen möglich.</string>
+    <string name="cap_open_fail">Die Kamera ließ sich nicht öffnen: %1$s</string>
+    <string name="cap_cfg_fail">Dieses Telefon verweigert den gleichzeitigen Betrieb beider Kameras (alle Auflösungsstufen fehlgeschlagen).</string>
+    <string name="swap_eyes">L/R tauschen</string>
+    <string name="swapped_on">Augen getauscht: links und rechts vertauscht</string>
+    <string name="swapped_off">Augen in normaler Reihenfolge</string>
+</resources>

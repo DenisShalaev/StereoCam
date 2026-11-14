@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">StereoCam</string>
+    <string name="probe_title">Test de la caméra stéréo</string>
+    <string name="probe_intro">Trouve les paires de caméras de ce téléphone capables de photographier en même temps.</string>
+    <string name="probe_no_pairs">Aucune paire de caméras utilisable. Ce téléphone n’ouvre pas deux caméras aux applications pour une prise de vue simultanée. Le rapport ci-dessous montre ce qui a été trouvé.</string>
+    <string name="pair_fmt">Caméras %1$s + %2$s · %3$s / %4$s mm (équiv. 35 mm) · base %5$s</string>
+    <string name="baseline_unknown">inconnue</string>
+    <string name="start">Commencer la prise de vue</string>
+    <string name="fmt_title">Enregistrer en</string>
+    <string name="fmt_mpo_t">MPO (fichier 3D)</string>
+    <string name="fmt_mpo_d">Format standard de photo stéréo pour téléviseurs et visionneuses 3D</string>
+    <string name="fmt_sbs_t">JPEG côte à côte</string>
+    <string name="fmt_sbs_d">Gauche et droite côte à côte, pour lunettes VR et visionneuses Cardboard</string>
+    <string name="fmt_vr_t">.vr.jpg</string>
+    <string name="fmt_vr_d">Pour le StereoPano Viewer sur ordinateur</string>
+    <string name="fmt_ana_t">Anaglyphe rouge-cyan</string>
+    <string name="fmt_ana_d">À voir avec des lunettes rouge-cyan</string>
+    <string name="fmt_pair_t">JPEG séparés gauche et droite</string>
+    <string name="align_t">Alignement automatique</string>
+    <string name="align_d">Corrige l’inclinaison, le décalage vertical et la différence d’échelle entre les caméras et rogne les bords</string>
+    <string name="report_title">Rapport</string>
+    <string name="share_report">Partager le rapport</string>
+    <string name="permission_needed">L’autorisation d’accès à la caméra est nécessaire.</string>
+    <string name="cap_hint">Ne bougez pas, touchez pour déclencher</string>
+    <string name="cap_mode">Mode %1$s : %2$s + %3$s</string>
+    <string name="cap_processing">Traitement…</string>
+    <string name="cap_saved">Enregistré : %1$s</string>
+    <string name="cap_error">Erreur : %1$s</string>
+    <string name="cap_missing">Le téléphone n’a fourni qu’une des deux images. La prise de vue simultanée est impossible avec cette paire.</string>
+    <string name="cap_open_fail">Impossible d’ouvrir la caméra : %1$s</string>
+    <string name="cap_cfg_fail">Ce téléphone refuse de faire fonctionner les deux caméras en même temps (tous les niveaux de résolution ont échoué).</string>
+    <string name="swap_eyes">Inverser G/D</string>
+    <string name="swapped_on">Yeux inversés : gauche et droite échangés</string>
+    <string name="swapped_off">Yeux dans l’ordre normal</string>
+</resources>

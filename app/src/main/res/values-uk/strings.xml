@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">StereoCam</string>
+    <string name="probe_title">Перевірка стереокамери</string>
+    <string name="probe_intro">Знаходить пари камер цього телефона, які можуть знімати одночасно.</string>
+    <string name="probe_no_pairs">Придатної пари камер не знайдено. Цей телефон не надає застосункам дві камери для одночасної зйомки. Нижче звіт про те, що знайдено.</string>
+    <string name="pair_fmt">Камери %1$s + %2$s · %3$s / %4$s мм (екв. 35 мм) · база %5$s</string>
+    <string name="baseline_unknown">невідома</string>
+    <string name="start">Почати зйомку</string>
+    <string name="fmt_title">Зберігати як</string>
+    <string name="fmt_mpo_t">MPO (3D-файл)</string>
+    <string name="fmt_mpo_d">Стандартний формат стереофото для 3D-телевізорів і переглядачів</string>
+    <string name="fmt_sbs_t">JPEG «поруч» (SBS)</string>
+    <string name="fmt_sbs_d">Лівий і правий кадри поруч — для VR-окулярів і картонних візорів</string>
+    <string name="fmt_vr_t">.vr.jpg</string>
+    <string name="fmt_vr_d">Для StereoPano Viewer на комп’ютері</string>
+    <string name="fmt_ana_t">Червоно-блакитний анагліф</string>
+    <string name="fmt_ana_d">Дивитися в червоно-блакитних окулярах</string>
+    <string name="fmt_pair_t">Окремі JPEG для лівого та правого</string>
+    <string name="align_t">Автоматичне вирівнювання</string>
+    <string name="align_d">Виправляє нахил, вертикальний зсув і різницю масштабу між камерами та обрізає краї</string>
+    <string name="report_title">Звіт</string>
+    <string name="share_report">Надіслати звіт</string>
+    <string name="permission_needed">Потрібен дозвіл на камеру.</string>
+    <string name="cap_hint">Тримайте рівно, торкніться для знімка</string>
+    <string name="cap_mode">Режим %1$s: %2$s + %3$s</string>
+    <string name="cap_processing">Обробка…</string>
+    <string name="cap_saved">Збережено: %1$s</string>
+    <string name="cap_error">Помилка: %1$s</string>
+    <string name="cap_missing">Телефон видав лише одне з двох зображень. З цією парою одночасна зйомка неможлива.</string>
+    <string name="cap_open_fail">Не вдалося відкрити камеру: %1$s</string>
+    <string name="cap_cfg_fail">Цей телефон відмовляється запускати обидві камери одночасно (усі рівні роздільності не спрацювали).</string>
+    <string name="swap_eyes">Поміняти Л/П</string>
+    <string name="swapped_on">Очі поміняно: лівий і правий кадри навпаки</string>
+    <string name="swapped_off">Очі в звичайному порядку</string>
+</resources>

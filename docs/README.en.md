@@ -1,0 +1,147 @@
+# StereoCam — documentation (English)
+
+[Русский](README.ru.md) · [Deutsch](README.de.md)
+
+> **Status: build 1. The app has never been run on a phone.** The Android code has not been compiled (the development environment has no Android SDK). Only the pair alignment and the MPO writer were tested, on a desktop JVM. Everything that involves the phone's cameras is untested.
+
+## 1. What it is
+
+StereoCam takes a **stereo photo with one phone and one tap**: it shoots with two rear cameras at the same time (for example the main and the ultra-wide camera), aligns the pair and saves it in several formats. The project was split off from the StereoPano panorama app and reuses its interface style, the `.vr.jpg` writer and the 7 languages (en, de, fr, it, es, ru, uk).
+
+The idea: the two lenses of a phone already form a stereo pair with a fixed baseline (usually 1–2 cm). Shoot static scenes, no closer than about 30 cm; closer than that the difference between the two views becomes too large. This approach is not suitable for macro (see section 8).
+
+## 2. How it works
+
+1. **Camera check (start screen).** The app enumerates the phone's cameras, finds "logical" cameras made of several physical ones and lists the pairs worth trying. For every physical camera the report shows: focal length (and 35 mm equivalent), sensor size, largest JPEG size, minimum focus distance, lens position relative to the main camera (this gives the baseline) and the sensor synchronisation type.
+2. **Shooting.** The app opens the logical camera and creates one Camera2 session with three streams: a preview and two JPEG streams, each bound to its own physical camera. One request returns two pictures. If the phone does not accept full resolution, the app tries 3264 and then 2048 pixels on the long side.
+3. **Processing.**
+   - Both frames are rotated according to sensor orientation and screen rotation.
+   - The field of view is matched: the wider camera's picture is cropped to its centre according to the ratio of the equivalent focal lengths.
+   - Block matching (normalised correlation) measures the residual errors; vertical offset, rotation and scale difference are fitted from them and the right image is corrected.
+   - The zero-parallax plane is set to the median of the scene and the edges are cropped with a common frame.
+   - Left and right are determined from the lens positions and the screen rotation. The "Swap L/R" button exchanges them by hand.
+4. **Saving** to `Pictures/StereoCam` (Android 10+ via MediaStore).
+
+## 3. File formats
+
+| Format | Used for |
+|---|---|
+| MPO (`.mpo`) | Standard 3D photo format (Fujifilm, Nintendo 3DS, 3D TVs) |
+| Side-by-side JPEG | Left and right next to each other: VR glasses, cardboard viewers |
+| `.vr.jpg` | For the StereoPano Viewer on the computer (right image inside extended XMP) |
+| Red-cyan anaglyph | For glasses with colour filters |
+| Separate L/R JPEG | For external editors |
+
+MPO, side-by-side and automatic alignment are on by default. The MPO is first written to Pictures with the type `image/mpo`; if the system rejects that type, the file goes to `Download/StereoCam`.
+
+## 4. Installation
+
+1. Open the project folder in Android Studio (Hedgehog or newer).
+2. Wait for the Gradle sync (if Studio offers to create the Gradle wrapper, accept).
+3. Connect a phone (Android 9 or newer, `minSdk 28`) and press Run.
+
+## 5. Usage
+
+1. Start the app and grant camera access.
+2. See whether camera pairs were found. If not, read the report at the bottom of the screen.
+3. Choose a pair (the first one has the most similar focal lengths and is the easiest to work with), choose the formats and press "Start shooting".
+4. Hold the phone so that the lenses are **on one horizontal line**. The app picks the screen orientation from the lens layout.
+5. Press the shutter button. The result is saved and a thumbnail appears at the bottom left.
+6. If the depth looks inverted (near things look far), press "Swap L/R" and shoot again.
+
+## 6. Tips for good stereo
+
+- The baseline is fixed, so choose your distance accordingly: a good stereo pair has the subject no closer than about 30× the baseline.
+- Shoot static scenes: the two cameras are not always perfectly synchronised (the report shows `calibrated` or `approximate`).
+- For a "main + ultra-wide" pair the app crops the wide frame at the centre. The final resolution is set by the narrower camera.
+- Clean the lenses and avoid featureless scenes (clear sky, white wall): the alignment relies on image detail.
+
+## 7. Compatibility: which phones work
+
+### 7.1 Requirements
+
+- Android 9 (API 28) or newer.
+- A rear "logical multi-camera" with at least two physical cameras.
+- The phone must expose the **physical cameras** to third-party apps and allow **simultaneous** capture from two of them in one session.
+
+### 7.2 The honest answer: there is no verified list
+
+**There is no reliable public list of phones on which two physical cameras work simultaneously in a third-party app, and no phone has been verified with StereoCam yet.** Reasons:
+
+- According to the Android documentation, physical cameras are available to apps from Android 9, but what the logical camera offers is "entirely dependent on the OEM implementation" of the camera HAL.
+- Only a minimal combination is guaranteed: **one YUV or RAW stream of the logical camera can be replaced by two streams from physical cameras of the same size and format.** From Android 10 on, a logical camera is not even required to support combinations with physical streams.
+- StereoCam uses **JPEG streams (possibly of different sizes) plus a preview**. That combination is **not covered by the Android guarantees**. This is the main technical risk (see section 9).
+- Manufacturers may hide cameras or break the session on specific firmware versions.
+
+### 7.3 What is known from public sources
+
+These are scattered statements, partly from users and developers. None of them confirms that **simultaneous** capture from two cameras will work.
+
+| Brand / model | What is reported | Reliability |
+|---|---|---|
+| Google Pixel 3 | Named in the Android documentation as an example of a device with a logical camera | Google documentation (2018), about the API, not about simultaneous capture |
+| Huawei Mate 20 | Named in an Android Developers article as supporting the multi-camera API at launch of Android 9 | 2018 article; the device is long out of updates |
+| Pixel (in general) | "Expose everything" | Retold in a third-party podcast; weak source |
+| Samsung Galaxy S23 Ultra | Shows all lenses through the standard API | Same weak source |
+| Samsung Galaxy S22–S25 | In a Samsung developer forum thread a user replies that Samsung does not provide telephoto camera information and CameraX has to be used | One forum opinion, no official Samsung answer |
+| OnePlus 9 (OxygenOS 12) | The Android 12 update removed third-party access to auxiliary cameras | Retold in a third-party source |
+| OnePlus 7 Pro | The ultra-wide camera was not visible to a third-party app (visible to Open Camera) | Developer blog, 2021 |
+| Motorola (models not named) | The ultra-wide camera is not available to third-party apps | Developer blog, 2021 |
+| Xiaomi POCO X8 Pro (Android 16, HyperOS 3) | A session through the logical camera with physical streams fails with `ERROR_CAMERA_DEVICE` while video stabilisation is enabled on the physical cameras; without it, according to the author, it works | A single forum report, no confirmation from Xiaomi |
+
+This information ages quickly: firmware updates change behaviour. Use the table as a hint, not as a guarantee.
+
+### 7.4 How to test your own phone
+
+Install the app and open the start screen:
+
+- **Pairs listed** — the phone shows two physical cameras to the app (necessary, but not sufficient).
+- **"No usable camera pair"** — the phone does not expose the physical cameras: StereoCam will not work on it.
+- Then you need a real shot. If the app shows `Mode 1/2/3: …` and saves a file, simultaneous capture works. The mode is the resolution step (1 — maximum, 2 — up to 3264, 3 — up to 2048).
+- If it says the phone refuses to run both cameras at once, or that only one of the two images arrived, the pair does not work.
+
+### 7.5 Table of verified devices (filled from reports)
+
+Empty for now. If you tested StereoCam on your phone, send the report ("Share report" on the start screen) and a note on whether shooting worked and in which mode. The data are collected in `docs/devices.csv`.
+
+| Manufacturer | Model | Android | Pair | Mode | Result |
+|---|---|---|---|---|---|
+| — | — | — | — | — | no data yet |
+
+## 8. Limitations
+
+- Nothing that involves Android has been tested on a phone: camera discovery, the session with two physical streams, the preview and its rotation, saving through MediaStore.
+- Macro: the fixed lens baseline (1–2 cm) is too large for subjects closer than about 30 cm. A two-shot mode and a turntable mode are not implemented in this project yet.
+- The automatic alignment has been tested only on a synthetic pair. Real scenes (glare, repetitive textures, little detail) may produce a wrong fit. The alignment can be switched off in the settings.
+- Left/right is derived from the lens positions; on a phone without position data the order "A is left" is assumed and can be corrected with the button.
+- Memory: photos are limited to 3600 pixels on the long side; the app requests a large heap.
+- The translations have not been reviewed by native speakers.
+
+## 9. Known risks and next steps
+
+- **Stream combination.** It would be more robust to use two `YUV_420_888` streams of identical size and encode the JPEG ourselves; this combination is guaranteed on Android 9 for devices with physical cameras. The preview for that mode would have to come from one of the streams. This is the second step worth adding if the first does not work on your phone.
+- On Android 10+ the combination can be checked in advance with `CameraDevice.isSessionConfigurationSupported` and the result shown on the start screen.
+- On some phones the physical cameras are not listed in `getCameraIdList()` (hidden) but can be reached by their ID; the app queries them directly.
+
+## 10. Troubleshooting
+
+| Message | Meaning |
+|---|---|
+| "No usable camera pair" | The phone does not expose two physical cameras to apps |
+| "This phone refuses to stream both cameras at once" | The session could not be configured at any of the three resolutions |
+| "The phone delivered only one of the two images" | The second frame did not arrive within 9 seconds |
+| "The camera could not be opened" | The camera is in use by another app or unavailable |
+
+## 11. Project structure
+
+`ProbeActivity` (check and settings) · `DualCaptureActivity` (shooting) · `DualProbe` (pair discovery) · `Processor` (processing and writing) · `StereoAligner` (pure Java: estimation and correction) · `MpoWriter` · `VrJpgWriter`, `ExifGps` (from StereoPano) · `Prefs` · `Ui` · `tools/gen_strings.py` (strings in 7 languages). Desktop JVM test: `test/AlignTest.java`.
+
+## 12. Sources
+
+- [Multi-camera API — Android Developers](https://developer.android.com/media/camera/camera2/multi-camera)
+- [Multi-camera support — Android Open Source Project](https://source.android.com/docs/core/camera/multi-camera)
+- [Getting the Most from the New Multi-Camera API — Android Developers (Medium)](https://medium.com/androiddevelopers/getting-the-most-from-the-new-multi-camera-api-5155fb3d77d9)
+- [Android Camera Fragmentation: Why Apps See Different Lenses](https://www.myweirdprompts.com/episode/android-camera-fragmentation-physical-lenses/)
+- [Every Camera, Every Angle on Android — GameChanger Tech Blog](https://tech.gc.com/every-camera-every-angle-on-android/)
+- [Telephoto access via third party application — Samsung Developer Forums](https://forum.developer.samsung.com/t/telephoto-access-via-third-party-application/42137)
+- [Camera2 API Issue: Physical Camera fails via Logical Camera Flow … POCO X8 Pro](https://android-overflow.vercel.app/thread/79931897)

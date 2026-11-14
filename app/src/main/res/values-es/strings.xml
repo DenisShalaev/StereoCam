@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">StereoCam</string>
+    <string name="probe_title">Comprobación de cámara estéreo</string>
+    <string name="probe_intro">Busca pares de cámaras de este teléfono que puedan disparar a la vez.</string>
+    <string name="probe_no_pairs">No se encontró ningún par de cámaras utilizable. Este teléfono no ofrece a las apps dos cámaras para disparar a la vez. El informe de abajo muestra lo que se encontró.</string>
+    <string name="pair_fmt">Cámaras %1$s + %2$s · %3$s / %4$s mm (equiv. 35 mm) · base %5$s</string>
+    <string name="baseline_unknown">desconocida</string>
+    <string name="start">Empezar a disparar</string>
+    <string name="fmt_title">Guardar como</string>
+    <string name="fmt_mpo_t">MPO (archivo 3D)</string>
+    <string name="fmt_mpo_d">Formato estándar de foto estéreo para televisores y visores 3D</string>
+    <string name="fmt_sbs_t">JPEG lado a lado</string>
+    <string name="fmt_sbs_d">Izquierda y derecha una junto a otra, para gafas VR y visores Cardboard</string>
+    <string name="fmt_vr_t">.vr.jpg</string>
+    <string name="fmt_vr_d">Para el StereoPano Viewer en el ordenador</string>
+    <string name="fmt_ana_t">Anaglifo rojo-cian</string>
+    <string name="fmt_ana_d">Se ve con gafas rojo-cian</string>
+    <string name="fmt_pair_t">JPEG separados izquierdo y derecho</string>
+    <string name="align_t">Alineación automática</string>
+    <string name="align_d">Corrige la inclinación, el desfase vertical y la diferencia de escala entre las cámaras y recorta los bordes</string>
+    <string name="report_title">Informe</string>
+    <string name="share_report">Compartir informe</string>
+    <string name="permission_needed">Se necesita permiso de cámara.</string>
+    <string name="cap_hint">Mantenga firme, toque para disparar</string>
+    <string name="cap_mode">Modo %1$s: %2$s + %3$s</string>
+    <string name="cap_processing">Procesando…</string>
+    <string name="cap_saved">Guardado: %1$s</string>
+    <string name="cap_error">Error: %1$s</string>
+    <string name="cap_missing">El teléfono entregó solo una de las dos imágenes. Con este par no es posible disparar a la vez.</string>
+    <string name="cap_open_fail">No se pudo abrir la cámara: %1$s</string>
+    <string name="cap_cfg_fail">Este teléfono se niega a usar ambas cámaras a la vez (fallaron todos los niveles de resolución).</string>
+    <string name="swap_eyes">Cambiar I/D</string>
+    <string name="swapped_on">Ojos cambiados: izquierda y derecha intercambiadas</string>
+    <string name="swapped_off">Ojos en orden normal</string>
+</resources>
