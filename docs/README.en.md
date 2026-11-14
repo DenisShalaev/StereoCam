@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [Deutsch](README.de.md)
 
-> **Status: build 4. The app has never been run on a phone.** The Android code has not been compiled (the development environment has no Android SDK). Only the pair alignment and the MPO writer were tested, on a desktop JVM. Everything that involves the phone's cameras is untested.
+> **Status: build 15.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
 
 ## 1. What it is
 
@@ -12,7 +12,7 @@ The idea: the two lenses of a phone already form a stereo pair with a fixed base
 
 ## 2. How it works
 
-1. **Camera check (start screen).** The app enumerates the phone's cameras, finds "logical" cameras made of several physical ones and lists the pairs worth trying. For every physical camera the report shows: focal length (and 35 mm equivalent), sensor size, largest JPEG size, minimum focus distance, lens position relative to the main camera (this gives the baseline) and the sensor synchronisation type.
+1. **Camera check .** The app enumerates the phone's cameras, finds "logical" cameras made of several physical ones and lists the pairs worth trying. For every physical camera the report shows: focal length (and 35 mm equivalent), sensor size, largest JPEG size, minimum focus distance, lens position relative to the main camera (this gives the baseline) and the sensor synchronisation type.
 2. **Shooting.** The app opens the logical camera and creates one Camera2 session with three streams: a preview and two JPEG streams, each bound to its own physical camera. One request returns two pictures. If the phone does not accept full resolution, the app tries 3264 and then 2048 pixels on the long side.
 3. **Processing.**
    - Both frames are rotated according to sensor orientation and screen rotation.
@@ -24,7 +24,7 @@ The idea: the two lenses of a phone already form a stereo pair with a fixed base
 
 ### 2.1 Shift mode (one camera)
 
-Works on **any** phone, including those where two cameras cannot be used at once. Use the "Shoot with shift (one camera)" button on the start screen; if no camera pairs were found it becomes the main action.
+Works on **any** phone, including those where two cameras cannot be used at once. Use the "Shoot with shift (one camera)" button in settings (gear); if no camera pairs were found it becomes the main action.
 
 1. The "subject distance" slider (5 cm to about 16 m) shows **how far to move the phone**: about 1/30 of the distance (for example 3 m → 10 cm, 1 m → 3.3 cm).
 2. The **first shot** is the left eye. Afterwards exposure, white balance and (if the phone allows manual focus) focus are locked; optical and video stabilisation are switched off so they do not cancel the shift.
@@ -36,7 +36,7 @@ Honest limits: the phone's sensors cannot measure the shift accurately — it is
 
 ### 2.2 Fast lens switching (one after another)
 
-For phones that do not expose two cameras at once (Android 11+ required). Use the "Fast lens switching" button on the start screen; the app also switches to this mode by itself if the two-camera session cannot be set up.
+For phones that do not expose two cameras at once (Android 11+ required). Use the "Fast lens switching" button in settings (gear); the app also switches to this mode by itself if the two-camera session cannot be set up.
 
 1. **One session of the logical camera** is opened: a preview and one JPEG stream. This is a standard combination that Android guarantees.
 2. The first shot is taken with the first lens. Immediately afterwards the zoom is switched to the second lens, the same way the stock camera app does it. The zoom factors are computed from the equivalent focal lengths relative to the lens that is active at zoom 1.0.
@@ -65,9 +65,9 @@ MPO, side-by-side and automatic alignment are on by default. The MPO is first wr
 
 ## 5. Usage
 
-1. Start the app and grant camera access.
-2. See whether camera pairs were found. If not, read the report at the bottom of the screen.
-3. Choose a pair (the first one has the most similar focal lengths and is the easiest to work with), choose the formats and press "Start shooting".
+1. Start the app and grant camera access: the camera view opens right away.
+2. If needed open settings (gear): shooting mode, camera pair, file formats, camera report.
+3. Tap the screen to focus on a subject (the vertical slider sets manual focus).
 4. Hold the phone so that the lenses are **on one horizontal line**. The app picks the screen orientation from the lens layout.
 5. Press the shutter button. The result is saved and a thumbnail appears at the bottom left.
 6. If the depth looks inverted (near things look far), press "Swap L/R" and shoot again.
@@ -78,7 +78,7 @@ The "Gallery / motion view" button on the main screen lists photos from Pictures
 
 **How many degrees this really is.** The real baseline between a phone's two cameras is about 1–2.5 cm, so the angle between the views is ≈ arctan(baseline / distance): with a 2 cm baseline about 1° at 1 m, ≈2.3° at 0.5 m, ≈3.8° at 0.3 m. A 20–30° swing would need 5–10 times the baseline a phone has. Such views are **synthesised** from a depth map computed from the pair itself (~480 px); the larger the swing, the more visible the artifacts at object edges (areas no camera saw are filled with background). The practical limit is about ×4–×6 of the real baseline (≈10–15° for close subjects), hence the ×1…×6 choice.
 
-**Honestly:** the depth map is estimated from two images of different lenses and is unreliable on plain surfaces and highlights; rendering runs on the CPU, a few frames per second on a phone (only the algorithm was tested, on a PC; not run on a device). This is a viewer, not an export: no video/GIF is produced.
+**Honestly:** the depth map is estimated from two images of different lenses and is unreliable on plain surfaces and highlights; rendering runs on the CPU, a few frames per second on a phone (only the algorithm was tested, on a PC; not run on a device). The animation can be saved as GIF or MP4 (section 5.5). The "Depth strength" slider reduces or increases the pixel shift where the depth map is wrong.
 
 The depth map for Motion mode uses semi-global matching (SGM, census cost, ±1 px vertical tolerance); the disparity range is taken from the picture itself, and narrow strips with outlying depth are rejected and filled from their surroundings.
 
@@ -88,7 +88,7 @@ The app opens straight on the camera image (the mode is chosen automatically: tw
 
 ### 5.3. View modes (as in StereoPano)
 
-The top bar of round buttons matches StereoPano: gallery, mode, pause and motion settings (Motion mode only), gyro, half SBS (SBS mode only), lens correction (Cardboard only), reset zoom, settings. The mode button cycles: **Motion** → **2D** → **Cardboard** (two eyes side by side, landscape, gentle barrel correction) → **SBS glasses** (full or "half": each eye fills its half of the screen). Double-tap toggles 2D ↔ the last stereo mode; pinch zooms; a tap shows/hides the bar. The gyro pans the zoomed image as you tilt the phone (rough estimate: 60° ≈ one image width).
+The top bar of round buttons matches StereoPano: back, mode, pause and motion settings (Motion mode only), save animation, lenticular print, gyro, half SBS (SBS mode only), lens correction (Cardboard only), reset zoom, settings. The mode button cycles: **Motion** → **2D** → **Cardboard** (two eyes side by side, landscape, gentle barrel correction) → **SBS glasses** (full or "half": each eye fills its half of the screen). Double-tap toggles 2D ↔ the last stereo mode; pinch zooms; a tap shows/hides the bar. The gyro pans the zoomed image as you tilt the phone (rough estimate: 60° ≈ one image width).
 
 Honestly: lens correction is approximate and not calibrated for any particular headset; not verified on a device.
 
@@ -150,7 +150,7 @@ This information ages quickly: firmware updates change behaviour. Use the table 
 
 ### 7.4 How to test your own phone
 
-Install the app and open the start screen:
+Install the app and open settings (gear):
 
 - **Pairs listed** — the phone shows two physical cameras to the app (necessary, but not sufficient).
 - **"No usable camera pair"** — the phone does not expose the physical cameras: the two-camera mode is unavailable, use the shift mode (section 2.1).
@@ -159,15 +159,16 @@ Install the app and open the start screen:
 
 ### 7.5 Table of verified devices (filled from reports)
 
-Empty for now. If you tested StereoCam on your phone, send the report ("Share report" on the start screen) and a note on whether shooting worked and in which mode. The data are collected in `docs/devices.csv`.
+If you tested StereoCam on your phone, send the report ("Share report" in settings) and a note on whether shooting worked and in which mode. The data are collected in `docs/devices.csv`.
 
 | Manufacturer | Model | Android | Pair | Mode | Result |
 |---|---|---|---|---|---|
-| — | — | — | — | — | no data yet |
+| Google | Pixel 9 | — | — | — | app starts and works (per the author; pair and mode not recorded) |
 
 ## 8. Limitations
 
-- Nothing that involves Android has been tested on a phone: camera discovery, the session with two physical streams, the preview and its rotation, saving through MediaStore.
+- The author has tested the app only on a Google Pixel 9 (it starts and works); other phones may behave differently (two physical cameras at once, fast lens switching). Individual functions — MP4 export, lenticular print, manual focus — are not separately confirmed.
+- The depth map for Motion mode can be wrong on real scenes (highlights, plain surfaces); the "Depth strength" slider is there for that.
 - Macro: the fixed lens baseline (1–2 cm) is too large for subjects closer than about 30 cm. A shift mode exists (section 2.1), but for macro a shift of a few millimetres cannot be held by hand; a turntable mode is not implemented yet.
 - The automatic alignment has been tested only on a synthetic pair. Real scenes (glare, repetitive textures, little detail) may produce a wrong fit. The alignment can be switched off in the settings.
 - Left/right is derived from the lens positions; on a phone without position data the order "A is left" is assumed and can be corrected with the button.
@@ -192,7 +193,7 @@ Empty for now. If you tested StereoCam on your phone, send the report ("Share re
 
 ## 11. Project structure
 
-`ProbeActivity` (check and settings) · `DualCaptureActivity` (shooting) · `DualProbe` (pair discovery) · `Processor` (processing and writing) · `StereoAligner` (pure Java: estimation and correction) · `MpoWriter` · `VrJpgWriter`, `ExifGps` (from StereoPano) · `Prefs` · `Ui` · `tools/gen_strings.py` (strings in 7 languages). Desktop JVM test: `test/AlignTest.java`.
+`LaunchActivity` (start and mode selection) · `ProbeActivity` (settings and report) · `StereoGalleryActivity`, `WiggleActivity`, `StereoView`, `DisparityMap` (gallery and viewer) · `AnimExport`, `GifWriter`, `VideoWriter` (GIF/MP4) · `LentiActivity`, `LentiCore` (lenticular print) · `FocusControl` · `DualCaptureActivity` (shooting) · `DualProbe` (pair discovery) · `Processor` (processing and writing) · `StereoAligner` (pure Java: estimation and correction) · `MpoWriter` · `VrJpgWriter`, `ExifGps` (from StereoPano) · `Prefs` · `Ui` · `tools/gen_strings.py` (strings in 7 languages). Desktop JVM test: `test/AlignTest.java`.
 
 ## 12. Sources
 

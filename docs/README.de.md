@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [English](README.en.md)
 
-> **Stand: Build 4. Die App wurde noch nie auf einem Telefon ausgeführt.** Der Android-Code wurde nicht kompiliert (in der Entwicklungsumgebung gibt es kein Android SDK). Nur die Ausrichtung des Bildpaars und der MPO-Writer wurden auf einer Desktop-JVM getestet. Alles, was die Kameras des Telefons betrifft, ist ungetestet.
+> **Stand: Build 15.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
 
 ## 1. Was ist das?
 
@@ -24,7 +24,7 @@ Die Idee: Die beiden Objektive eines Telefons bilden bereits ein Stereopaar mit 
 
 ### 2.1 Verschiebungsmodus (eine Kamera)
 
-Funktioniert auf **jedem** Telefon, auch wenn zwei Kameras nicht gleichzeitig nutzbar sind. Dazu dient die Taste „Aufnahme mit Verschiebung (eine Kamera)" auf dem Startbildschirm; wurden keine Kamerapaare gefunden, wird sie zur Hauptaktion.
+Funktioniert auf **jedem** Telefon, auch wenn zwei Kameras nicht gleichzeitig nutzbar sind. Dazu dient die Taste „Aufnahme mit Verschiebung (eine Kamera)" in den Einstellungen (Zahnrad); wurden keine Kamerapaare gefunden, wird sie zur Hauptaktion.
 
 1. Der Regler „Motivabstand" (5 cm bis etwa 16 m) zeigt, **wie weit das Telefon verschoben werden soll**: etwa 1/30 des Abstands (z. B. 3 m → 10 cm, 1 m → 3,3 cm).
 2. Die **erste Aufnahme** ist das linke Auge. Danach werden Belichtung, Weißabgleich und (wenn das Telefon manuellen Fokus erlaubt) der Fokus gesperrt; optische und Videostabilisierung werden abgeschaltet, damit sie die Verschiebung nicht aufheben.
@@ -36,7 +36,7 @@ Ehrliche Grenzen: Die Sensoren des Telefons messen die Verschiebung nicht genau 
 
 ### 2.2 Schnelles Linsenumschalten (nacheinander)
 
-Für Telefone, die nicht zwei Kameras gleichzeitig freigeben (Android 11+ erforderlich). Dazu dient die Taste „Schnelles Linsenumschalten" auf dem Startbildschirm; außerdem wechselt die App von selbst in diesen Modus, wenn sich die Sitzung mit zwei Kameras nicht einrichten lässt.
+Für Telefone, die nicht zwei Kameras gleichzeitig freigeben (Android 11+ erforderlich). Dazu dient die Taste „Schnelles Linsenumschalten" in den Einstellungen (Zahnrad); außerdem wechselt die App von selbst in diesen Modus, wenn sich die Sitzung mit zwei Kameras nicht einrichten lässt.
 
 1. Es wird **eine Sitzung der logischen Kamera** geöffnet: Vorschau und ein JPEG-Stream. Das ist eine Standardkombination, die Android garantiert.
 2. Die erste Aufnahme entsteht mit dem ersten Objektiv. Sofort danach wird der Zoom auf das zweite Objektiv umgestellt — so wie es die Kamera-App des Herstellers tut. Die Zoomfaktoren werden aus den äquivalenten Brennweiten relativ zum bei Zoom 1,0 aktiven Objektiv berechnet.
@@ -65,9 +65,9 @@ Standardmäßig sind MPO, Side-by-Side und automatische Ausrichtung eingeschalte
 
 ## 5. Bedienung
 
-1. App starten und Kamerazugriff erlauben.
-2. Prüfen, ob Kamerapaare gefunden wurden. Wenn nicht, den Bericht unten auf dem Bildschirm lesen.
-3. Ein Paar wählen (das erste hat die ähnlichsten Brennweiten und ist am einfachsten zu verarbeiten), Formate wählen und „Aufnahme starten" drücken.
+1. App starten und Kamerazugriff erlauben: das Kamerabild öffnet sich sofort.
+2. Bei Bedarf die Einstellungen (Zahnrad) öffnen: Aufnahmemodus, Kamerapaar, Dateiformate, Kamerabericht.
+3. Durch Tippen auf den Bildschirm auf ein Motiv fokussieren (der senkrechte Regler stellt den Fokus von Hand ein).
 4. Das Telefon so halten, dass die Objektive **auf einer waagerechten Linie** liegen. Die App wählt die Bildschirmausrichtung nach der Anordnung der Linsen.
 5. Auslöser drücken. Das Ergebnis wird gespeichert, unten links erscheint eine Vorschau.
 6. Wirkt die Tiefe vertauscht (Nahes wirkt fern), „L/R tauschen" drücken und neu aufnehmen.
@@ -78,7 +78,7 @@ Das Vorschaubild unten links auf dem Kamerabild öffnet die Galerie mit Fotos au
 
 **Wie viele Grad das wirklich sind.** Die echte Basis zwischen den beiden Kameras eines Telefons beträgt etwa 1–2,5 cm; der Winkel zwischen den Ansichten ist ≈ arctan(Basis / Abstand): bei 2 cm Basis etwa 1° auf 1 m, ≈2,3° auf 0,5 m, ≈3,8° auf 0,3 m. Für 20–30° wäre das 5- bis 10-Fache der Basis nötig. Solche Ansichten werden aus einer Tiefenkarte **errechnet**, die aus dem Paar selbst entsteht (~480 px); je größer der Ausschlag, desto sichtbarer die Artefakte an Objektkanten (von keiner Kamera gesehene Stellen werden mit Hintergrund gefüllt). Praktische Grenze: etwa ×4–×6 der echten Basis (≈10–15° bei nahen Motiven), daher die Auswahl ×1…×6.
 
-**Ehrlich:** Die Tiefenkarte wird aus zwei Bildern verschiedener Objektive geschätzt und ist auf einfarbigen Flächen und Spiegelungen unsicher; die Berechnung läuft auf der CPU, auf einem Telefon wenige Bilder pro Sekunde (nur der Algorithmus wurde am PC getestet, nicht auf einem Gerät). Das ist eine Ansicht, kein Export: es entstehen kein Video und kein GIF.
+**Ehrlich:** Die Tiefenkarte wird aus zwei Bildern verschiedener Objektive geschätzt und ist auf einfarbigen Flächen und Spiegelungen unsicher; die Berechnung läuft auf der CPU, auf einem Telefon wenige Bilder pro Sekunde (nur der Algorithmus wurde am PC getestet, nicht auf einem Gerät). Die Animation lässt sich als GIF oder MP4 speichern (Abschnitt 5.5). Der Regler „Tiefenstärke“ verkleinert oder verstärkt die Pixelverschiebung, wo die Tiefenkarte falsch liegt.
 
 Die Tiefenkarte für den Modus „Bewegung“ nutzt Semi-Global-Matching (SGM, Census-Kosten, ±1 px vertikale Toleranz); der Disparitätsbereich wird aus dem Bild selbst bestimmt, schmale Streifen mit abweichender Tiefe werden verworfen und aus der Umgebung gefüllt.
 
@@ -88,7 +88,7 @@ Die App öffnet sich direkt mit dem Kamerabild (der Modus wird automatisch gewä
 
 ### 5.3. Ansichtsmodi (wie in StereoPano)
 
-Die obere Leiste runder Knöpfe entspricht StereoPano: Galerie, Modus, Pause und Bewegungseinstellungen (nur im Modus „Bewegung“), Gyro, Halb-SBS (nur im SBS-Modus), Linsenkorrektur (nur Cardboard), Zoom zurücksetzen, Einstellungen. Der Modusknopf schaltet der Reihe nach: **Bewegung** → **2D** → **Cardboard** (zwei Augen nebeneinander, Querformat, sanfte Tonnenkorrektur) → **SBS-Brille** (voll oder „halb“: jedes Auge füllt seine Bildschirmhälfte). Doppeltippen wechselt 2D ↔ letzter Stereomodus; Pinch zoomt; Tippen blendet die Leiste ein/aus. Der Gyro verschiebt das vergrößerte Bild beim Kippen des Telefons (grobe Schätzung: 60° ≈ eine Bildbreite).
+Die obere Leiste runder Knöpfe entspricht StereoPano: Zurück, Modus, Pause und Bewegungseinstellungen (nur im Modus „Bewegung“), Animation speichern, Rasterdruck, Gyro, Halb-SBS (nur im SBS-Modus), Linsenkorrektur (nur Cardboard), Zoom zurücksetzen, Einstellungen. Der Modusknopf schaltet der Reihe nach: **Bewegung** → **2D** → **Cardboard** (zwei Augen nebeneinander, Querformat, sanfte Tonnenkorrektur) → **SBS-Brille** (voll oder „halb“: jedes Auge füllt seine Bildschirmhälfte). Doppeltippen wechselt 2D ↔ letzter Stereomodus; Pinch zoomt; Tippen blendet die Leiste ein/aus. Der Gyro verschiebt das vergrößerte Bild beim Kippen des Telefons (grobe Schätzung: 60° ≈ eine Bildbreite).
 
 Ehrlich: Die Linsenkorrektur ist eine Näherung und nicht für eine bestimmte Brille kalibriert; nicht auf einem Gerät geprüft.
 
@@ -150,7 +150,7 @@ Diese Angaben veralten schnell: Firmware-Updates ändern das Verhalten. Verwende
 
 ### 7.4 So prüfen Sie Ihr Telefon
 
-App installieren und den Startbildschirm öffnen:
+App installieren und die Einstellungen (Zahnrad) öffnen:
 
 - **Paare aufgelistet** — das Telefon zeigt der App zwei physische Kameras (notwendig, aber nicht hinreichend).
 - **„Kein nutzbares Kamerapaar"** — das Telefon gibt die physischen Kameras nicht frei: der Zwei-Kamera-Modus ist nicht verfügbar, nutzen Sie den Verschiebungsmodus (Abschnitt 2.1).
@@ -159,15 +159,16 @@ App installieren und den Startbildschirm öffnen:
 
 ### 7.5 Tabelle geprüfter Geräte (wird aus Berichten gefüllt)
 
-Vorerst leer. Haben Sie StereoCam auf Ihrem Telefon getestet, senden Sie den Bericht („Bericht teilen" auf dem Startbildschirm) und eine Notiz, ob die Aufnahme funktionierte und in welchem Modus. Die Daten werden in `docs/devices.csv` gesammelt.
+Vorerst leer. Haben Sie StereoCam auf Ihrem Telefon getestet, senden Sie den Bericht („Bericht teilen“ in den Einstellungen) und eine Notiz, ob die Aufnahme funktionierte und in welchem Modus. Die Daten werden in `docs/devices.csv` gesammelt.
 
 | Hersteller | Modell | Android | Paar | Modus | Ergebnis |
 |---|---|---|---|---|---|
-| — | — | — | — | — | noch keine Daten |
+| Google | Pixel 9 | — | — | — | App startet und funktioniert (laut Autor; Paar und Modus nicht erfasst) |
 
 ## 8. Einschränkungen
 
-- Nichts, was Android betrifft, wurde auf einem Telefon getestet: Kamerasuche, Sitzung mit zwei physischen Streams, Vorschau und deren Drehung, Speichern über MediaStore.
+- Der Autor hat die App nur auf einem Google Pixel 9 getestet (sie startet und funktioniert); andere Telefone können sich anders verhalten (zwei physische Kameras gleichzeitig, schneller Linsenwechsel). Einzelne Funktionen — MP4-Export, Rasterdruck, manueller Fokus — sind nicht gesondert bestätigt.
+- Die Tiefenkarte für den Modus „Bewegung“ kann bei echten Motiven falsch liegen (Spiegelungen, einfarbige Flächen); dafür gibt es den Regler „Tiefenstärke“.
 - Makro: Die feste Linsenbasis (1–2 cm) ist für Motive näher als etwa 30 cm zu groß. Ein Verschiebungsmodus existiert (Abschnitt 2.1), aber für Makro lässt sich eine Verschiebung von wenigen Millimetern von Hand nicht halten; ein Drehtellermodus ist noch nicht umgesetzt.
 - Die automatische Ausrichtung wurde nur an einem synthetischen Paar getestet. Reale Szenen (Spiegelungen, sich wiederholende Texturen, wenig Details) können zu einer falschen Anpassung führen. Die Ausrichtung lässt sich in den Einstellungen abschalten.
 - Links/rechts wird aus den Linsenpositionen bestimmt; bei einem Telefon ohne Positionsdaten wird die Reihenfolge „A ist links" angenommen und lässt sich per Taste korrigieren.
@@ -192,7 +193,7 @@ Vorerst leer. Haben Sie StereoCam auf Ihrem Telefon getestet, senden Sie den Ber
 
 ## 11. Projektstruktur
 
-`ProbeActivity` (Check und Einstellungen) · `DualCaptureActivity` (Aufnahme) · `DualProbe` (Paarsuche) · `Processor` (Verarbeitung und Schreiben) · `StereoAligner` (reines Java: Schätzung und Korrektur) · `MpoWriter` · `VrJpgWriter`, `ExifGps` (aus StereoPano) · `Prefs` · `Ui` · `tools/gen_strings.py` (Strings in 7 Sprachen). Desktop-JVM-Test: `test/AlignTest.java`.
+`LaunchActivity` (Start und Moduswahl) · `ProbeActivity` (Einstellungen und Bericht) · `StereoGalleryActivity`, `WiggleActivity`, `StereoView`, `DisparityMap` (Galerie und Ansicht) · `AnimExport`, `GifWriter`, `VideoWriter` (GIF/MP4) · `LentiActivity`, `LentiCore` (Rasterdruck) · `FocusControl` · `DualCaptureActivity` (Aufnahme) · `DualProbe` (Paarsuche) · `Processor` (Verarbeitung und Schreiben) · `StereoAligner` (reines Java: Schätzung und Korrektur) · `MpoWriter` · `VrJpgWriter`, `ExifGps` (aus StereoPano) · `Prefs` · `Ui` · `tools/gen_strings.py` (Strings in 7 Sprachen). Desktop-JVM-Test: `test/AlignTest.java`.
 
 ## 12. Quellen
 
