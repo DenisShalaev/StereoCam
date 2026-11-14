@@ -41,7 +41,11 @@ public class StereoGalleryActivity extends Activity {
         page.setOnApplyWindowInsetsListener((v, in) -> { v.setPadding(in.getSystemWindowInsetLeft(), in.getSystemWindowInsetTop(), in.getSystemWindowInsetRight(), in.getSystemWindowInsetBottom()); return in; });
         int p = Ui.dp(this, 16);
         LinearLayout head = new LinearLayout(this); head.setOrientation(LinearLayout.VERTICAL); head.setPadding(p, p, p, Ui.dp(this, 8));
-        head.addView(Ui.text(this, getString(R.string.gal_title), 22, Ui.TEXT));
+        LinearLayout top = new LinearLayout(this); top.setOrientation(LinearLayout.HORIZONTAL); top.setGravity(Gravity.CENTER_VERTICAL);
+        ImageView back = new ImageView(this); back.setImageResource(R.drawable.ic_back); int bp = Ui.dp(this, 10); back.setPadding(bp, bp, bp, bp);
+        back.setBackground(Ui.round(this, 22, Ui.CARD, Ui.EDGE)); back.setContentDescription(getString(R.string.back)); back.setOnClickListener(v -> onBackPressed());
+        LinearLayout.LayoutParams bl = new LinearLayout.LayoutParams(Ui.dp(this, 44), Ui.dp(this, 44)); bl.rightMargin = Ui.dp(this, 12); top.addView(back, bl);
+        top.addView(Ui.text(this, getString(R.string.gal_title), 22, Ui.TEXT)); head.addView(top);
         head.addView(Ui.text(this, getString(R.string.gal_intro), 13, Ui.GREY));
         head.addView(Ui.space(this, 8));
         Button open = Ui.pill(this, R.string.gal_open, false);
@@ -78,7 +82,12 @@ public class StereoGalleryActivity extends Activity {
         if (req == DEL) { endSelect(); fill(); }
     }
 
-    private void open(Uri u, String name) { startActivity(new Intent(this, WiggleActivity.class).setData(u).putExtra("name", name)); }
+    private void open(Uri u, String name) {
+        ArrayList<String> us = new ArrayList<>(), ns = new ArrayList<>(); int idx = 0;
+        for (StereoItems.Item it : items) { if (it.uri.equals(u)) idx = us.size(); us.add(it.uri.toString()); ns.add(it.name); }
+        if (us.isEmpty() || !us.contains(u.toString())) { us.clear(); ns.clear(); us.add(u.toString()); ns.add(name); idx = 0; }
+        startActivity(new Intent(this, WiggleActivity.class).putStringArrayListExtra("uris", us).putStringArrayListExtra("names", ns).putExtra("index", idx));
+    }
 
     // ------------------------------------------------------------------ Liste
 

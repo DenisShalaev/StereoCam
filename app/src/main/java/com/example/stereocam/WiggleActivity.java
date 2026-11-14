@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -52,6 +53,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
     private long t0; private double pausedAt;
     private SensorManager sm; private final float[] rm = new float[9], ori = new float[3]; private float baseYaw = Float.NaN, basePitch;
     private float lx, ly;
+    private final List<Uri> uris = new ArrayList<>(); private final List<String> names = new ArrayList<>(); private int index; private int gen;
     private final List<TextView> ampChips = new ArrayList<>(), perChips = new ArrayList<>(), shapeChips = new ArrayList<>();
 
     @Override protected void onCreate(Bundle b) {
@@ -62,6 +64,12 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         mode = Prefs.getInt(this, "view_mode", StereoView.MOTION); lastStereo = Prefs.getInt(this, "view_last", StereoView.CARDBOARD);
         half = Prefs.get(this, "view_half"); lens = !Prefs.str(this, "view_lens_off").equals("1"); gyro = false;
 
+        Intent in = getIntent();
+        ArrayList<String> us = in.getStringArrayListExtra("uris"), ns = in.getStringArrayListExtra("names");
+        if (us != null && !us.isEmpty()) { for (String x : us) uris.add(Uri.parse(x)); if (ns != null) names.addAll(ns); index = Math.max(0, Math.min(uris.size() - 1, in.getIntExtra("index", 0))); }
+        else if (in.getData() != null) { uris.add(in.getData()); names.add(in.getStringExtra("name")); }
+        while (names.size() < uris.size()) names.add("");
+
         FrameLayout root = new FrameLayout(this); root.setBackgroundColor(0xFF000000);
         view = new StereoView(this); root.addView(view, new FrameLayout.LayoutParams(-1, -1));
         status = Ui.text(this, getString(R.string.wig_loading), 14, Ui.GREY); status.setGravity(Gravity.CENTER);
@@ -69,6 +77,12 @@ public class WiggleActivity extends Activity implements SensorEventListener {
 
         final GestureDetector gd = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override public boolean onSingleTapConfirmed(MotionEvent e) { boolean on = bar.getVisibility() == View.VISIBLE; bar.setVisibility(on ? View.GONE : View.VISIBLE); if (on) panel.setVisibility(View.GONE); return true; }
+            @Override public boolean onFling(MotionEvent a, MotionEvent b2, float vx, float vy) {
+                if (a == null || b2 == null || view.getZoom() > 1.02f) return false;
+                float dy = b2.getY() - a.getY(), dx = b2.getX() - a.getX();
+                if (Math.abs(dy) > Ui.dp(WiggleActivity.this, 80) && Math.abs(dy) > 1.5f * Math.abs(dx)) { step(dy < 0 ? 1 : -1); return true; }
+                return false;
+            }
             @Override public boolean onDoubleTap(MotionEvent e) { setMode(mode == StereoView.FLAT ? lastStereo : StereoView.FLAT); return true; }
         });
         final ScaleGestureDetector sd = new ScaleGestureDetector(this, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
@@ -83,7 +97,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         });
 
         bar = new LinearLayout(this); bar.setOrientation(LinearLayout.HORIZONTAL); bar.setGravity(Gravity.CENTER_HORIZONTAL); bar.setPadding(Ui.dp(this, 8), Ui.dp(this, 8), Ui.dp(this, 8), Ui.dp(this, 8));
-        bar.addView(btn(R.drawable.ic_gallery, R.string.gal_title, v -> finish()));
+        bar.addView(btn(R.drawable.ic_back, R.string.back, v -> finish()));
         modeBtn = btn(MODE_ICON[mode], R.string.cd_mode, v -> setMode(mode == StereoView.SBS ? StereoView.MOTION : mode + 1)); bar.addView(modeBtn);
         playBtn = btn(R.drawable.ic_pause, R.string.cd_pause, v -> toggle()); bar.addView(playBtn);
         tuneBtn = btn(R.drawable.ic_tune, R.string.cd_tune, v -> panel.setVisibility(panel.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE)); bar.addView(tuneBtn);
@@ -102,9 +116,24 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         FrameLayout.LayoutParams pl = new FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM); pl.setMargins(Ui.dp(this, 12), 0, Ui.dp(this, 12), Ui.dp(this, 12));
         root.addView(panel, pl);
         setContentView(root);
-        bar.setOnApplyWindowInsetsListener((v, in) -> { v.setPadding(in.getSystemWindowInsetLeft() + Ui.dp(this, 8), in.getSystemWindowInsetTop() + Ui.dp(this, 8), in.getSystemWindowInsetRight() + Ui.dp(this, 8), Ui.dp(this, 8)); return in; });
+        bar.setOnApplyWindowInsetsListener((v, insets) -> { v.setPadding(insets.getSystemWindowInsetLeft() + Ui.dp(this, 8), insets.getSystemWindowInsetTop() + Ui.dp(this, 8), insets.getSystemWindowInsetRight() + Ui.dp(this, 8), Ui.dp(this, 8)); return insets; });
         view.setHalf(half); view.setLens(lens); applyMode(false);
         load();
+    }
+
+    /** Naechste (+1) oder vorherige (-1) Datei der Galerie. */
+    private void step(int d) {
+        int n = index + d; if (n < 0 || n >= uris.size()) { Toast.makeText(this, d > 0 ? R.string.nav_last : R.string.nav_first, Toast.LENGTH_SHORT).show(); return; }
+        index = n; gen++; scene = null; busy = false; view.reset(); view.setSingle(null); view.setPair(null, null);
+        status.setText(R.string.wig_loading); status.setVisibility(View.VISIBLE);
+        Toast.makeText(this, (index + 1) + "/" + uris.size() + "  " + names.get(index), Toast.LENGTH_SHORT).show();
+        load();
+    }
+
+    @Override public boolean onKeyDown(int code, KeyEvent e) {
+        if (code == KeyEvent.KEYCODE_VOLUME_DOWN) { step(1); return true; }
+        if (code == KeyEvent.KEYCODE_VOLUME_UP) { step(-1); return true; }
+        return super.onKeyDown(code, e);
     }
 
     private ImageView btn(int icon, int desc, View.OnClickListener l) {
@@ -162,23 +191,27 @@ public class WiggleActivity extends Activity implements SensorEventListener {
     private void toggle() { playing = !playing; if (playing) { t0 = now() - (long) (pausedAt * 1000); tick(); } else pausedAt = (now() - t0) / 1000.0; refresh(); }
 
     private void load() {
-        final Uri u = getIntent().getData(); final String name = getIntent().getStringExtra("name");
+        if (uris.isEmpty()) { status.setText(R.string.wig_not_stereo); return; }
+        final Uri u = uris.get(index); final String name = names.get(index); final int myGen = gen;
         worker.execute(() -> {
             String err = null;
             try {
                 byte[] data = StereoFile.readAll(this, u);
                 StereoFile.Pair p = StereoFile.load(data, name, 2048);
+                if (myGen != gen) return;
                 if (p == null) err = getString(R.string.wig_not_stereo);
                 else {
                     left = p.left; right = p.right;
                     int w = left.getWidth(), h = left.getHeight(); int[] l = new int[w * h], r = new int[w * h];
                     left.getPixels(l, 0, w, 0, 0, w, h); right.getPixels(r, 0, w, 0, 0, w, h);
-                    scene = WiggleRenderer.build(l, r, w, h, 600);
-                    buf = new int[scene.w * scene.h]; frame = Bitmap.createBitmap(scene.w, scene.h, Bitmap.Config.ARGB_8888);
+                    WiggleRenderer.Scene sc = WiggleRenderer.build(l, r, w, h, 600);
+                    if (myGen != gen) return;
+                    buf = new int[sc.w * sc.h]; frame = Bitmap.createBitmap(sc.w, sc.h, Bitmap.Config.ARGB_8888); scene = sc;
                 }
             } catch (Throwable e) { err = getString(R.string.cap_error, String.valueOf(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName())); }
             final String fe = err;
             ui.post(() -> {
+                if (myGen != gen) return;
                 if (fe != null) { status.setText(fe); return; }
                 status.setVisibility(View.GONE); view.setPair(left, right); view.setSingle(frame); t0 = now(); if (mode == StereoView.MOTION) tick();
             });

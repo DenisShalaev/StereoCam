@@ -92,6 +92,8 @@ Die obere Leiste runder Knöpfe entspricht StereoPano: Galerie, Modus, Pause und
 
 Ehrlich: Die Linsenkorrektur ist eine Näherung und nicht für eine bestimmte Brille kalibriert; nicht auf einem Gerät geprüft.
 
+In der Ansicht wechselt man zur nächsten / vorherigen Datei der Galerie per Wischen nach oben / unten (ohne Zoom) oder mit den Lautstärketasten (leiser = nächste, lauter = vorherige). Der Zurück-Pfeil oben links führt zur Galerie.
+
 ## 6. Tipps für gutes Stereo
 
 - Die Basis ist fest; wählen Sie die Entfernung entsprechend: Ein gutes Stereopaar hat das Motiv nicht näher als etwa das 30-Fache der Basis.

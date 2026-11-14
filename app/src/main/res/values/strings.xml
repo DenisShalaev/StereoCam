@@ -53,7 +53,7 @@
     <string name="swapped_on">Eyes swapped: left and right are exchanged</string>
     <string name="swapped_off">Eyes in normal order</string>
     <string name="gal_title">Stereo photos</string>
-    <string name="gal_intro">Photos taken with StereoCam. Tap one to watch it as camera motion; press and hold to select several.</string>
+    <string name="gal_intro">Photos taken with StereoCam. Tap one to watch it as camera motion; press and hold to select several. In the viewer: swipe up/down or volume keys = next/previous.</string>
     <string name="gal_open">Open a file…</string>
     <string name="gal_empty">No stereo photos yet. Take one, or open a file.</string>
     <string name="gal_start">Gallery / motion view</string>
@@ -106,4 +106,6 @@
     <string name="half_off">Full SBS: original proportions</string>
     <string name="lens_on">Lens correction on</string>
     <string name="lens_off">Lens correction off</string>
+    <string name="nav_first">This is the first file.</string>
+    <string name="nav_last">This is the last file.</string>
 </resources>

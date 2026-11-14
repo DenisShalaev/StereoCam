@@ -106,4 +106,6 @@
     <string name="half_off">Полный SBS: исходные пропорции</string>
     <string name="lens_on">Коррекция линз включена</string>
     <string name="lens_off">Коррекция линз выключена</string>
+    <string name="nav_first">Это первый файл.</string>
+    <string name="nav_last">Это последний файл.</string>
 </resources>

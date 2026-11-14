@@ -92,6 +92,8 @@ The top bar of round buttons matches StereoPano: gallery, mode, pause and motion
 
 Honestly: lens correction is approximate and not calibrated for any particular headset; not verified on a device.
 
+In the viewer, next / previous file of the gallery: swipe up / down (when not zoomed) or the volume keys (down = next, up = previous). The back arrow at the top left returns to the gallery.
+
 ## 6. Tips for good stereo
 
 - The baseline is fixed, so choose your distance accordingly: a good stereo pair has the subject no closer than about 30× the baseline.

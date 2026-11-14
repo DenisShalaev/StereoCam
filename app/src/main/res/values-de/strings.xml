@@ -106,4 +106,6 @@
     <string name="half_off">Voll-SBS: Originalproportionen</string>
     <string name="lens_on">Linsenkorrektur an</string>
     <string name="lens_off">Linsenkorrektur aus</string>
+    <string name="nav_first">Das ist die erste Datei.</string>
+    <string name="nav_last">Das ist die letzte Datei.</string>
 </resources>

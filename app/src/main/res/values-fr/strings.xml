@@ -106,4 +106,6 @@
     <string name="half_off">SBS complet : proportions d’origine</string>
     <string name="lens_on">Correction des lentilles activée</string>
     <string name="lens_off">Correction des lentilles désactivée</string>
+    <string name="nav_first">C’est le premier fichier.</string>
+    <string name="nav_last">C’est le dernier fichier.</string>
 </resources>

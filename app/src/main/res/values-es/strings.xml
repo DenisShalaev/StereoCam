@@ -106,4 +106,6 @@
     <string name="half_off">SBS completo: proporciones originales</string>
     <string name="lens_on">Corrección de lentes activada</string>
     <string name="lens_off">Corrección de lentes desactivada</string>
+    <string name="nav_first">Este es el primer archivo.</string>
+    <string name="nav_last">Este es el último archivo.</string>
 </resources>
