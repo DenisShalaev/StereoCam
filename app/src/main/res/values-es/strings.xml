@@ -52,4 +52,20 @@
     <string name="swap_eyes">Cambiar I/D</string>
     <string name="swapped_on">Ojos cambiados: izquierda y derecha intercambiadas</string>
     <string name="swapped_off">Ojos en orden normal</string>
+    <string name="gal_title">Fotos estéreo</string>
+    <string name="gal_intro">Fotos hechas con StereoCam. Toque una para verla como movimiento de cámara en la pantalla plana.</string>
+    <string name="gal_open">Abrir un archivo…</string>
+    <string name="gal_empty">Aún no hay fotos estéreo. Haga una o abra un archivo.</string>
+    <string name="gal_start">Galería / vista en movimiento</string>
+    <string name="wig_loading">Calculando la profundidad…</string>
+    <string name="wig_not_stereo">Este archivo no es un par estéreo (necesita MPO, .vr.jpg o lado a lado).</string>
+    <string name="wig_amp">Amplitud (múltiplos de la distancia real entre cámaras)</string>
+    <string name="wig_speed">Velocidad</string>
+    <string name="wig_fast">Rápido</string>
+    <string name="wig_mid">Medio</string>
+    <string name="wig_slow">Lento</string>
+    <string name="wig_path">Trayectoria</string>
+    <string name="wig_line">Ida y vuelta</string>
+    <string name="wig_circle">Alrededor del sujeto</string>
+    <string name="wig_hint">Toque la imagen para pausar. La amplitud real es de pocos grados; los valores mayores se calculan con una estimación de profundidad y muestran artefactos en los bordes.</string>
 </resources>

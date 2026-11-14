@@ -51,6 +51,9 @@ public class ProbeActivity extends Activity {
         root.addView(swBtn, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         root.addView(Ui.text(this, getString(R.string.switch_intro), 12, Ui.GREY));
         root.addView(Ui.space(this, 8));
+        Button galBtn = Ui.pill(this, R.string.gal_start, false); galBtn.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
+        root.addView(galBtn, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        root.addView(Ui.space(this, 8));
         root.addView(Ui.text(this, getString(R.string.shift_intro), 12, Ui.GREY));
         root.addView(Ui.space(this, 12));
 

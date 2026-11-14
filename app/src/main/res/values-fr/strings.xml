@@ -52,4 +52,20 @@
     <string name="swap_eyes">Inverser G/D</string>
     <string name="swapped_on">Yeux inversés : gauche et droite échangés</string>
     <string name="swapped_off">Yeux dans l’ordre normal</string>
+    <string name="gal_title">Photos stéréo</string>
+    <string name="gal_intro">Photos prises avec StereoCam. Touchez-en une pour la voir comme un mouvement de caméra sur l’écran plat.</string>
+    <string name="gal_open">Ouvrir un fichier…</string>
+    <string name="gal_empty">Pas encore de photos stéréo. Prenez-en une ou ouvrez un fichier.</string>
+    <string name="gal_start">Galerie / vue en mouvement</string>
+    <string name="wig_loading">Calcul de la profondeur…</string>
+    <string name="wig_not_stereo">Ce fichier n’est pas une paire stéréo (MPO, .vr.jpg ou côte à côte requis).</string>
+    <string name="wig_amp">Amplitude (multiples de l’écart réel des caméras)</string>
+    <string name="wig_speed">Vitesse</string>
+    <string name="wig_fast">Rapide</string>
+    <string name="wig_mid">Moyen</string>
+    <string name="wig_slow">Lent</string>
+    <string name="wig_path">Trajectoire</string>
+    <string name="wig_line">Aller-retour</string>
+    <string name="wig_circle">Autour du sujet</string>
+    <string name="wig_hint">Touchez l’image pour mettre en pause. L’amplitude réelle n’est que de quelques degrés ; les valeurs plus grandes sont calculées à partir d’une estimation de profondeur et montrent des artefacts sur les bords.</string>
 </resources>

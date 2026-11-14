@@ -72,6 +72,14 @@ Standardmäßig sind MPO, Side-by-Side und automatische Ausrichtung eingeschalte
 5. Auslöser drücken. Das Ergebnis wird gespeichert, unten links erscheint eine Vorschau.
 6. Wirkt die Tiefe vertauscht (Nahes wirkt fern), „L/R tauschen" drücken und neu aufnehmen.
 
+### 5.1. Galerie und Bewegungsansicht
+
+Die Schaltfläche „Galerie / Bewegungsansicht“ auf dem Hauptbildschirm listet Fotos aus Pictures/StereoCam und Download/StereoCam (MPO, .vr.jpg, SBS) oder über „Datei öffnen…“ beliebige Dateien. Das gewählte Paar wird als Kamerabewegung auf einem normalen Bildschirm gezeigt: vom linken zum rechten Auge und zurück, an den Enden sanft gebremst (Sinus). Bahnen: „Hin und her“ oder „Um das Motiv“ (mit senkrechtem Anteil, also Umkreisen). Der Ausschlag wird in Vielfachen der echten Basis eingestellt (×1…×6), das Tempo in drei Stufen; Antippen des Bildes pausiert.
+
+**Wie viele Grad das wirklich sind.** Die echte Basis zwischen den beiden Kameras eines Telefons beträgt etwa 1–2,5 cm; der Winkel zwischen den Ansichten ist ≈ arctan(Basis / Abstand): bei 2 cm Basis etwa 1° auf 1 m, ≈2,3° auf 0,5 m, ≈3,8° auf 0,3 m. Für 20–30° wäre das 5- bis 10-Fache der Basis nötig. Solche Ansichten werden aus einer Tiefenkarte **errechnet**, die aus dem Paar selbst entsteht (~480 px); je größer der Ausschlag, desto sichtbarer die Artefakte an Objektkanten (von keiner Kamera gesehene Stellen werden mit Hintergrund gefüllt). Praktische Grenze: etwa ×4–×6 der echten Basis (≈10–15° bei nahen Motiven), daher die Auswahl ×1…×6.
+
+**Ehrlich:** Die Tiefenkarte wird aus zwei Bildern verschiedener Objektive geschätzt und ist auf einfarbigen Flächen und Spiegelungen unsicher; die Berechnung läuft auf der CPU, auf einem Telefon wenige Bilder pro Sekunde (nur der Algorithmus wurde am PC getestet, nicht auf einem Gerät). Das ist eine Ansicht, kein Export: es entstehen kein Video und kein GIF.
+
 ## 6. Tipps für gutes Stereo
 
 - Die Basis ist fest; wählen Sie die Entfernung entsprechend: Ein gutes Stereopaar hat das Motiv nicht näher als etwa das 30-Fache der Basis.

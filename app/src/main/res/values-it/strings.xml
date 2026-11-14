@@ -52,4 +52,20 @@
     <string name="swap_eyes">Scambia S/D</string>
     <string name="swapped_on">Occhi scambiati: sinistro e destro invertiti</string>
     <string name="swapped_off">Occhi in ordine normale</string>
+    <string name="gal_title">Foto stereo</string>
+    <string name="gal_intro">Foto scattate con StereoCam. Tocca per vederle come movimento della camera sullo schermo piatto.</string>
+    <string name="gal_open">Apri un file…</string>
+    <string name="gal_empty">Ancora nessuna foto stereo. Scattane una o apri un file.</string>
+    <string name="gal_start">Galleria / vista in movimento</string>
+    <string name="wig_loading">Calcolo della profondità…</string>
+    <string name="wig_not_stereo">Questo file non è una coppia stereo (serve MPO, .vr.jpg o affiancato).</string>
+    <string name="wig_amp">Ampiezza (multipli della distanza reale delle fotocamere)</string>
+    <string name="wig_speed">Velocità</string>
+    <string name="wig_fast">Veloce</string>
+    <string name="wig_mid">Medio</string>
+    <string name="wig_slow">Lento</string>
+    <string name="wig_path">Traiettoria</string>
+    <string name="wig_line">Avanti e indietro</string>
+    <string name="wig_circle">Intorno al soggetto</string>
+    <string name="wig_hint">Tocca l’immagine per mettere in pausa. L’ampiezza reale è di pochi gradi; valori maggiori sono calcolati da una stima di profondità e mostrano artefatti sui bordi.</string>
 </resources>

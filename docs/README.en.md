@@ -72,6 +72,14 @@ MPO, side-by-side and automatic alignment are on by default. The MPO is first wr
 5. Press the shutter button. The result is saved and a thumbnail appears at the bottom left.
 6. If the depth looks inverted (near things look far), press "Swap L/R" and shoot again.
 
+### 5.1. Gallery and motion view
+
+The "Gallery / motion view" button on the main screen lists photos from Pictures/StereoCam and Download/StereoCam (MPO, .vr.jpg, SBS), or any file via "Open a file…". The chosen pair is shown as camera motion on an ordinary screen: from the left eye to the right and back, easing at the ends (sine). Paths: "Back and forth" or "Around the subject" (adds a vertical part, i.e. circling). Swing is set in multiples of the real baseline (×1…×6), speed has three steps, tapping the picture pauses.
+
+**How many degrees this really is.** The real baseline between a phone's two cameras is about 1–2.5 cm, so the angle between the views is ≈ arctan(baseline / distance): with a 2 cm baseline about 1° at 1 m, ≈2.3° at 0.5 m, ≈3.8° at 0.3 m. A 20–30° swing would need 5–10 times the baseline a phone has. Such views are **synthesised** from a depth map computed from the pair itself (~480 px); the larger the swing, the more visible the artifacts at object edges (areas no camera saw are filled with background). The practical limit is about ×4–×6 of the real baseline (≈10–15° for close subjects), hence the ×1…×6 choice.
+
+**Honestly:** the depth map is estimated from two images of different lenses and is unreliable on plain surfaces and highlights; rendering runs on the CPU, a few frames per second on a phone (only the algorithm was tested, on a PC; not run on a device). This is a viewer, not an export: no video/GIF is produced.
+
 ## 6. Tips for good stereo
 
 - The baseline is fixed, so choose your distance accordingly: a good stereo pair has the subject no closer than about 30× the baseline.

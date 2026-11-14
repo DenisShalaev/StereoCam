@@ -29,5 +29,10 @@
     
         <activity android:name=".LensSwitchActivity" android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout" />
+
+        <activity android:name=".StereoGalleryActivity" android:exported="false" />
+
+        <activity android:name=".WiggleActivity" android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout" />
     </application>
 </manifest>

@@ -52,4 +52,20 @@
     <string name="swap_eyes">Swap L/R</string>
     <string name="swapped_on">Eyes swapped: left and right are exchanged</string>
     <string name="swapped_off">Eyes in normal order</string>
+    <string name="gal_title">Stereo photos</string>
+    <string name="gal_intro">Photos taken with StereoCam. Tap one to watch it as camera motion on the flat screen.</string>
+    <string name="gal_open">Open a file…</string>
+    <string name="gal_empty">No stereo photos yet. Take one, or open a file.</string>
+    <string name="gal_start">Gallery / motion view</string>
+    <string name="wig_loading">Computing depth…</string>
+    <string name="wig_not_stereo">This file is not a stereo pair (needs MPO, .vr.jpg or side-by-side).</string>
+    <string name="wig_amp">Swing (multiples of the real camera distance)</string>
+    <string name="wig_speed">Speed</string>
+    <string name="wig_fast">Fast</string>
+    <string name="wig_mid">Medium</string>
+    <string name="wig_slow">Slow</string>
+    <string name="wig_path">Path</string>
+    <string name="wig_line">Back and forth</string>
+    <string name="wig_circle">Around the subject</string>
+    <string name="wig_hint">Tap the picture to pause. The real swing is only a few degrees; larger values are computed from a depth estimate and show artifacts at edges.</string>
 </resources>

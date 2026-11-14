@@ -52,4 +52,20 @@
     <string name="swap_eyes">L/R tauschen</string>
     <string name="swapped_on">Augen getauscht: links und rechts vertauscht</string>
     <string name="swapped_off">Augen in normaler Reihenfolge</string>
+    <string name="gal_title">Stereofotos</string>
+    <string name="gal_intro">Mit StereoCam aufgenommene Fotos. Antippen, um sie als Kamerabewegung auf dem flachen Bildschirm zu sehen.</string>
+    <string name="gal_open">Datei öffnen…</string>
+    <string name="gal_empty">Noch keine Stereofotos. Machen Sie eines oder öffnen Sie eine Datei.</string>
+    <string name="gal_start">Galerie / Bewegungsansicht</string>
+    <string name="wig_loading">Tiefe wird berechnet…</string>
+    <string name="wig_not_stereo">Diese Datei ist kein Stereopaar (benötigt MPO, .vr.jpg oder Side-by-Side).</string>
+    <string name="wig_amp">Ausschlag (Vielfache des echten Kameraabstands)</string>
+    <string name="wig_speed">Tempo</string>
+    <string name="wig_fast">Schnell</string>
+    <string name="wig_mid">Mittel</string>
+    <string name="wig_slow">Langsam</string>
+    <string name="wig_path">Bahn</string>
+    <string name="wig_line">Hin und her</string>
+    <string name="wig_circle">Um das Motiv</string>
+    <string name="wig_hint">Zum Anhalten das Bild antippen. Der echte Ausschlag beträgt nur wenige Grad; größere Werte werden aus einer Tiefenschätzung berechnet und zeigen Artefakte an Kanten.</string>
 </resources>

@@ -52,4 +52,20 @@
     <string name="swap_eyes">Поменять Л/П</string>
     <string name="swapped_on">Глаза поменяны: левый и правый кадры наоборот</string>
     <string name="swapped_off">Глаза в обычном порядке</string>
+    <string name="gal_title">Стереофото</string>
+    <string name="gal_intro">Снимки, сделанные в StereoCam. Нажмите, чтобы посмотреть движение камеры на плоском экране.</string>
+    <string name="gal_open">Открыть файл…</string>
+    <string name="gal_empty">Стереофото пока нет. Сделайте снимок или откройте файл.</string>
+    <string name="gal_start">Галерея / просмотр в движении</string>
+    <string name="wig_loading">Расчёт глубины…</string>
+    <string name="wig_not_stereo">Это не стереопара (нужен MPO, .vr.jpg или «рядом»).</string>
+    <string name="wig_amp">Размах (кратно реальному расстоянию между камерами)</string>
+    <string name="wig_speed">Скорость</string>
+    <string name="wig_fast">Быстро</string>
+    <string name="wig_mid">Средне</string>
+    <string name="wig_slow">Медленно</string>
+    <string name="wig_path">Траектория</string>
+    <string name="wig_line">Туда-обратно</string>
+    <string name="wig_circle">Вокруг объекта</string>
+    <string name="wig_hint">Нажмите на картинку, чтобы остановить. Реальный размах — всего несколько градусов; большие значения считаются по оценке глубины и дают артефакты на краях.</string>
 </resources>
