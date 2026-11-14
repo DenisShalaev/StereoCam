@@ -87,4 +87,23 @@
     <string name="gal_converted">Listo: %1$d convertidos. Los originales no cambian.</string>
     <string name="gal_conv_failed">Falló la conversión: %1$s</string>
     <string name="back">Atrás</string>
+    <string name="v_mode_motion">Movimiento</string>
+    <string name="v_mode_flat">2D (plano)</string>
+    <string name="v_mode_cardboard">Cardboard (dos ojos)</string>
+    <string name="v_mode_sbs">Gafas SBS</string>
+    <string name="v_mode_fmt">Modo: %1$s</string>
+    <string name="cd_mode">Modo de vista</string>
+    <string name="cd_pause">Reproducir / pausa</string>
+    <string name="cd_tune">Ajustes del movimiento</string>
+    <string name="cd_gyro">Giroscopio: mover la vista con el teléfono</string>
+    <string name="cd_half">Mitad lado a lado</string>
+    <string name="cd_lens">Corrección de la distorsión de las lentes</string>
+    <string name="cd_center">Restablecer zoom y posición</string>
+    <string name="gyro_on">Giroscopio activado (con zoom)</string>
+    <string name="gyro_off">Giroscopio desactivado</string>
+    <string name="gyro_none">Este teléfono no tiene sensor de rotación.</string>
+    <string name="half_on">Medio SBS: cada ojo llena su mitad de pantalla</string>
+    <string name="half_off">SBS completo: proporciones originales</string>
+    <string name="lens_on">Corrección de lentes activada</string>
+    <string name="lens_off">Corrección de lentes desactivada</string>
 </resources>

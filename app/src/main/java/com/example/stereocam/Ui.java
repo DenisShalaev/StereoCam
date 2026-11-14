@@ -67,6 +67,23 @@ final class Ui {
         }
     }
 
+    static final int ST_OFF = 0, ST_ON = 1, ST_NORMAL = 3;
+
+    /** Runder Symbol-Knopf (immer quadratisch), Beschreibung als Bedienungshilfe/Tooltip. */
+    static final class RoundBtn extends android.widget.ImageView {
+        RoundBtn(Context c) { super(c); }
+        @Override protected void onMeasure(int w, int h) { super.onMeasure(w, h); int s = Math.min(getMeasuredWidth(), getMeasuredHeight()); setMeasuredDimension(s, s); }
+    }
+    static android.widget.ImageView iconBtn(Context c, int icon, int desc) {
+        android.widget.ImageView v = new RoundBtn(c); v.setImageResource(icon); v.setScaleType(android.widget.ImageView.ScaleType.FIT_CENTER);
+        int p = dp(c, 10); v.setPadding(p, p, p, p); v.setContentDescription(c.getString(desc)); v.setTooltipText(c.getString(desc)); state(v, ST_NORMAL); return v;
+    }
+    static void state(android.widget.ImageView v, int st) {
+        GradientDrawable bg = new GradientDrawable(); bg.setShape(GradientDrawable.OVAL);
+        bg.setColor(st == ST_ON ? 0xE61E88E5 : 0x73000000); bg.setStroke(Math.max(1, dp(v.getContext(), 1)), st == ST_ON ? 0xFFFFFFFF : 0x66FFFFFF);
+        v.setBackground(bg); v.setImageAlpha(st == ST_OFF ? 150 : 255);
+    }
+
     /** Kleiner Textknopf (Chip) fuer Leisten. */
     static TextView chip(Context c, CharSequence s, boolean primary) {
         TextView t = text(c, s, 13, primary ? 0xFF0B1220 : TEXT); t.setGravity(Gravity.CENTER);

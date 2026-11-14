@@ -87,4 +87,23 @@
     <string name="gal_converted">Fertig: %1$d umgewandelt. Die Originale bleiben unverändert.</string>
     <string name="gal_conv_failed">Umwandlung fehlgeschlagen: %1$s</string>
     <string name="back">Zurück</string>
+    <string name="v_mode_motion">Bewegung</string>
+    <string name="v_mode_flat">2D (flach)</string>
+    <string name="v_mode_cardboard">Cardboard (zwei Augen)</string>
+    <string name="v_mode_sbs">SBS-Brille</string>
+    <string name="v_mode_fmt">Modus: %1$s</string>
+    <string name="cd_mode">Ansichtsmodus</string>
+    <string name="cd_pause">Start / Pause</string>
+    <string name="cd_tune">Bewegungseinstellungen</string>
+    <string name="cd_gyro">Gyro: Ansicht mit dem Telefon verschieben</string>
+    <string name="cd_half">Halbes Side-by-Side</string>
+    <string name="cd_lens">Linsenverzerrung korrigieren</string>
+    <string name="cd_center">Zoom und Position zurücksetzen</string>
+    <string name="gyro_on">Gyro an (mit Zoom nutzen)</string>
+    <string name="gyro_off">Gyro aus</string>
+    <string name="gyro_none">Dieses Telefon hat keinen Drehsensor.</string>
+    <string name="half_on">Halb-SBS: jedes Auge füllt seine Bildschirmhälfte</string>
+    <string name="half_off">Voll-SBS: Originalproportionen</string>
+    <string name="lens_on">Linsenkorrektur an</string>
+    <string name="lens_off">Linsenkorrektur aus</string>
 </resources>

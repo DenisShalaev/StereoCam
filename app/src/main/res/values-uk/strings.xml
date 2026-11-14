@@ -87,4 +87,23 @@
     <string name="gal_converted">Готово: сконвертовано %1$d. Оригінали не змінено.</string>
     <string name="gal_conv_failed">Не вдалося конвертувати: %1$s</string>
     <string name="back">Назад</string>
+    <string name="v_mode_motion">Рух</string>
+    <string name="v_mode_flat">2D (плоско)</string>
+    <string name="v_mode_cardboard">Cardboard (два ока)</string>
+    <string name="v_mode_sbs">SBS-окуляри</string>
+    <string name="v_mode_fmt">Режим: %1$s</string>
+    <string name="cd_mode">Режим перегляду</string>
+    <string name="cd_pause">Пуск / пауза</string>
+    <string name="cd_tune">Налаштування руху</string>
+    <string name="cd_gyro">Гіроскоп: рухати вигляд нахилом телефона</string>
+    <string name="cd_half">Половинний SBS</string>
+    <string name="cd_lens">Корекція спотворень лінз</string>
+    <string name="cd_center">Скинути масштаб і положення</string>
+    <string name="gyro_on">Гіроскоп увімкнено (разом із зумом)</string>
+    <string name="gyro_off">Гіроскоп вимкнено</string>
+    <string name="gyro_none">У цьому телефоні немає датчика повороту.</string>
+    <string name="half_on">Половинний SBS: кожне око займає свою половину екрана</string>
+    <string name="half_off">Повний SBS: вихідні пропорції</string>
+    <string name="lens_on">Корекцію лінз увімкнено</string>
+    <string name="lens_off">Корекцію лінз вимкнено</string>
 </resources>

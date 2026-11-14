@@ -84,6 +84,12 @@ The "Gallery / motion view" button on the main screen lists photos from Pictures
 
 The app opens straight on the camera image (the mode is chosen automatically: two cameras if the phone provides them, otherwise shift shooting). The gear at the top right opens settings: capture mode (auto / two cameras / fast switching / shift), camera pair, file formats, alignment and report. The thumbnail of the last photo at the bottom left opens the gallery. In the gallery: tap = motion view; press and hold = select several files (share, convert to SBS / anaglyph / separate L and R / MPO, delete). Conversion creates new files and leaves the originals unchanged; deletion is permanent (on Android 11+ the system may ask for confirmation).
 
+### 5.3. View modes (as in StereoPano)
+
+The top bar of round buttons matches StereoPano: gallery, mode, pause and motion settings (Motion mode only), gyro, half SBS (SBS mode only), lens correction (Cardboard only), reset zoom, settings. The mode button cycles: **Motion** → **2D** → **Cardboard** (two eyes side by side, landscape, gentle barrel correction) → **SBS glasses** (full or "half": each eye fills its half of the screen). Double-tap toggles 2D ↔ the last stereo mode; pinch zooms; a tap shows/hides the bar. The gyro pans the zoomed image as you tilt the phone (rough estimate: 60° ≈ one image width).
+
+Honestly: lens correction is approximate and not calibrated for any particular headset; not verified on a device.
+
 ## 6. Tips for good stereo
 
 - The baseline is fixed, so choose your distance accordingly: a good stereo pair has the subject no closer than about 30× the baseline.

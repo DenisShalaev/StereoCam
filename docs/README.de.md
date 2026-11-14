@@ -84,6 +84,12 @@ Das Vorschaubild unten links auf dem Kamerabild öffnet die Galerie mit Fotos au
 
 Die App öffnet sich direkt mit dem Kamerabild (der Modus wird automatisch gewählt: zwei Kameras, wenn das Telefon sie freigibt, sonst Aufnahme mit Verschiebung). Das Zahnrad oben rechts öffnet die Einstellungen: Aufnahmemodus (Auto / zwei Kameras / schnelles Umschalten / Verschiebung), Kamerapaar, Dateiformate, Ausrichtung und Bericht. Das Vorschaubild des letzten Fotos unten links öffnet die Galerie. In der Galerie: Antippen = Bewegungsansicht; langes Drücken = mehrere Dateien auswählen (teilen, in SBS / Anaglyphe / getrennte L und R / MPO umwandeln, löschen). Die Umwandlung erzeugt neue Dateien, die Originale bleiben unverändert; Löschen ist endgültig (ab Android 11 kann das System um Bestätigung bitten).
 
+### 5.3. Ansichtsmodi (wie in StereoPano)
+
+Die obere Leiste runder Knöpfe entspricht StereoPano: Galerie, Modus, Pause und Bewegungseinstellungen (nur im Modus „Bewegung“), Gyro, Halb-SBS (nur im SBS-Modus), Linsenkorrektur (nur Cardboard), Zoom zurücksetzen, Einstellungen. Der Modusknopf schaltet der Reihe nach: **Bewegung** → **2D** → **Cardboard** (zwei Augen nebeneinander, Querformat, sanfte Tonnenkorrektur) → **SBS-Brille** (voll oder „halb“: jedes Auge füllt seine Bildschirmhälfte). Doppeltippen wechselt 2D ↔ letzter Stereomodus; Pinch zoomt; Tippen blendet die Leiste ein/aus. Der Gyro verschiebt das vergrößerte Bild beim Kippen des Telefons (grobe Schätzung: 60° ≈ eine Bildbreite).
+
+Ehrlich: Die Linsenkorrektur ist eine Näherung und nicht für eine bestimmte Brille kalibriert; nicht auf einem Gerät geprüft.
+
 ## 6. Tipps für gutes Stereo
 
 - Die Basis ist fest; wählen Sie die Entfernung entsprechend: Ein gutes Stereopaar hat das Motiv nicht näher als etwa das 30-Fache der Basis.

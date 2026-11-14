@@ -87,4 +87,23 @@
     <string name="gal_converted">Done: %1$d converted. The originals are unchanged.</string>
     <string name="gal_conv_failed">Conversion failed: %1$s</string>
     <string name="back">Back</string>
+    <string name="v_mode_motion">Motion</string>
+    <string name="v_mode_flat">2D (flat)</string>
+    <string name="v_mode_cardboard">Cardboard (two eyes)</string>
+    <string name="v_mode_sbs">SBS glasses</string>
+    <string name="v_mode_fmt">Mode: %1$s</string>
+    <string name="cd_mode">View mode</string>
+    <string name="cd_pause">Play / pause</string>
+    <string name="cd_tune">Motion settings</string>
+    <string name="cd_gyro">Gyro: move the view with the phone</string>
+    <string name="cd_half">Half side-by-side</string>
+    <string name="cd_lens">Lens distortion correction</string>
+    <string name="cd_center">Reset zoom and position</string>
+    <string name="gyro_on">Gyro on (use with zoom)</string>
+    <string name="gyro_off">Gyro off</string>
+    <string name="gyro_none">No rotation sensor in this phone.</string>
+    <string name="half_on">Half SBS: each eye fills its half of the screen</string>
+    <string name="half_off">Full SBS: original proportions</string>
+    <string name="lens_on">Lens correction on</string>
+    <string name="lens_off">Lens correction off</string>
 </resources>

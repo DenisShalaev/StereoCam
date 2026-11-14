@@ -87,4 +87,23 @@
     <string name="gal_converted">Terminé : %1$d converti(s). Les originaux restent inchangés.</string>
     <string name="gal_conv_failed">Échec de la conversion : %1$s</string>
     <string name="back">Retour</string>
+    <string name="v_mode_motion">Mouvement</string>
+    <string name="v_mode_flat">2D (plat)</string>
+    <string name="v_mode_cardboard">Cardboard (deux yeux)</string>
+    <string name="v_mode_sbs">Lunettes SBS</string>
+    <string name="v_mode_fmt">Mode : %1$s</string>
+    <string name="cd_mode">Mode d’affichage</string>
+    <string name="cd_pause">Lecture / pause</string>
+    <string name="cd_tune">Réglages du mouvement</string>
+    <string name="cd_gyro">Gyro : déplacer la vue avec le téléphone</string>
+    <string name="cd_half">Demi côte à côte</string>
+    <string name="cd_lens">Correction de la distorsion des lentilles</string>
+    <string name="cd_center">Réinitialiser zoom et position</string>
+    <string name="gyro_on">Gyro activé (avec zoom)</string>
+    <string name="gyro_off">Gyro désactivé</string>
+    <string name="gyro_none">Ce téléphone n’a pas de capteur de rotation.</string>
+    <string name="half_on">Demi-SBS : chaque œil remplit sa moitié d’écran</string>
+    <string name="half_off">SBS complet : proportions d’origine</string>
+    <string name="lens_on">Correction des lentilles activée</string>
+    <string name="lens_off">Correction des lentilles désactivée</string>
 </resources>
