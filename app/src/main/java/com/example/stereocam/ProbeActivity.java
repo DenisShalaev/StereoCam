@@ -35,7 +35,11 @@ public class ProbeActivity extends Activity {
         setContentView(sv);
         sv.setOnApplyWindowInsetsListener((v, in) -> { v.setPadding(in.getSystemWindowInsetLeft(), in.getSystemWindowInsetTop(), in.getSystemWindowInsetRight(), in.getSystemWindowInsetBottom()); return in; });
 
-        root.addView(Ui.text(this, getString(R.string.set_title), 22, Ui.TEXT));
+        LinearLayout head = new LinearLayout(this); head.setOrientation(LinearLayout.HORIZONTAL); head.setGravity(Gravity.CENTER_VERTICAL);
+        android.widget.ImageView back = new android.widget.ImageView(this); back.setImageResource(R.drawable.ic_back); int bp = Ui.dp(this, 10); back.setPadding(bp, bp, bp, bp);
+        back.setBackground(Ui.round(this, 22, Ui.CARD, Ui.EDGE)); back.setContentDescription(getString(R.string.back)); back.setOnClickListener(v -> finish());
+        LinearLayout.LayoutParams bl = new LinearLayout.LayoutParams(Ui.dp(this, 44), Ui.dp(this, 44)); bl.rightMargin = Ui.dp(this, 12); head.addView(back, bl);
+        head.addView(Ui.text(this, getString(R.string.set_title), 22, Ui.TEXT)); root.addView(head); root.addView(Ui.space(this, 6));
         root.addView(Ui.text(this, getString(R.string.probe_intro), 13, Ui.GREY));
         root.addView(Ui.space(this, 12));
 

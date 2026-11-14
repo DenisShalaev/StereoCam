@@ -86,4 +86,5 @@
     <string name="gal_converting">Converting…</string>
     <string name="gal_converted">Done: %1$d converted. The originals are unchanged.</string>
     <string name="gal_conv_failed">Conversion failed: %1$s</string>
+    <string name="back">Back</string>
 </resources>

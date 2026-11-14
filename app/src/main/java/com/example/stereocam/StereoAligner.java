@@ -219,4 +219,40 @@ final class StereoAligner {
         for (int y = 0; y < oh; y++) System.arraycopy(rgb, (y + rect[1]) * W + rect[0], out, y * ow, ow);
         return out;
     }
+
+    /**
+     * Verfeinert den Bildausschnitt der weitwinkligeren Kamera: sucht den Anteil frac (um nominal herum, +-10 %), bei dem der mittige Ausschnitt
+     * des Weitwinkelbildes dem Bild der anderen Kamera am besten gleicht (NCC, mit kleiner Verschiebungssuche gegen Parallaxe).
+     * @return {frac, score, scoreNominal}
+     */
+    static double[] refineCrop(int[] wide, int ww, int wh, int[] narrow, int nw, int nh, double nominal) {
+        final int tw = 160, th = Math.max(16, (int) Math.round(160.0 * nh / nw));
+        float[] gn = gray(resample(narrow, nw, nh, 0, 0, nw, nh, tw, th), tw * th);
+        double[] best = {nominal, -2, -2};
+        double lo = nominal * 0.90, hi = Math.min(1.0, nominal * 1.10);
+        for (double step : new double[] {0.01, 0.0025}) {
+            double c0 = step == 0.01 ? lo : Math.max(lo, best[0] - 0.012), c1 = step == 0.01 ? hi : Math.min(hi, best[0] + 0.012);
+            for (double fr = c0; fr <= c1 + 1e-9; fr += nominal * step) {
+                double cw = ww * fr, ch = wh * fr; if (cw < 8 || ch < 8) continue;
+                float[] gw = gray(resample(wide, ww, wh, (ww - cw) / 2, (wh - ch) / 2, cw, ch, tw, th), tw * th);
+                double sc = bestShiftNcc(gw, gn, tw, th, 8, 3);
+                if (sc > best[1]) { best[0] = fr; best[1] = sc; }
+            }
+        }
+        float[] gw = gray(resample(wide, ww, wh, (ww - ww * nominal) / 2, (wh - wh * nominal) / 2, ww * nominal, wh * nominal, tw, th), tw * th);
+        best[2] = bestShiftNcc(gw, gn, tw, th, 8, 3);
+        return best;
+    }
+
+    private static double bestShiftNcc(float[] a, float[] b, int w, int h, int mx, int my) {
+        double best = -2;
+        for (int dy = -my; dy <= my; dy++) for (int dx = -mx; dx <= mx; dx++) {
+            int x0 = Math.max(0, dx) + 6, x1 = Math.min(w, w + dx) - 6, y0 = Math.max(0, dy) + 6, y1 = Math.min(h, h + dy) - 6; if (x1 - x0 < 16 || y1 - y0 < 16) continue;
+            double sa = 0, sb = 0, saa = 0, sbb = 0, sab = 0; int n = 0;
+            for (int y = y0; y < y1; y++) for (int x = x0; x < x1; x++) { double va = a[(y - dy) * w + (x - dx)], vb = b[y * w + x]; sa += va; sb += vb; saa += va * va; sbb += vb * vb; sab += va * vb; n++; }
+            double cov = sab - sa * sb / n, va = saa - sa * sa / n, vb = sbb - sb * sb / n; if (va < 1e-6 || vb < 1e-6) continue;
+            double r = cov / Math.sqrt(va * vb); if (r > best) best = r;
+        }
+        return best;
+    }
 }

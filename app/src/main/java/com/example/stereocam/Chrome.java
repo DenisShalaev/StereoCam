@@ -14,7 +14,7 @@ import android.widget.ImageView;
 
 import java.util.List;
 
-/** Gemeinsame Bedienelemente der Aufnahme-Bildschirme: Zahnrad (oben rechts) und Galerie-Vorschaubild (unten rechts). */
+/** Gemeinsame Bedienelemente der Aufnahme-Bildschirme: Zahnrad (oben rechts) und Galerie-Vorschaubild (unten links). */
 final class Chrome {
     private Chrome() {}
 
@@ -32,7 +32,7 @@ final class Chrome {
     static ImageView gallery(final Activity a, FrameLayout root) {
         ImageView t = new ImageView(a); t.setScaleType(ImageView.ScaleType.CENTER_CROP); t.setBackground(Ui.round(a, 12, Ui.CARD, Ui.EDGE));
         t.setClipToOutline(true); t.setContentDescription(a.getString(R.string.gal_title));
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(Ui.dp(a, 60), Ui.dp(a, 60), Gravity.BOTTOM | Gravity.END); lp.rightMargin = Ui.dp(a, 24); lp.bottomMargin = Ui.dp(a, 30);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(Ui.dp(a, 60), Ui.dp(a, 60), Gravity.BOTTOM | Gravity.START); lp.leftMargin = Ui.dp(a, 24); lp.bottomMargin = Ui.dp(a, 30);
         root.addView(t, lp); t.setOnClickListener(v -> a.startActivity(new Intent(a, StereoGalleryActivity.class)));
         return t;
     }

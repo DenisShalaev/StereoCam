@@ -74,7 +74,7 @@ Standardmäßig sind MPO, Side-by-Side und automatische Ausrichtung eingeschalte
 
 ### 5.1. Galerie und Bewegungsansicht
 
-Das Vorschaubild unten rechts auf dem Kamerabild öffnet die Galerie mit Fotos aus Pictures/StereoCam und Download/StereoCam (MPO, .vr.jpg, SBS) oder über „Datei öffnen…“ beliebige Dateien. Das gewählte Paar wird als Kamerabewegung auf einem normalen Bildschirm gezeigt: vom linken zum rechten Auge und zurück, an den Enden sanft gebremst (Sinus). Bahnen: „Hin und her“ oder „Um das Motiv“ (mit senkrechtem Anteil, also Umkreisen). Der Ausschlag wird in Vielfachen der echten Basis eingestellt (×1…×6), das Tempo in drei Stufen; Antippen des Bildes pausiert.
+Das Vorschaubild unten links auf dem Kamerabild öffnet die Galerie mit Fotos aus Pictures/StereoCam und Download/StereoCam (MPO, .vr.jpg, SBS) oder über „Datei öffnen…“ beliebige Dateien. Das gewählte Paar wird als Kamerabewegung auf einem normalen Bildschirm gezeigt: vom linken zum rechten Auge und zurück, an den Enden sanft gebremst (Sinus). Bahnen: „Hin und her“ oder „Um das Motiv“ (mit senkrechtem Anteil, also Umkreisen). Der Ausschlag wird in Vielfachen der echten Basis eingestellt (×1…×6), das Tempo in drei Stufen; Antippen des Bildes pausiert.
 
 **Wie viele Grad das wirklich sind.** Die echte Basis zwischen den beiden Kameras eines Telefons beträgt etwa 1–2,5 cm; der Winkel zwischen den Ansichten ist ≈ arctan(Basis / Abstand): bei 2 cm Basis etwa 1° auf 1 m, ≈2,3° auf 0,5 m, ≈3,8° auf 0,3 m. Für 20–30° wäre das 5- bis 10-Fache der Basis nötig. Solche Ansichten werden aus einer Tiefenkarte **errechnet**, die aus dem Paar selbst entsteht (~480 px); je größer der Ausschlag, desto sichtbarer die Artefakte an Objektkanten (von keiner Kamera gesehene Stellen werden mit Hintergrund gefüllt). Praktische Grenze: etwa ×4–×6 der echten Basis (≈10–15° bei nahen Motiven), daher die Auswahl ×1…×6.
 
@@ -82,7 +82,7 @@ Das Vorschaubild unten rechts auf dem Kamerabild öffnet die Galerie mit Fotos a
 
 ### 5.2. Start, Einstellungen und Galerie
 
-Die App öffnet sich direkt mit dem Kamerabild (der Modus wird automatisch gewählt: zwei Kameras, wenn das Telefon sie freigibt, sonst Aufnahme mit Verschiebung). Das Zahnrad oben rechts öffnet die Einstellungen: Aufnahmemodus (Auto / zwei Kameras / schnelles Umschalten / Verschiebung), Kamerapaar, Dateiformate, Ausrichtung und Bericht. Das Vorschaubild des letzten Fotos unten rechts öffnet die Galerie. In der Galerie: Antippen = Bewegungsansicht; langes Drücken = mehrere Dateien auswählen (teilen, in SBS / Anaglyphe / getrennte L und R / MPO umwandeln, löschen). Die Umwandlung erzeugt neue Dateien, die Originale bleiben unverändert; Löschen ist endgültig (ab Android 11 kann das System um Bestätigung bitten).
+Die App öffnet sich direkt mit dem Kamerabild (der Modus wird automatisch gewählt: zwei Kameras, wenn das Telefon sie freigibt, sonst Aufnahme mit Verschiebung). Das Zahnrad oben rechts öffnet die Einstellungen: Aufnahmemodus (Auto / zwei Kameras / schnelles Umschalten / Verschiebung), Kamerapaar, Dateiformate, Ausrichtung und Bericht. Das Vorschaubild des letzten Fotos unten links öffnet die Galerie. In der Galerie: Antippen = Bewegungsansicht; langes Drücken = mehrere Dateien auswählen (teilen, in SBS / Anaglyphe / getrennte L und R / MPO umwandeln, löschen). Die Umwandlung erzeugt neue Dateien, die Originale bleiben unverändert; Löschen ist endgültig (ab Android 11 kann das System um Bestätigung bitten).
 
 ## 6. Tipps für gutes Stereo
 

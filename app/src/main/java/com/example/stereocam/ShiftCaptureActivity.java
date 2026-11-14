@@ -108,17 +108,17 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
 
         reset = Ui.text(this, getString(R.string.shift_reset), 13, Ui.TEXT); reset.setBackground(Ui.round(this, 18, Ui.alpha(Ui.BG, 200), Ui.EDGE));
         reset.setPadding(Ui.dp(this, 14), Ui.dp(this, 8), Ui.dp(this, 14), Ui.dp(this, 8)); reset.setVisibility(View.GONE);
-        FrameLayout.LayoutParams rp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.START); rp.leftMargin = Ui.dp(this, 24); rp.bottomMargin = Ui.dp(this, 42);
+        FrameLayout.LayoutParams rp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.END); rp.rightMargin = Ui.dp(this, 24); rp.bottomMargin = Ui.dp(this, 42);
         root.addView(reset, rp); reset.setOnClickListener(v -> resetShots());
 
         TextView swap = Ui.text(this, getString(R.string.swap_eyes), 13, Ui.TEXT); swap.setBackground(Ui.round(this, 18, Ui.alpha(Ui.BG, 200), Ui.EDGE));
         swap.setPadding(Ui.dp(this, 14), Ui.dp(this, 8), Ui.dp(this, 14), Ui.dp(this, 8));
-        FrameLayout.LayoutParams wp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.START); wp.leftMargin = Ui.dp(this, 24); wp.bottomMargin = Ui.dp(this, 90);
+        FrameLayout.LayoutParams wp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.END); wp.rightMargin = Ui.dp(this, 24); wp.bottomMargin = Ui.dp(this, 90);
         root.addView(swap, wp);
         swap.setOnClickListener(v -> { Prefs.set(this, Prefs.SWAP, !Prefs.get(this, Prefs.SWAP)); updateDist(); updateStatus(); });
 
         thumb = new ImageView(this); thumb.setScaleType(ImageView.ScaleType.CENTER_CROP); thumb.setBackground(Ui.round(this, 12, Ui.CARD, Ui.EDGE)); thumb.setVisibility(View.VISIBLE);
-        FrameLayout.LayoutParams tp = new FrameLayout.LayoutParams(Ui.dp(this, 60), Ui.dp(this, 60), Gravity.BOTTOM | Gravity.END); tp.rightMargin = Ui.dp(this, 24); tp.bottomMargin = Ui.dp(this, 30);
+        FrameLayout.LayoutParams tp = new FrameLayout.LayoutParams(Ui.dp(this, 60), Ui.dp(this, 60), Gravity.BOTTOM | Gravity.START); tp.leftMargin = Ui.dp(this, 24); tp.bottomMargin = Ui.dp(this, 30);
         root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
         Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);

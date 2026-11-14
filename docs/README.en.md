@@ -16,7 +16,7 @@ The idea: the two lenses of a phone already form a stereo pair with a fixed base
 2. **Shooting.** The app opens the logical camera and creates one Camera2 session with three streams: a preview and two JPEG streams, each bound to its own physical camera. One request returns two pictures. If the phone does not accept full resolution, the app tries 3264 and then 2048 pixels on the long side.
 3. **Processing.**
    - Both frames are rotated according to sensor orientation and screen rotation.
-   - The field of view is matched: the wider camera's picture is cropped to its centre according to the ratio of the equivalent focal lengths.
+   - The field of view is matched: the wider camera's picture is cropped to its centre according to the ratio of the equivalent focal lengths; the ratio is then checked against the pictures themselves (±10 % search by image matching) and corrected if the lens data are inaccurate.
    - Block matching (normalised correlation) measures the residual errors; vertical offset, rotation and scale difference are fitted from them and the right image is corrected.
    - The zero-parallax plane is set to the median of the scene and the edges are cropped with a common frame.
    - Left and right are determined from the lens positions and the screen rotation. The "Swap L/R" button exchanges them by hand.
@@ -82,7 +82,7 @@ The "Gallery / motion view" button on the main screen lists photos from Pictures
 
 ### 5.2. Start, settings and gallery
 
-The app opens straight on the camera image (the mode is chosen automatically: two cameras if the phone provides them, otherwise shift shooting). The gear at the top right opens settings: capture mode (auto / two cameras / fast switching / shift), camera pair, file formats, alignment and report. The thumbnail of the last photo at the bottom right opens the gallery. In the gallery: tap = motion view; press and hold = select several files (share, convert to SBS / anaglyph / separate L and R / MPO, delete). Conversion creates new files and leaves the originals unchanged; deletion is permanent (on Android 11+ the system may ask for confirmation).
+The app opens straight on the camera image (the mode is chosen automatically: two cameras if the phone provides them, otherwise shift shooting). The gear at the top right opens settings: capture mode (auto / two cameras / fast switching / shift), camera pair, file formats, alignment and report. The thumbnail of the last photo at the bottom left opens the gallery. In the gallery: tap = motion view; press and hold = select several files (share, convert to SBS / anaglyph / separate L and R / MPO, delete). Conversion creates new files and leaves the originals unchanged; deletion is permanent (on Android 11+ the system may ask for confirmation).
 
 ## 6. Tips for good stereo
 

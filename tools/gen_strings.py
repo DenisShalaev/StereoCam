@@ -88,6 +88,7 @@ S = {
 'gal_converting': ['Converting…', 'Umwandlung…', 'Conversion…', 'Conversione…', 'Convirtiendo…', 'Конвертация…', 'Конвертація…'],
 'gal_converted': ['Done: %1$d converted. The originals are unchanged.', 'Fertig: %1$d umgewandelt. Die Originale bleiben unverändert.', 'Terminé : %1$d converti(s). Les originaux restent inchangés.', 'Fatto: %1$d convertiti. Gli originali restano invariati.', 'Listo: %1$d convertidos. Los originales no cambian.', 'Готово: сконвертировано %1$d. Оригиналы не изменены.', 'Готово: сконвертовано %1$d. Оригінали не змінено.'],
 'gal_conv_failed': ['Conversion failed: %1$s', 'Umwandlung fehlgeschlagen: %1$s', 'Échec de la conversion : %1$s', 'Conversione non riuscita: %1$s', 'Falló la conversión: %1$s', 'Не удалось конвертировать: %1$s', 'Не вдалося конвертувати: %1$s'],
+'back': ['Back', 'Zurück', 'Retour', 'Indietro', 'Atrás', 'Назад', 'Назад'],
 }
 LANGS = ['en','de','fr','it','es','ru','uk']; DIRS = {'en':'values'}
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'app', 'src', 'main', 'res')

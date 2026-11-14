@@ -50,6 +50,15 @@ final class Processor {
         // 1) Bildwinkel angleichen: die weitwinkligere Kamera wird mittig auf den Bildwinkel der anderen zugeschnitten
         double fa = in.equivA > 0 ? in.equivA : 1, fb = in.equivB > 0 ? in.equivB : 1;
         double cropA = fa < fb ? fa / fb : 1, cropB = fb < fa ? fb / fa : 1;           // Anteil des Bildes, der bleibt
+        StringBuilder note = new StringBuilder();
+        if (Math.abs(fa / fb - 1) > 0.03 && in.equivA > 0 && in.equivB > 0) {         // Brennweiten-Verhaeltnis aus den Bildern selbst nachpruefen
+            try {
+                boolean aWide = fa < fb; double nom = aWide ? cropA : cropB;
+                double[] r = aWide ? StereoAligner.refineCrop(pa, wa, ha, pb, wb, hb, nom) : StereoAligner.refineCrop(pb, wb, hb, pa, wa, ha, nom);
+                if (r[1] > r[2] + 0.02 && r[1] > 0.3) { if (aWide) cropA = r[0]; else cropB = r[0]; note.append(String.format(Locale.ROOT, "crop refined %.3f -> %.3f (ncc %.2f -> %.2f)\n", nom, r[0], r[2], r[1])); }
+                else note.append(String.format(Locale.ROOT, "crop nominal %.3f kept (ncc %.2f)\n", nom, r[2]));
+            } catch (Throwable e) { note.append("crop refine failed: ").append(e).append('\n'); }
+        }
         double aw = wa * cropA, ah = ha * cropA, bw = wb * cropB, bh = hb * cropB;
         // Seitenverhaeltnis angleichen (falls Sensoren verschieden)
         double ra = aw / ah, rb = bw / bh;
@@ -64,13 +73,14 @@ final class Processor {
         int[] lb = StereoAligner.resample(pb, wb, hb, (wb - bw) / 2, (hb - bh) / 2, bw, bh, tw, th); pb = null;
         int[] left = in.aIsLeft ? la : lb, right = in.aIsLeft ? lb : la;
 
+        out.align = note.toString();
         // 2) Restfehler schaetzen und rechtes Bild entzerren
         int W = tw, H = th;
         if (Prefs.get(ctx, Prefs.ALIGN)) {
             int ww = Math.min(640, W), wh = Math.max(8, Math.round((float) H * ww / W)); double k = (double) W / ww;
             int[] l2 = StereoAligner.resample(left, W, H, 0, 0, W, H, ww, wh), r2 = StereoAligner.resample(right, W, H, 0, 0, W, H, ww, wh);
             StereoAligner.Fit f = StereoAligner.estimate(StereoAligner.gray(l2, ww * wh), StereoAligner.gray(r2, ww * wh), ww, wh);
-            out.align = f.toString();
+            out.align = note + f.toString();
             if (f.ok) {
                 // Konvergenz: optional ueber Einstellung - 0 = Hauptmotiv (Median), sonst der naechste Punkt ("Fenster hinter den Bildrand")
                 int[] rect = StereoAligner.validRect(f, k, W, H);
