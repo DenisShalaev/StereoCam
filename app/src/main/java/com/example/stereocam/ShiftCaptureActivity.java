@@ -122,7 +122,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
         root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
         Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);
-        focus = new FocusControl(this, root, tv, this::refocus); compose = new ComposeOverlay(this, root, tv); compose.setBaselineMm(0);
+        focus = new FocusControl(this, root, tv, this::refocus); compose = new ComposeOverlay(this, root, tv); compose.setBaselineMm(0); compose.setInfoBottomDp(240);
         root.setOnApplyWindowInsetsListener((v, in) -> { v.setPadding(in.getSystemWindowInsetLeft(), in.getSystemWindowInsetTop(), in.getSystemWindowInsetRight(), in.getSystemWindowInsetBottom()); return in; });
         updateDist(); updateStatus();
     }

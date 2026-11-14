@@ -37,7 +37,7 @@ final class ComposeOverlay {
         grid = Prefs.getInt(a, "grid_mode", 0); level = Prefs.getInt(a, "level_on", 0) == 1;
         canvas = new Canvas0(a); root.addView(canvas, new FrameLayout.LayoutParams(-1, -1));
         info = Ui.text(a, "", 12, Ui.TEXT); info.setBackground(Ui.round(a, 14, Ui.alpha(Ui.BG, 170), Ui.EDGE)); info.setPadding(Ui.dp(a, 10), Ui.dp(a, 5), Ui.dp(a, 10), Ui.dp(a, 5)); info.setVisibility(View.GONE);
-        FrameLayout.LayoutParams ip = new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.CENTER_HORIZONTAL); ip.topMargin = Ui.dp(a, 14); root.addView(info, ip);
+        ipl = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL); ipl.bottomMargin = Ui.dp(a, 110); ipl.leftMargin = ipl.rightMargin = Ui.dp(a, 16); root.addView(info, ipl);
         final ImageView g = btn(root, R.drawable.ic_grid, R.string.cd_grid, 62), l = btn(root, R.drawable.ic_level, R.string.cd_level, 114);
         g.setOnClickListener(v -> {
             grid = (grid + 1) % 3; Prefs.setInt(act, "grid_mode", grid); canvas.invalidate(); state(g, grid != 0);
@@ -54,6 +54,9 @@ final class ComposeOverlay {
     }
     private void state(ImageView g, boolean on) { g.setBackground(Ui.round(act, 22, on ? Ui.alpha(Ui.ACCENT, 90) : Ui.alpha(Ui.BG, 170), on ? Ui.ACCENT : Ui.EDGE)); }
 
+    private FrameLayout.LayoutParams ipl;
+    /** Abstand der Info-Zeile vom unteren Rand (dp), damit sie ueber dem Ausloeser und anderen Bedienelementen bleibt. */
+    void setInfoBottomDp(int dp) { ipl.bottomMargin = Ui.dp(act, dp); info.setLayoutParams(ipl); }
     void setBaselineMm(double mm) { baselineMm = mm; }
 
     // ------------------------------------------------------------------ Sensor
