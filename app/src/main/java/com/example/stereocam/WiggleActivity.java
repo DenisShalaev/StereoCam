@@ -45,6 +45,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
     private final ExecutorService worker = Executors.newSingleThreadExecutor();
     private StereoView view; private TextView status; private LinearLayout bar, panel;
     private ImageView exportBtn, modeBtn, playBtn, tuneBtn, gyroBtn, halfBtn, lensBtn;
+    private float planeAdj; private LinearLayout planeCard; private TextView planeLabel; private android.widget.SeekBar planeBar;
     private WiggleRenderer.Scene scene; private Bitmap frame, left, right; private int[] buf;
     private volatile boolean playing = true, alive = true, busy, paused;
     private volatile int depthPct = 100;
@@ -77,7 +78,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         root.addView(status, new FrameLayout.LayoutParams(-1, -2, Gravity.CENTER));
 
         final GestureDetector gd = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
-            @Override public boolean onSingleTapConfirmed(MotionEvent e) { boolean on = bar.getVisibility() == View.VISIBLE; bar.setVisibility(on ? View.GONE : View.VISIBLE); if (on) panel.setVisibility(View.GONE); return true; }
+            @Override public boolean onSingleTapConfirmed(MotionEvent e) { boolean on = bar.getVisibility() == View.VISIBLE; bar.setVisibility(on ? View.GONE : View.VISIBLE); planeCard.setVisibility(on ? View.GONE : View.VISIBLE); if (on) panel.setVisibility(View.GONE); return true; }
             @Override public boolean onFling(MotionEvent a, MotionEvent b2, float vx, float vy) {
                 if (a == null || b2 == null || view.getZoom() > 1.02f) return false;
                 float dy = b2.getY() - a.getY(), dx = b2.getX() - a.getX();
@@ -128,6 +129,20 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         panel.addView(Ui.space(this, 6)); panel.addView(Ui.text(this, getString(R.string.wig_hint), 12, Ui.GREY));
         FrameLayout.LayoutParams pl = new FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM); pl.setMargins(Ui.dp(this, 12), 0, Ui.dp(this, 12), Ui.dp(this, 12));
         root.addView(panel, pl);
+        planeCard = Ui.card(this);
+        planeLabel = Ui.text(this, "", 13, Ui.ACCENT); planeLabel.setPadding(0, 0, 0, Ui.dp(this, 2));
+        planeLabel.setOnClickListener(x -> { planeBar.setProgress(50); });
+        planeBar = new android.widget.SeekBar(this); planeBar.setMax(100); planeBar.setProgress(50);
+        planeBar.setProgressTintList(android.content.res.ColorStateList.valueOf(Ui.ACCENT)); planeBar.setThumbTintList(android.content.res.ColorStateList.valueOf(Ui.ACCENT));
+        planeBar.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener() {
+            @Override public void onProgressChanged(android.widget.SeekBar s, int p, boolean user) { setPlane((p - 50) / 50f * 0.06f); }
+            @Override public void onStartTrackingTouch(android.widget.SeekBar s) {}
+            @Override public void onStopTrackingTouch(android.widget.SeekBar s) {}
+        });
+        planeCard.addView(planeLabel); planeCard.addView(planeBar);
+        FrameLayout.LayoutParams ql = new FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM); ql.setMargins(Ui.dp(this, 12), 0, Ui.dp(this, 12), Ui.dp(this, 12));
+        root.addView(planeCard, ql); setPlane(0f);
+        pl.bottomMargin = Ui.dp(this, 96); panel.setLayoutParams(pl);
         setContentView(root);
         bar.setOnApplyWindowInsetsListener((v, insets) -> { v.setPadding(insets.getSystemWindowInsetLeft() + Ui.dp(this, 8), insets.getSystemWindowInsetTop() + Ui.dp(this, 8), insets.getSystemWindowInsetRight() + Ui.dp(this, 8), Ui.dp(this, 8)); return insets; });
         view.setHalf(half); view.setLens(lens); applyMode(false);
@@ -137,7 +152,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
     /** Naechste (+1) oder vorherige (-1) Datei der Galerie. */
     private void step(int d) {
         int n = index + d; if (n < 0 || n >= uris.size()) { Toast.makeText(this, d > 0 ? R.string.nav_last : R.string.nav_first, Toast.LENGTH_SHORT).show(); return; }
-        index = n; gen++; scene = null; busy = false; view.reset(); view.setSingle(null); view.setPair(null, null);
+        index = n; gen++; scene = null; if (planeBar != null) planeBar.setProgress(50); busy = false; view.reset(); view.setSingle(null); view.setPair(null, null);
         status.setText(R.string.wig_loading); status.setVisibility(View.VISIBLE);
         Toast.makeText(this, (index + 1) + "/" + uris.size() + "  " + names.get(index), Toast.LENGTH_SHORT).show();
         load();
@@ -254,9 +269,22 @@ public class WiggleActivity extends Activity implements SensorEventListener {
             ui.post(() -> {
                 if (myGen != gen) return;
                 if (fe != null) { status.setText(fe); return; }
-                status.setVisibility(View.GONE); view.setPair(left, right); view.setSingle(frame); t0 = now(); if (mode == StereoView.MOTION) tick();
+                status.setVisibility(View.GONE); view.setPair(left, right); applyPlane(); view.setSingle(frame); t0 = now(); if (mode == StereoView.MOTION) tick();
             });
         });
+    }
+
+    /** Bildebene: adj > 0 = Ebene naeher zum Betrachter (Szene rueckt hinter den Bildschirm), adj < 0 = Szene tritt vor den Bildschirm. Anteil der Bildbreite. */
+    private void setPlane(float adj) {
+        planeAdj = adj; Prefs.setInt(this, "plane_adj_pm", Math.round(adj * 10000));
+        planeLabel.setText(getString(R.string.plane_fmt, adj * 100f));
+        applyPlane();
+    }
+    private void applyPlane() {
+        if (scene != null) { scene.d0 = scene.d0auto - planeAdj * scene.w; if (mode == StereoView.MOTION && !playing) { /* naechster Frame beim Abspielen */ } }
+        float base = scene != null ? -scene.d0auto / scene.w : 0f;
+        view.setShift(base + planeAdj);
+        if (mode == StereoView.MOTION && scene != null && !playing && !busy) { playing = true; tick(); playing = false; }
     }
 
     private void tick() {
@@ -291,5 +319,5 @@ public class WiggleActivity extends Activity implements SensorEventListener {
 
     @Override protected void onPause() { super.onPause(); sm.unregisterListener(this); if (playing) { pausedAt = (now() - t0) / 1000.0; playing = false; paused = true; } }
     @Override protected void onResume() { super.onResume(); listen(); if (paused) { paused = false; playing = true; t0 = now() - (long) (pausedAt * 1000); tick(); refresh(); } }
-    @Override protected void onDestroy() { super.onDestroy(); alive = false; worker.shutdownNow(); }
+    @Override protected void onDestroy() { super.onDestroy(); Prefs.setInt(this, "plane_adj_pm", 0); alive = false; worker.shutdownNow(); }
 }

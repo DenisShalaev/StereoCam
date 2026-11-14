@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [Deutsch](README.de.md)
 
-> **Status: build 17.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
+> **Status: build 19.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
 
 ## 1. What it is
 
@@ -105,6 +105,14 @@ The film button in Motion mode (and the "Convert" entries in the gallery) saves 
 ### 5.6 Lenticular print
 
 The printer button in the viewer (or Convert → Lenticular print… in the gallery, for one selected file) prepares an image for printing behind a lenticular sheet: N views (8–24) are built from the L/R pair and interleaved in strips at the lens pitch (DPI / LPI). Adjustable: frame window (drag and pinch), 75 or 100 LPI, real LPI from the test sheet, A4/A5/A6, orientation, DPI, number of views, depth strength, alignment marks, reverse. Output is a PNG with the chosen DPI in Pictures/StereoCam/Lenticular. Ported from StereoPano; not tested on a real print or on a device.
+
+### 5.7 Screen plane
+
+The slider at the bottom of the viewer (hidden together with the button bar) sets which depth sits "at the screen plane". By default the main subject (the median distance in the centre of the frame, from the depth map) is put on the screen plane; moving the slider right pushes the whole scene behind the screen, moving it left brings objects forward, floating in front of the screen. Range ±6 % of the frame width; tap the label to reset. It works in Motion (the fixed depth), Cardboard and SBS; it resets when you change file. The files are not modified: the setting affects viewing and the GIF/MP4 export of the current file only. A narrow black strip may remain at the edges because of the shift. The app does not show the real distance to the subject: it is known only at the moment of shooting and is not stored in the file. Not tested on a device.
+
+### 5.8 Composition aids
+
+On the shooting screen there are two buttons under the gear on the right. **Grid** cycles: off → rule of thirds → golden ratio (lines at 38.2 % and 61.8 %). **Horizon level** shows, from the accelerometer, a line that turns with the tilt of the phone: yellow under 5°, green under 1°; it works in portrait and landscape. The top of the screen shows the focus distance (from the camera's results); when viewing, things closer than the focus point come out in front of the screen and farther ones go behind it (if the main subject is put on the screen plane, see 5.7). A warning appears when the focus is closer than about 15 baselines (≈30 cm by default). Honestly: the live preview has no depth map, so there are no lines showing what comes out of the screen for each part of the frame, only the focus distance; not every phone reports the focus distance to apps. Not tested on a device.
 
 ## 6. Tips for good stereo
 

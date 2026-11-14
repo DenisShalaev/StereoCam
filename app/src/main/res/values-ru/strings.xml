@@ -149,4 +149,12 @@
     <string name="lenti_gesture_hint">Двигайте снимок одним пальцем, масштабируйте двумя. Если разрешение источника меньше ~300 dpi, печать будет мягкой.</string>
     <string name="lenti_reset_view">Сбросить вид</string>
     <string name="lenti_menu">Печать на растре…</string>
+    <string name="plane_fmt">Плоскость экрана: %1$+.1f %% (тап — сброс)</string>
+    <string name="cd_grid">Сетка: выкл. / трети / золотое сечение</string>
+    <string name="cd_level">Уровень горизонта</string>
+    <string name="grid_off">Сетка выключена</string>
+    <string name="grid_thirds">Правило третей</string>
+    <string name="grid_golden">Золотое сечение</string>
+    <string name="compose_focus_fmt">Фокус ≈ %1$s м · ближе — перед экраном, дальше — за экраном</string>
+    <string name="compose_near_fmt">Фокус ≈ %1$s м: слишком близко (ближе ~%2$d см пара плохо смотрится)</string>
 </resources>

@@ -57,7 +57,7 @@ public class LensSwitchActivity extends Activity {
     private Range<Float> zoomRange; private String refId; private float equivRef = 0;
     private volatile String lastActive; private volatile String waitFor; private volatile int okCount;
     private float zA = 1, zB = 1;                      // Zoomfaktoren der beiden Linsen
-    private float zNow = 1; private FocusControl focus;
+    private float zNow = 1; private FocusControl focus; private ComposeOverlay compose;
     private byte[] jpegA, jpegB; private float usedZA, usedZB; private String actA, actB; private long tA, tB; private int rotShot;
     private Runnable onReady;
 
@@ -84,7 +84,7 @@ public class LensSwitchActivity extends Activity {
         FrameLayout.LayoutParams tp = new FrameLayout.LayoutParams(Ui.dp(this, 60), Ui.dp(this, 60), Gravity.BOTTOM | Gravity.START); tp.leftMargin = Ui.dp(this, 24); tp.bottomMargin = Ui.dp(this, 30); root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
         Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);
-        focus = new FocusControl(this, root, tv, this::refocus);
+        focus = new FocusControl(this, root, tv, this::refocus); compose = new ComposeOverlay(this, root, tv);
 
         TextView swap = Ui.text(this, getString(R.string.swap_eyes), 13, Ui.TEXT); swap.setBackground(Ui.round(this, 18, Ui.alpha(Ui.BG, 200), Ui.EDGE));
         swap.setPadding(Ui.dp(this, 14), Ui.dp(this, 8), Ui.dp(this, 14), Ui.dp(this, 8));
@@ -101,7 +101,7 @@ public class LensSwitchActivity extends Activity {
     }
 
     @Override protected void onResume() {
-        super.onResume(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
+        super.onResume(); if (compose != null) compose.listen(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
         ht = new HandlerThread("cam"); ht.start(); bg = new Handler(ht.getLooper());
         if (tv.isAvailable()) openCamera(); else tv.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override public void onSurfaceTextureAvailable(SurfaceTexture s, int w, int h) { openCamera(); }
@@ -111,7 +111,7 @@ public class LensSwitchActivity extends Activity {
         });
     }
 
-    @Override protected void onPause() { closeCamera(); if (ht != null) { ht.quitSafely(); ht = null; } super.onPause(); }
+    @Override protected void onPause() { if (compose != null) compose.stop(); closeCamera(); if (ht != null) { ht.quitSafely(); ht = null; } super.onPause(); }
 
     private void fit() {
         if (root.getWidth() == 0) return;
@@ -168,7 +168,7 @@ public class LensSwitchActivity extends Activity {
     private final CameraCaptureSession.CaptureCallback previewCb = new CameraCaptureSession.CaptureCallback() {
         @Override public void onCaptureCompleted(CameraCaptureSession s, CaptureRequest r, TotalCaptureResult res) {
             String id = Build.VERSION.SDK_INT >= 29 ? res.get(CaptureResult.LOGICAL_MULTI_CAMERA_ACTIVE_PHYSICAL_ID) : null;
-            if (id != null) lastActive = id;
+            if (id != null) lastActive = id; if (compose != null) compose.result(res);
             String w = waitFor;
             if (w != null) { if (w.equals(id)) okCount++; else okCount = 0; if (okCount >= 3) { waitFor = null; Runnable r2 = onReady; onReady = null; if (r2 != null) r2.run(); } }
         }

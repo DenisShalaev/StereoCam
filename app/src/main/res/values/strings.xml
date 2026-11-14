@@ -149,4 +149,12 @@
     <string name="lenti_gesture_hint">Drag the picture with one finger, pinch with two fingers to zoom. Below ~300 dpi of the source the print gets soft.</string>
     <string name="lenti_reset_view">Reset view</string>
     <string name="lenti_menu">Lenticular print…</string>
+    <string name="plane_fmt">Screen plane: %1$+.1f %% (tap to reset)</string>
+    <string name="cd_grid">Grid: off / thirds / golden ratio</string>
+    <string name="cd_level">Horizon level</string>
+    <string name="grid_off">Grid off</string>
+    <string name="grid_thirds">Rule of thirds</string>
+    <string name="grid_golden">Golden ratio</string>
+    <string name="compose_focus_fmt">Focus ≈ %1$s m · closer: in front of the screen, farther: behind it</string>
+    <string name="compose_near_fmt">Focus ≈ %1$s m: too close (under ~%2$d cm the pair is hard to view)</string>
 </resources>

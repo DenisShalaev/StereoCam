@@ -32,7 +32,7 @@ final class AnimExport {
         int shape = Prefs.getInt(c, "wig_shape", 0); float k = Prefs.getInt(c, "wig_depth", 100) / 100f;
         String base = name.replaceAll("(?i)\\.vr\\.jpg$|(?i)\\.jpe?g$|(?i)\\.mpo$", "").replaceAll("(?i)_sbs$", "");
         if (kind == GIF) {
-            WiggleRenderer.Scene s = WiggleRenderer.build(l, r, w, h, 480); l = r = null;
+            WiggleRenderer.Scene s = WiggleRenderer.build(l, r, w, h, 480); l = r = null; s.d0 = s.d0auto - Prefs.getInt(c, "plane_adj_pm", 0) / 10000f * s.w;
             int fps = 14, n = (int) Math.round(period * fps); List<int[]> samples = new ArrayList<>(); int[] first = null;
             ByteArrayOutputStream bo = new ByteArrayOutputStream(8_000_000); List<int[]> all = new ArrayList<>();
             for (int i = 0; i < n; i++) { int[] f = new int[s.w * s.h]; double[] tv = WigglePath.at(period * i / n, period, amp, shape); WiggleRenderer.render(s, tv[0], tv[1], f, k); all.add(f); }
@@ -41,7 +41,7 @@ final class AnimExport {
             for (int[] f : all) g.frame(f); g.finish();
             save(c, base + "_motion.gif", "image/gif", bo.toByteArray(), false);
         } else {
-            WiggleRenderer.Scene s = WiggleRenderer.build(l, r, w, h, 720); l = r = null;
+            WiggleRenderer.Scene s = WiggleRenderer.build(l, r, w, h, 720); l = r = null; s.d0 = s.d0auto - Prefs.getInt(c, "plane_adj_pm", 0) / 10000f * s.w;
             int vw = Math.max(160, s.w & ~15), vh = Math.max(160, s.h & ~15), fps = 24, n = (int) Math.round(period * fps);
             File tmp = new File(c.getCacheDir(), "motion_" + System.nanoTime() + ".mp4");
             String stage = "encoder start";

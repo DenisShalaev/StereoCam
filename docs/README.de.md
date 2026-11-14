@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [English](README.en.md)
 
-> **Stand: Build 17.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
+> **Stand: Build 19.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
 
 ## 1. Was ist das?
 
@@ -105,6 +105,14 @@ Der Filmknopf im Modus „Bewegung“ (und die Einträge unter „Umwandeln“ i
 ### 5.6 Rasterdruck (Lentikular)
 
 Die Drucker-Taste im Viewer (oder Konvertieren → Rasterdruck … in der Galerie, für eine gewählte Datei) bereitet ein Bild für den Druck unter einer Linsenrasterfolie vor: Aus dem L/R-Paar werden N Ansichten (8–24) berechnet und streifenweise im Linsenraster (DPI / LPI) verschachtelt. Einstellbar: Bildfenster (Ziehen und Zoomen), 75 oder 100 LPI, reales LPI per Testblatt, A4/A5/A6, Ausrichtung, DPI, Anzahl Ansichten, Tiefenstärke, Passermarken, Umkehren. Ergebnis ist ein PNG mit gewählter DPI in Pictures/StereoCam/Lenticular. Aus StereoPano übernommen; weder im echten Druck noch auf dem Gerät getestet.
+
+### 5.7 Bildebene
+
+Der Regler am unteren Rand der Ansicht (wird mit der Knopfleiste ausgeblendet) legt fest, welche Tiefe „in der Bildschirmebene“ liegt. Standardmäßig wird das Hauptmotiv (Medianabstand in der Bildmitte, aus der Tiefenkarte) auf die Bildebene gelegt; nach rechts rückt die ganze Szene hinter den Bildschirm, nach links treten Objekte nach vorn, frei vor den Bildschirm. Bereich ±6 % der Bildbreite; Tippen auf die Beschriftung setzt zurück. Wirkt in „Bewegung“ (die feste Tiefe), Cardboard und SBS; beim Dateiwechsel wird zurückgesetzt. Die Dateien bleiben unverändert: die Einstellung wirkt auf die Ansicht und den GIF/MP4-Export der aktuellen Datei. Durch die Verschiebung kann am Rand ein schmaler schwarzer Streifen bleiben. Den echten Abstand zum Motiv zeigt die App nicht: er ist nur bei der Aufnahme bekannt und wird nicht in der Datei gespeichert. Nicht auf einem Gerät geprüft.
+
+### 5.8 Bildaufbau-Hilfen
+
+Auf dem Aufnahmebildschirm gibt es rechts unter dem Zahnrad zwei Knöpfe. **Raster** schaltet um: aus → Drittelregel → goldener Schnitt (Linien bei 38,2 % und 61,8 %). Die **Horizont-Wasserwaage** zeigt mit dem Beschleunigungssensor eine Linie, die sich mit der Neigung des Telefons dreht: gelb unter 5°, grün unter 1°; sie funktioniert im Hoch- und Querformat. Oben wird die Fokusentfernung angezeigt (aus den Ergebnissen der Kamera); bei der Betrachtung treten Dinge, die näher als der Fokuspunkt sind, vor den Bildschirm, weiter entfernte liegen dahinter (wenn das Hauptmotiv auf die Bildebene gelegt wird, siehe 5.7). Ist der Fokus näher als etwa 15 Basislängen (standardmäßig ≈30 cm), erscheint eine Warnung. Ehrlich: In der Live-Vorschau gibt es keine Tiefenkarte, daher keine Linien, was an welcher Bildstelle aus dem Bildschirm tritt, nur die Fokusentfernung; nicht jedes Telefon meldet die Fokusentfernung an Apps. Nicht auf einem Gerät geprüft.
 
 ## 6. Tipps für gutes Stereo
 

@@ -149,4 +149,12 @@
     <string name="lenti_gesture_hint">Faites glisser l\'image avec un doigt, pincez avec deux doigts pour zoomer. En dessous d\'environ 300 dpi de la source, l\'impression devient floue.</string>
     <string name="lenti_reset_view">Réinitialiser la vue</string>
     <string name="lenti_menu">Impression lenticulaire…</string>
+    <string name="plane_fmt">Plan de l’écran : %1$+.1f %% (toucher pour réinitialiser)</string>
+    <string name="cd_grid">Grille : aucune / tiers / nombre d’or</string>
+    <string name="cd_level">Niveau d’horizon</string>
+    <string name="grid_off">Grille désactivée</string>
+    <string name="grid_thirds">Règle des tiers</string>
+    <string name="grid_golden">Nombre d’or</string>
+    <string name="compose_focus_fmt">Mise au point ≈ %1$s m · plus près : devant l’écran, plus loin : derrière</string>
+    <string name="compose_near_fmt">Mise au point ≈ %1$s m : trop près (sous ~%2$d cm la paire est difficile à regarder)</string>
 </resources>

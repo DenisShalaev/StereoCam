@@ -122,7 +122,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
         root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
         Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);
-        focus = new FocusControl(this, root, tv, this::refocus);
+        focus = new FocusControl(this, root, tv, this::refocus); compose = new ComposeOverlay(this, root, tv); compose.setBaselineMm(0);
         root.setOnApplyWindowInsetsListener((v, in) -> { v.setPadding(in.getSystemWindowInsetLeft(), in.getSystemWindowInsetTop(), in.getSystemWindowInsetRight(), in.getSystemWindowInsetBottom()); return in; });
         updateDist(); updateStatus();
     }
@@ -144,7 +144,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
     // ------------------------------------------------------------------ Lebenszyklus
 
     @Override protected void onResume() {
-        super.onResume(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
+        super.onResume(); if (compose != null) compose.listen(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
         ht = new HandlerThread("cam"); ht.start(); bg = new Handler(ht.getLooper());
         Sensor rv = sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         if (rv != null) sm.registerListener(this, rv, SensorManager.SENSOR_DELAY_GAME);
@@ -158,7 +158,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
     }
 
     @Override protected void onPause() {
-        sm.unregisterListener(this); closeCamera(); if (ht != null) { ht.quitSafely(); ht = null; } super.onPause();
+        sm.unregisterListener(this); if (compose != null) compose.stop(); closeCamera(); if (ht != null) { ht.quitSafely(); ht = null; } super.onPause();
     }
 
     // ------------------------------------------------------------------ Sensor: Drehung gegenueber dem ersten Bild
@@ -244,7 +244,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
         try {
             previewReq = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); previewReq.addTarget(pvSurface);
             applyLocks(previewReq, shot1 != null); if (shot1 == null) focus.apply(previewReq, false);
-            sess.setRepeatingRequest(previewReq.build(), null, bg);
+            sess.setRepeatingRequest(previewReq.build(), compose.callback(), bg);
         } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
     }
 
@@ -287,7 +287,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
         } catch (Exception e) { busy = false; shutter.setAlpha(1f); say(getString(R.string.cap_error, e.toString())); }
     }
 
-    private FocusControl focus;
+    private FocusControl focus; private ComposeOverlay compose;
     private boolean pendingFirst; private int pendingRot;
 
     private void got(ImageReader r) {

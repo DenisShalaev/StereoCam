@@ -149,4 +149,12 @@
     <string name="lenti_gesture_hint">Bild mit einem Finger verschieben, mit zwei Fingern zoomen. Unter ca. 300 dpi der Quelle wird der Druck weich.</string>
     <string name="lenti_reset_view">Ansicht zurücksetzen</string>
     <string name="lenti_menu">Rasterdruck …</string>
+    <string name="plane_fmt">Bildebene: %1$+.1f %% (Tippen setzt zurück)</string>
+    <string name="cd_grid">Raster: aus / Drittel / goldener Schnitt</string>
+    <string name="cd_level">Horizont-Wasserwaage</string>
+    <string name="grid_off">Raster aus</string>
+    <string name="grid_thirds">Drittelregel</string>
+    <string name="grid_golden">Goldener Schnitt</string>
+    <string name="compose_focus_fmt">Fokus ≈ %1$s m · näher: vor dem Bildschirm, weiter: dahinter</string>
+    <string name="compose_near_fmt">Fokus ≈ %1$s m: zu nah (unter ~%2$d cm ist das Paar schwer zu betrachten)</string>
 </resources>

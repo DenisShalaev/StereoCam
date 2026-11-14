@@ -14,7 +14,8 @@ final class WiggleRenderer {
         int w, h;
         int[] left, right;       // ARGB
         float[] dL, dR;          // Disparitaet im linken / rechten Bild (Pixel dieser Aufloesung)
-        float d0;                // Ruheebene (Median der Bildmitte)
+        float d0;                // Ruheebene (Median der Bildmitte, ggf. vom Nutzer verschoben)
+        float d0auto;            // automatische Ruheebene (Median)
         int validPercent;
     }
 
@@ -29,7 +30,7 @@ final class WiggleRenderer {
         int[] l2 = StereoAligner.resample(l, sw, sh, 0, 0, sw, sh, hw, hh), r2 = StereoAligner.resample(r, sw, sh, 0, 0, sw, sh, hw, hh);
         DisparityMap.Result d = DisparityMap.compute(l2, r2, hw, hh, Math.max(8, Math.round(0.07f * hw)));
         Scene s = new Scene(); s.w = sw; s.h = sh; s.left = l; s.right = r; s.validPercent = d.validPercent;
-        s.dL = DisparityMap.upsample(d.dL, hw, hh, sw, sh); s.dR = DisparityMap.upsample(d.dR, hw, hh, sw, sh); s.d0 = d.centerMedian * ((float) sw / hw);
+        s.dL = DisparityMap.upsample(d.dL, hw, hh, sw, sh); s.dR = DisparityMap.upsample(d.dR, hw, hh, sw, sh); s.d0 = d.centerMedian * ((float) sw / hw); s.d0auto = s.d0;
         return s;
     }
 

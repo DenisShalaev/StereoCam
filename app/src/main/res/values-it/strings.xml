@@ -149,4 +149,12 @@
     <string name="lenti_gesture_hint">Trascina l\'immagine con un dito, pizzica con due dita per ingrandire. Sotto i ~300 dpi della sorgente la stampa risulta morbida.</string>
     <string name="lenti_reset_view">Reimposta la vista</string>
     <string name="lenti_menu">Stampa lenticolare…</string>
+    <string name="plane_fmt">Piano dello schermo: %1$+.1f %% (tocca per azzerare)</string>
+    <string name="cd_grid">Griglia: spenta / terzi / sezione aurea</string>
+    <string name="cd_level">Livella dell’orizzonte</string>
+    <string name="grid_off">Griglia spenta</string>
+    <string name="grid_thirds">Regola dei terzi</string>
+    <string name="grid_golden">Sezione aurea</string>
+    <string name="compose_focus_fmt">Fuoco ≈ %1$s m · più vicino: davanti allo schermo, più lontano: dietro</string>
+    <string name="compose_near_fmt">Fuoco ≈ %1$s m: troppo vicino (sotto ~%2$d cm la coppia è difficile da guardare)</string>
 </resources>

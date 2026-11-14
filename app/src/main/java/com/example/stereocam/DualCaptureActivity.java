@@ -49,7 +49,7 @@ public class DualCaptureActivity extends Activity {
 
     private static final int[] CAPS = {Integer.MAX_VALUE, 3264, 2048};      // Rueckfallstufen: lange Kante der Fotos
 
-    private DualProbe.Pair pair;
+    private DualProbe.Pair pair; private double baseMm = Double.NaN;
     private TextureView tv;
     private FrameLayout root;
     private TextView status;
@@ -61,7 +61,7 @@ public class DualCaptureActivity extends Activity {
     private int level = 0; private boolean busy = false, closed = false;
     private byte[] gotA, gotB; private Size usedA, usedB;
     private final MediaActionSound sound = new MediaActionSound();
-    private FocusControl focus; private Surface pvS;
+    private FocusControl focus; private ComposeOverlay compose; private Surface pvS;
     private android.net.Uri lastUri; private String cfgAtStart = "";
 
     @Override protected void onCreate(Bundle b) {
@@ -71,6 +71,7 @@ public class DualCaptureActivity extends Activity {
         if (pair == null) { finish(); return; }
         // Die Basis zwischen den Linsen soll beim Halten waagerecht liegen
         double dx = 0, dy = 1;
+        if (!Double.isNaN(pair.baselineMm)) { final double bm0 = pair.baselineMm; baseMm = bm0; }
         if (pair.a.pose != null && pair.b.pose != null) { dx = Math.abs(pair.a.pose[0] - pair.b.pose[0]); dy = Math.abs(pair.a.pose[1] - pair.b.pose[1]); }
         setRequestedOrientation(dx > dy ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
@@ -91,7 +92,7 @@ public class DualCaptureActivity extends Activity {
         root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
         Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);
-        focus = new FocusControl(this, root, tv, this::refocus);
+        focus = new FocusControl(this, root, tv, this::refocus); compose = new ComposeOverlay(this, root, tv); compose.setBaselineMm(baseMm);
 
         TextView swap = Ui.text(this, getString(R.string.swap_eyes), 13, Ui.TEXT); swap.setBackground(Ui.round(this, 18, Ui.alpha(Ui.BG, 200), Ui.EDGE));
         swap.setPadding(Ui.dp(this, 14), Ui.dp(this, 8), Ui.dp(this, 14), Ui.dp(this, 8));
@@ -108,7 +109,7 @@ public class DualCaptureActivity extends Activity {
     }
 
     @Override protected void onResume() {
-        super.onResume(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
+        super.onResume(); if (compose != null) compose.listen(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
         ht = new HandlerThread("cam"); ht.start(); bg = new Handler(ht.getLooper());
         if (tv.isAvailable()) openCamera(); else tv.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override public void onSurfaceTextureAvailable(SurfaceTexture s, int w, int h) { openCamera(); }
@@ -118,7 +119,7 @@ public class DualCaptureActivity extends Activity {
         });
     }
 
-    @Override protected void onPause() { closeCamera(); if (ht != null) { ht.quitSafely(); ht = null; } super.onPause(); }
+    @Override protected void onPause() { if (compose != null) compose.stop(); closeCamera(); if (ht != null) { ht.quitSafely(); ht = null; } super.onPause(); }
 
     // ------------------------------------------------------------------ Vorschaugeometrie (wie Camera2Basic)
 
@@ -198,7 +199,7 @@ public class DualCaptureActivity extends Activity {
                         rb.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
                         rb.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);   // bei einigen Geraeten (z. B. Xiaomi/POCO) bricht die Sitzung mit Stabilisierung auf physischen Kameras ab
                         focus.apply(rb, false);
-                        s.setRepeatingRequest(rb.build(), null, bg);
+                        s.setRepeatingRequest(rb.build(), compose.callback(), bg);
                         sayUi(getString(R.string.cap_mode, String.valueOf(level + 1), usedA.getWidth() + "x" + usedA.getHeight(), usedB.getWidth() + "x" + usedB.getHeight()));
                     } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
                 }
@@ -218,7 +219,7 @@ public class DualCaptureActivity extends Activity {
         try {
             CaptureRequest.Builder rb = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); rb.addTarget(pvS);
             rb.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
-            boolean trig = focus.takeTrigger(); focus.apply(rb, false); sess.setRepeatingRequest(rb.build(), null, bg);
+            boolean trig = focus.takeTrigger(); focus.apply(rb, false); sess.setRepeatingRequest(rb.build(), compose.callback(), bg);
             if (trig) {
                 CaptureRequest.Builder t = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); t.addTarget(pvS);
                 t.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF); focus.apply(t, true); sess.capture(t.build(), null, bg);

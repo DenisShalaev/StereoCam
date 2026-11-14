@@ -27,6 +27,8 @@ final class StereoView extends View {
 
     void setMode(int m) { mode = m; invalidate(); }
     int getMode() { return mode; }
+    private float shift;                                       // Verschiebung des rechten gegen das linke Bild (Anteil der Bildbreite): Bildebene
+    void setShift(float f) { shift = f; invalidate(); }
     void setHalf(boolean h) { half = h; invalidate(); }
     void setLens(boolean l) { lens = l; invalidate(); }
     void setSingle(Bitmap b) { single = b; invalidate(); }
@@ -42,22 +44,22 @@ final class StereoView extends View {
         int w = getWidth(), h = getHeight();
         if (mode == MOTION || mode == FLAT) {
             Bitmap b = mode == MOTION ? single : left; if (b == null) return;
-            drawEye(c, b, new RectF(0, 0, w, h), true, false);
+            drawEye(c, b, new RectF(0, 0, w, h), true, false, 0f);
         } else {
             if (left == null || right == null) return;
             boolean fit = !(mode == SBS && half);                     // Halb-SBS: Bild fuellt die Haelfte (wird vom Display wieder entzerrt)
-            c.save(); c.clipRect(0, 0, w / 2f, h); drawEye(c, left, new RectF(0, 0, w / 2f, h), fit, mode == CARDBOARD && lens); c.restore();
-            c.save(); c.clipRect(w / 2f, 0, w, h); drawEye(c, right, new RectF(w / 2f, 0, w, h), fit, mode == CARDBOARD && lens); c.restore();
+            c.save(); c.clipRect(0, 0, w / 2f, h); drawEye(c, left, new RectF(0, 0, w / 2f, h), fit, mode == CARDBOARD && lens, -shift / 2f); c.restore();
+            c.save(); c.clipRect(w / 2f, 0, w, h); drawEye(c, right, new RectF(w / 2f, 0, w, h), fit, mode == CARDBOARD && lens, shift / 2f); c.restore();
             Paint p = new Paint(); p.setColor(0xFF000000); c.drawRect(w / 2f - 1, 0, w / 2f + 1, h, p);
         }
     }
 
     /** Zeichnet ein Auge in den Bereich area (Seitenverhaeltnis erhalten, wenn fit). */
-    private void drawEye(Canvas c, Bitmap b, RectF area, boolean fit, boolean distort) {
+    private void drawEye(Canvas c, Bitmap b, RectF area, boolean fit, boolean distort, float sh) {
         float aw = area.width(), ah = area.height(), bw = b.getWidth(), bh = b.getHeight();
         float dw = aw, dh = ah;
         if (fit) { float s = Math.min(aw / bw, ah / bh); dw = bw * s; dh = bh * s; }
-        float cx = area.centerX() + panX * dw * zoom, cy = area.centerY() + panY * dh * zoom;
+        float cx = area.centerX() + panX * dw * zoom + sh * dw * zoom, cy = area.centerY() + panY * dh * zoom;
         float zw = dw * zoom, zh = dh * zoom;
         RectF dst = new RectF(cx - zw / 2, cy - zh / 2, cx + zw / 2, cy + zh / 2);
         if (!distort) { c.drawBitmap(b, null, dst, paint); return; }

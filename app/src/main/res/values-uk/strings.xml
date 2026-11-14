@@ -149,4 +149,12 @@
     <string name="lenti_gesture_hint">Перетягуйте зображення одним пальцем, масштабуйте щипком двома пальцями. Нижче ~300 dpi джерела друк виходить розмитим.</string>
     <string name="lenti_reset_view">Скинути вигляд</string>
     <string name="lenti_menu">Друк на растрі…</string>
+    <string name="plane_fmt">Площина екрана: %1$+.1f %% (дотик — скидання)</string>
+    <string name="cd_grid">Сітка: вимк. / треті / золотий перетин</string>
+    <string name="cd_level">Рівень горизонту</string>
+    <string name="grid_off">Сітку вимкнено</string>
+    <string name="grid_thirds">Правило третин</string>
+    <string name="grid_golden">Золотий перетин</string>
+    <string name="compose_focus_fmt">Фокус ≈ %1$s м · ближче — перед екраном, далі — за екраном</string>
+    <string name="compose_near_fmt">Фокус ≈ %1$s м: занадто близько (ближче ~%2$d см пара погано дивиться)</string>
 </resources>
