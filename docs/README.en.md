@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [Deutsch](README.de.md)
 
-> **Status: build 3. The app has never been run on a phone.** The Android code has not been compiled (the development environment has no Android SDK). Only the pair alignment and the MPO writer were tested, on a desktop JVM. Everything that involves the phone's cameras is untested.
+> **Status: build 4. The app has never been run on a phone.** The Android code has not been compiled (the development environment has no Android SDK). Only the pair alignment and the MPO writer were tested, on a desktop JVM. Everything that involves the phone's cameras is untested.
 
 ## 1. What it is
 
@@ -33,6 +33,17 @@ Works on **any** phone, including those where two cameras cannot be used at once
 5. The **second shot** goes through the same alignment and is saved in the same formats. "Start over" discards the first shot. "Swap L/R" reverses the direction: the first shot becomes the right eye and the phone must be moved to the left.
 
 Honest limits: the phone's sensors cannot measure the shift accurately — it is judged by eye from the hint; moving subjects (people, branches, water) cause errors; the alignment corrects vertical offset, tilt and scale, but not a wrong baseline. The mode has not been tested on a phone. For macro (5 cm distance → shift ≈ 1.7 mm) the shift cannot be held by hand; a turntable is better for macro — that mode does not exist yet.
+
+### 2.2 Fast lens switching (one after another)
+
+For phones that do not expose two cameras at once (Android 11+ required). Use the "Fast lens switching" button on the start screen; the app also switches to this mode by itself if the two-camera session cannot be set up.
+
+1. **One session of the logical camera** is opened: a preview and one JPEG stream. This is a standard combination that Android guarantees.
+2. The first shot is taken with the first lens. Immediately afterwards the zoom is switched to the second lens, the same way the stock camera app does it. The zoom factors are computed from the equivalent focal lengths relative to the lens that is active at zoom 1.0.
+3. The app waits until the frame metadata (`ACTIVE_PHYSICAL_ID`) confirms the second lens for three frames in a row. If it has not switched within 0.9 s, the zoom is nudged slightly (up to four attempts).
+4. The shot with the second lens follows, then the usual processing and saving. The **interval between the two shots in milliseconds** is shown in the status line.
+
+Limits: the interval will probably be hundreds of milliseconds — movement of the subject or the hand causes errors that the alignment cannot fix (it removes vertical offset, tilt and scale, but not parallax from shaking). The mode works only if the phone's logical camera switches lenses with zoom (Pixel and many others do, not all). Not tested on a phone.
 
 ## 3. File formats
 
@@ -110,7 +121,7 @@ Install the app and open the start screen:
 - **Pairs listed** — the phone shows two physical cameras to the app (necessary, but not sufficient).
 - **"No usable camera pair"** — the phone does not expose the physical cameras: the two-camera mode is unavailable, use the shift mode (section 2.1).
 - Then you need a real shot. If the app shows `Mode 1/2/3: …` and saves a file, simultaneous capture works. The mode is the resolution step (1 — maximum, 2 — up to 3264, 3 — up to 2048).
-- If it says the phone refuses to run both cameras at once, or that only one of the two images arrived, the pair does not work.
+- If it says the phone refuses to run both cameras at once, the app switches to fast lens switching by itself (section 2.2). If only one of the two images arrived, the pair does not work for simultaneous capture; try the mode in 2.2.
 
 ### 7.5 Table of verified devices (filled from reports)
 
@@ -131,6 +142,7 @@ Empty for now. If you tested StereoCam on your phone, send the report ("Share re
 
 ## 9. Known risks and next steps
 
+- **Fallback modes.** If simultaneous capture does not work, there is fast lens switching (2.2) and one-camera shifting (2.1).
 - **Stream combination.** It would be more robust to use two `YUV_420_888` streams of identical size and encode the JPEG ourselves; this combination is guaranteed on Android 9 for devices with physical cameras. The preview for that mode would have to come from one of the streams. This is the second step worth adding if the first does not work on your phone.
 - On Android 10+ the combination can be checked in advance with `CameraDevice.isSessionConfigurationSupported` and the result shown on the start screen.
 - On some phones the physical cameras are not listed in `getCameraIdList()` (hidden) but can be reached by their ID; the app queries them directly.

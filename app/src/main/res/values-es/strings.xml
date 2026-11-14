@@ -41,6 +41,14 @@
     <string name="shift_no_sensor">Sin sensor de rotación: no se puede comprobar el giro.</string>
     <string name="shift_angles_wait">Giro desde la primera foto: se muestra tras el paso 1</string>
     <string name="shift_angles">Giro: inclinación %1$s°  giro lateral %2$s°  alabeo %3$s°  (objetivo ±1°)</string>
+    <string name="switch_start">Cambio rápido de objetivo (uno tras otro)</string>
+    <string name="switch_intro">Para teléfonos que no ofrecen dos cámaras a la vez: una foto por objetivo, con el cambio más rápido posible. Mantenga firme.</string>
+    <string name="switch_hold">Mantenga firme: dos disparos seguidos</string>
+    <string name="switch_need_api">El cambio de objetivo requiere Android 11 o posterior.</string>
+    <string name="switch_fail">El objetivo no cambió: la cámara lógica de este teléfono no cambia de objetivo con el zoom.</string>
+    <string name="switch_ready">Listo. Objetivo 1: %1$s, objetivo 2: %2$s. Mantenga firme y toque.</string>
+    <string name="switch_info">Objetivos %1$s, intervalo entre disparos %2$s ms</string>
+    <string name="switch_fallback">Aquí no es posible usar dos cámaras a la vez. Cambio al cambio rápido de objetivo.</string>
     <string name="swap_eyes">Cambiar I/D</string>
     <string name="swapped_on">Ojos cambiados: izquierda y derecha intercambiadas</string>
     <string name="swapped_off">Ojos en orden normal</string>

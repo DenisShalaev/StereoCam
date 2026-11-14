@@ -41,6 +41,14 @@
     <string name="shift_no_sensor">Нет датчика вращения: поворот проверить нельзя.</string>
     <string name="shift_angles_wait">Поворот с первого снимка: появится после шага 1</string>
     <string name="shift_angles">Поворот: наклон %1$s°  разворот %2$s°  крен %3$s°  (цель: ±1°)</string>
+    <string name="switch_start">Быстрое переключение объективов (по очереди)</string>
+    <string name="switch_intro">Для телефонов, которые не отдают две камеры одновременно: по снимку каждым объективом, переключение максимально быстрое. Держите телефон неподвижно.</string>
+    <string name="switch_hold">Не двигайтесь: два снимка подряд</string>
+    <string name="switch_need_api">Для переключения объективов нужен Android 11 или новее.</string>
+    <string name="switch_fail">Объектив не переключился: логическая камера этого телефона не меняет объектив зумом.</string>
+    <string name="switch_ready">Готово. Объектив 1: %1$s, объектив 2: %2$s. Держите неподвижно и нажмите.</string>
+    <string name="switch_info">Объективы %1$s, интервал между снимками %2$s мс</string>
+    <string name="switch_fallback">Две камеры одновременно здесь невозможны. Переход на быстрое переключение объективов.</string>
     <string name="swap_eyes">Поменять Л/П</string>
     <string name="swapped_on">Глаза поменяны: левый и правый кадры наоборот</string>
     <string name="swapped_off">Глаза в обычном порядке</string>

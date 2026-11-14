@@ -198,12 +198,12 @@ public class DualCaptureActivity extends Activity {
                     } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
                 }
                 @Override public void onConfigureFailed(CameraCaptureSession s) {
-                    if (level + 1 < CAPS.length) { level++; startSession(); } else sayUi(getString(R.string.cap_cfg_fail));
+                    if (level + 1 < CAPS.length) { level++; startSession(); } else switchFallback();
                 }
             });
             cam.createCaptureSession(sc);
         } catch (Exception e) {
-            if (level + 1 < CAPS.length) { level++; startSession(); } else sayUi(getString(R.string.cap_cfg_fail) + "\n" + e);
+            if (level + 1 < CAPS.length) { level++; startSession(); } else switchFallback();
         }
     }
 
@@ -262,6 +262,15 @@ public class DualCaptureActivity extends Activity {
         try { if (sess != null) sess.close(); } catch (Exception ignored) {} sess = null;
         try { if (cam != null) cam.close(); } catch (Exception ignored) {} cam = null;
         if (rdA != null) { rdA.close(); rdA = null; } if (rdB != null) { rdB.close(); rdB = null; }
+    }
+
+    /** Zwei Kameras gleichzeitig gehen nicht: automatisch auf schnelles Umschalten der Linsen wechseln. */
+    private void switchFallback() {
+        ui.post(() -> {
+            android.widget.Toast.makeText(this, R.string.switch_fallback, android.widget.Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, LensSwitchActivity.class).putExtra("pair", pair.key()));
+            finish();
+        });
     }
 
     private void say(String s) { if (status != null) status.setText(s); }

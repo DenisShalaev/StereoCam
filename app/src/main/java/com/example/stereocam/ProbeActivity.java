@@ -46,6 +46,11 @@ public class ProbeActivity extends Activity {
         root.addView(Ui.space(this, 8));
         shiftBtn = Ui.pill(this, R.string.shift_start, false); shiftBtn.setOnClickListener(v -> startActivity(new Intent(this, ShiftCaptureActivity.class)));
         root.addView(shiftBtn, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        root.addView(Ui.space(this, 8));
+        Button swBtn = Ui.pill(this, R.string.switch_start, false); swBtn.setOnClickListener(v -> { if (!selected.isEmpty()) { Prefs.setStr(this, Prefs.PAIR_KEY, selected); startActivity(new Intent(this, LensSwitchActivity.class).putExtra("pair", selected)); } });
+        root.addView(swBtn, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        root.addView(Ui.text(this, getString(R.string.switch_intro), 12, Ui.GREY));
+        root.addView(Ui.space(this, 8));
         root.addView(Ui.text(this, getString(R.string.shift_intro), 12, Ui.GREY));
         root.addView(Ui.space(this, 12));
 

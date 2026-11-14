@@ -41,6 +41,14 @@
     <string name="shift_no_sensor">Nessun sensore di rotazione: la rotazione non può essere controllata.</string>
     <string name="shift_angles_wait">Rotazione dalla prima foto: mostrata dopo il passo 1</string>
     <string name="shift_angles">Rotazione: inclinazione %1$s°  panoramica %2$s°  rollio %3$s°  (obiettivo ±1°)</string>
+    <string name="switch_start">Cambio rapido dell’obiettivo (uno dopo l’altro)</string>
+    <string name="switch_intro">Per i telefoni che non offrono due fotocamere insieme: uno scatto per obiettivo, cambio il più rapido possibile. Stai fermo.</string>
+    <string name="switch_hold">Stai fermo: due scatti in rapida successione</string>
+    <string name="switch_need_api">Il cambio dell’obiettivo richiede Android 11 o successivo.</string>
+    <string name="switch_fail">L’obiettivo non è cambiato: la fotocamera logica di questo telefono non cambia obiettivo con lo zoom.</string>
+    <string name="switch_ready">Pronto. Obiettivo 1: %1$s, obiettivo 2: %2$s. Stai fermo e tocca.</string>
+    <string name="switch_info">Obiettivi %1$s, intervallo tra gli scatti %2$s ms</string>
+    <string name="switch_fallback">Due fotocamere insieme non sono possibili qui. Passo al cambio rapido dell’obiettivo.</string>
     <string name="swap_eyes">Scambia S/D</string>
     <string name="swapped_on">Occhi scambiati: sinistro e destro invertiti</string>
     <string name="swapped_off">Occhi in ordine normale</string>

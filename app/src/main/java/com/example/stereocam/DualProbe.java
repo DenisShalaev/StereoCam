@@ -48,6 +48,16 @@ final class DualProbe {
 
     private DualProbe() {}
 
+    /** Kleinbildaequivalente Brennweite einer (auch verborgenen) physischen Kamera, 0 wenn unbekannt. */
+    static float equiv35(CameraManager cm, String id) {
+        try {
+            CameraCharacteristics pc = cm.getCameraCharacteristics(id);
+            float[] fl = pc.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS); SizeF sz = pc.get(CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE);
+            if (fl == null || fl.length == 0 || sz == null) return 0;
+            return (float) (fl[0] * 43.27 / Math.hypot(sz.getWidth(), sz.getHeight()));
+        } catch (Exception e) { return 0; }
+    }
+
     static Result scan(Context ctx) {
         Result r = new Result();
         StringBuilder sb = r.report;

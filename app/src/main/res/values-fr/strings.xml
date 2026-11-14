@@ -41,6 +41,14 @@
     <string name="shift_no_sensor">Pas de capteur de rotation : la rotation ne peut pas être vérifiée.</string>
     <string name="shift_angles_wait">Rotation depuis la première photo : affichée après l’étape 1</string>
     <string name="shift_angles">Rotation : inclinaison %1$s°  panoramique %2$s°  roulis %3$s°  (visez ±1°)</string>
+    <string name="switch_start">Changement rapide d’objectif (l’un après l’autre)</string>
+    <string name="switch_intro">Pour les téléphones qui n’ouvrent pas deux caméras à la fois : une photo par objectif, changement aussi rapide que possible. Ne bougez pas.</string>
+    <string name="switch_hold">Ne bougez pas : deux prises de vue rapprochées</string>
+    <string name="switch_need_api">Le changement d’objectif nécessite Android 11 ou plus récent.</string>
+    <string name="switch_fail">L’objectif n’a pas changé : la caméra logique de ce téléphone ne change pas d’objectif avec le zoom.</string>
+    <string name="switch_ready">Prêt. Objectif 1 : %1$s, objectif 2 : %2$s. Ne bougez pas et touchez.</string>
+    <string name="switch_info">Objectifs %1$s, intervalle entre les prises %2$s ms</string>
+    <string name="switch_fallback">Deux caméras à la fois sont impossibles ici. Passage au changement rapide d’objectif.</string>
     <string name="swap_eyes">Inverser G/D</string>
     <string name="swapped_on">Yeux inversés : gauche et droite échangés</string>
     <string name="swapped_off">Yeux dans l’ordre normal</string>

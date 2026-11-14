@@ -41,6 +41,14 @@
     <string name="shift_no_sensor">Kein Drehsensor: Drehung kann nicht geprüft werden.</string>
     <string name="shift_angles_wait">Drehung seit dem ersten Foto: erscheint nach Schritt 1</string>
     <string name="shift_angles">Drehung: Nicken %1$s°  Schwenk %2$s°  Rollen %3$s°  (Ziel: ±1°)</string>
+    <string name="switch_start">Schnelles Linsenumschalten (nacheinander)</string>
+    <string name="switch_intro">Für Telefone, die nicht zwei Kameras gleichzeitig freigeben: ein Foto pro Objektiv, so schnell wie möglich umgeschaltet. Ruhig halten.</string>
+    <string name="switch_hold">Ruhig halten: zwei Aufnahmen kurz hintereinander</string>
+    <string name="switch_need_api">Das Linsenumschalten braucht Android 11 oder neuer.</string>
+    <string name="switch_fail">Das Objektiv wurde nicht umgeschaltet: Die logische Kamera dieses Telefons wechselt das Objektiv nicht per Zoom.</string>
+    <string name="switch_ready">Bereit. Objektiv 1: %1$s, Objektiv 2: %2$s. Ruhig halten und tippen.</string>
+    <string name="switch_info">Objektive %1$s, Abstand zwischen den Aufnahmen %2$s ms</string>
+    <string name="switch_fallback">Zwei Kameras gleichzeitig sind hier nicht möglich. Wechsel zum schnellen Linsenumschalten.</string>
     <string name="swap_eyes">L/R tauschen</string>
     <string name="swapped_on">Augen getauscht: links und rechts vertauscht</string>
     <string name="swapped_off">Augen in normaler Reihenfolge</string>

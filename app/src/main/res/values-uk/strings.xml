@@ -41,6 +41,14 @@
     <string name="shift_no_sensor">Немає датчика обертання: поворот перевірити не можна.</string>
     <string name="shift_angles_wait">Поворот від першого знімка: з’явиться після кроку 1</string>
     <string name="shift_angles">Поворот: нахил %1$s°  розворот %2$s°  крен %3$s°  (мета: ±1°)</string>
+    <string name="switch_start">Швидке перемикання об’єктивів (по черзі)</string>
+    <string name="switch_intro">Для телефонів, які не віддають дві камери одночасно: по знімку кожним об’єктивом, перемикання якомога швидше. Тримайте телефон нерухомо.</string>
+    <string name="switch_hold">Не рухайтеся: два знімки поспіль</string>
+    <string name="switch_need_api">Для перемикання об’єктивів потрібен Android 11 або новіший.</string>
+    <string name="switch_fail">Об’єктив не перемкнувся: логічна камера цього телефона не змінює об’єктив зумом.</string>
+    <string name="switch_ready">Готово. Об’єктив 1: %1$s, об’єктив 2: %2$s. Тримайте нерухомо й натисніть.</string>
+    <string name="switch_info">Об’єктиви %1$s, інтервал між знімками %2$s мс</string>
+    <string name="switch_fallback">Дві камери одночасно тут неможливі. Перехід на швидке перемикання об’єктивів.</string>
     <string name="swap_eyes">Поміняти Л/П</string>
     <string name="swapped_on">Очі поміняно: лівий і правий кадри навпаки</string>
     <string name="swapped_off">Очі в звичайному порядку</string>

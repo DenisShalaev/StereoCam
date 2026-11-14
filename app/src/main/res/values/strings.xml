@@ -41,6 +41,14 @@
     <string name="shift_no_sensor">No rotation sensor: turning cannot be checked.</string>
     <string name="shift_angles_wait">Turn since the first photo: shown after step 1</string>
     <string name="shift_angles">Turn: tilt %1$s°  pan %2$s°  roll %3$s°  (aim: ±1°)</string>
+    <string name="switch_start">Fast lens switching (one after another)</string>
+    <string name="switch_intro">For phones that do not give two cameras at once: one shot per lens, switching as fast as possible. Keep still.</string>
+    <string name="switch_hold">Hold still: two shots in quick succession</string>
+    <string name="switch_need_api">Lens switching needs Android 11 or newer.</string>
+    <string name="switch_fail">The lens did not switch: this phone’s logical camera does not change lenses with zoom.</string>
+    <string name="switch_ready">Ready. Lens 1: %1$s, lens 2: %2$s. Hold still and tap.</string>
+    <string name="switch_info">Lenses %1$s, interval between shots %2$s ms</string>
+    <string name="switch_fallback">Two cameras at once are not possible here. Switching to fast lens switching.</string>
     <string name="swap_eyes">Swap L/R</string>
     <string name="swapped_on">Eyes swapped: left and right are exchanged</string>
     <string name="swapped_off">Eyes in normal order</string>

@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [English](README.en.md)
 
-> **Stand: Build 3. Die App wurde noch nie auf einem Telefon ausgeführt.** Der Android-Code wurde nicht kompiliert (in der Entwicklungsumgebung gibt es kein Android SDK). Nur die Ausrichtung des Bildpaars und der MPO-Writer wurden auf einer Desktop-JVM getestet. Alles, was die Kameras des Telefons betrifft, ist ungetestet.
+> **Stand: Build 4. Die App wurde noch nie auf einem Telefon ausgeführt.** Der Android-Code wurde nicht kompiliert (in der Entwicklungsumgebung gibt es kein Android SDK). Nur die Ausrichtung des Bildpaars und der MPO-Writer wurden auf einer Desktop-JVM getestet. Alles, was die Kameras des Telefons betrifft, ist ungetestet.
 
 ## 1. Was ist das?
 
@@ -33,6 +33,17 @@ Funktioniert auf **jedem** Telefon, auch wenn zwei Kameras nicht gleichzeitig nu
 5. Die **zweite Aufnahme** durchläuft dieselbe Ausrichtung und wird in denselben Formaten gespeichert. „Neu beginnen" verwirft die erste Aufnahme. „L/R tauschen" kehrt die Richtung um: Die erste Aufnahme wird das rechte Auge, das Telefon wird nach links verschoben.
 
 Ehrliche Grenzen: Die Sensoren des Telefons messen die Verschiebung nicht genau — sie wird nach Augenmaß anhand des Hinweises bestimmt; bewegte Motive (Personen, Zweige, Wasser) verursachen Fehler; die Ausrichtung korrigiert Höhenversatz, Neigung und Maßstab, aber keine falsche Basis. Der Modus wurde nicht auf einem Telefon getestet. Für Makro (5 cm Abstand → Verschiebung ≈ 1,7 mm) lässt sich die Verschiebung von Hand nicht halten; für Makro ist ein Drehteller besser — diesen Modus gibt es noch nicht.
+
+### 2.2 Schnelles Linsenumschalten (nacheinander)
+
+Für Telefone, die nicht zwei Kameras gleichzeitig freigeben (Android 11+ erforderlich). Dazu dient die Taste „Schnelles Linsenumschalten" auf dem Startbildschirm; außerdem wechselt die App von selbst in diesen Modus, wenn sich die Sitzung mit zwei Kameras nicht einrichten lässt.
+
+1. Es wird **eine Sitzung der logischen Kamera** geöffnet: Vorschau und ein JPEG-Stream. Das ist eine Standardkombination, die Android garantiert.
+2. Die erste Aufnahme entsteht mit dem ersten Objektiv. Sofort danach wird der Zoom auf das zweite Objektiv umgestellt — so wie es die Kamera-App des Herstellers tut. Die Zoomfaktoren werden aus den äquivalenten Brennweiten relativ zum bei Zoom 1,0 aktiven Objektiv berechnet.
+3. Die App wartet, bis die Metadaten der Bilder (`ACTIVE_PHYSICAL_ID`) dreimal hintereinander das zweite Objektiv bestätigen. Hat es nach 0,9 s nicht umgeschaltet, wird der Zoom leicht nachgestellt (bis zu vier Versuche).
+4. Es folgt die Aufnahme mit dem zweiten Objektiv, dann die übliche Verarbeitung und das Speichern. Der **Abstand zwischen beiden Aufnahmen in Millisekunden** steht in der Statuszeile.
+
+Grenzen: Der Abstand liegt wahrscheinlich bei einigen hundert Millisekunden — Bewegung von Motiv oder Hand verursacht Fehler, die die Ausrichtung nicht beheben kann (sie entfernt Höhenversatz, Neigung und Maßstab, aber keine Parallaxe durch Wackeln). Der Modus funktioniert nur, wenn die logische Kamera des Telefons Objektive per Zoom umschaltet (Pixel und viele andere tun das, nicht alle). Nicht auf einem Telefon getestet.
 
 ## 3. Dateiformate
 
@@ -110,7 +121,7 @@ App installieren und den Startbildschirm öffnen:
 - **Paare aufgelistet** — das Telefon zeigt der App zwei physische Kameras (notwendig, aber nicht hinreichend).
 - **„Kein nutzbares Kamerapaar"** — das Telefon gibt die physischen Kameras nicht frei: der Zwei-Kamera-Modus ist nicht verfügbar, nutzen Sie den Verschiebungsmodus (Abschnitt 2.1).
 - Danach braucht es eine echte Aufnahme. Zeigt die App `Modus 1/2/3: …` und speichert eine Datei, funktioniert die gleichzeitige Aufnahme. Der Modus ist die Auflösungsstufe (1 — Maximum, 2 — bis 3264, 3 — bis 2048).
-- Meldet die App, das Telefon verweigere den gleichzeitigen Betrieb beider Kameras oder es sei nur eines der beiden Bilder eingetroffen, funktioniert das Paar nicht.
+- Meldet die App, das Telefon verweigere den gleichzeitigen Betrieb beider Kameras, wechselt sie von selbst zum schnellen Linsenumschalten (Abschnitt 2.2). Ist nur eines der beiden Bilder eingetroffen, funktioniert das Paar nicht für gleichzeitige Aufnahmen; probieren Sie den Modus aus 2.2.
 
 ### 7.5 Tabelle geprüfter Geräte (wird aus Berichten gefüllt)
 
@@ -131,6 +142,7 @@ Vorerst leer. Haben Sie StereoCam auf Ihrem Telefon getestet, senden Sie den Ber
 
 ## 9. Bekannte Risiken und nächste Schritte
 
+- **Rückfallmodi.** Funktioniert die gleichzeitige Aufnahme nicht, gibt es das schnelle Linsenumschalten (2.2) und die Verschiebung mit einer Kamera (2.1).
 - **Stream-Kombination.** Robuster wäre es, zwei `YUV_420_888`-Streams gleicher Größe zu verwenden und das JPEG selbst zu kodieren; diese Kombination ist unter Android 9 für Geräte mit physischen Kameras garantiert. Die Vorschau müsste in diesem Modus aus einem der Streams kommen. Das ist der zweite Schritt, der sich lohnt, falls der erste auf Ihrem Telefon nicht funktioniert.
 - Ab Android 10 lässt sich die Kombination vorab mit `CameraDevice.isSessionConfigurationSupported` prüfen und das Ergebnis auf dem Startbildschirm anzeigen.
 - Bei manchen Telefonen sind die physischen Kameras nicht in `getCameraIdList()` aufgeführt (verborgen), aber über ihre ID erreichbar; die App fragt sie direkt ab.
