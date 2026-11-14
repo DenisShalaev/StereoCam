@@ -80,6 +80,8 @@ Das Vorschaubild unten links auf dem Kamerabild öffnet die Galerie mit Fotos au
 
 **Ehrlich:** Die Tiefenkarte wird aus zwei Bildern verschiedener Objektive geschätzt und ist auf einfarbigen Flächen und Spiegelungen unsicher; die Berechnung läuft auf der CPU, auf einem Telefon wenige Bilder pro Sekunde (nur der Algorithmus wurde am PC getestet, nicht auf einem Gerät). Das ist eine Ansicht, kein Export: es entstehen kein Video und kein GIF.
 
+Die Tiefenkarte für den Modus „Bewegung“ nutzt Semi-Global-Matching (SGM, Census-Kosten, ±1 px vertikale Toleranz); der Disparitätsbereich wird aus dem Bild selbst bestimmt, schmale Streifen mit abweichender Tiefe werden verworfen und aus der Umgebung gefüllt.
+
 ### 5.2. Start, Einstellungen und Galerie
 
 Die App öffnet sich direkt mit dem Kamerabild (der Modus wird automatisch gewählt: zwei Kameras, wenn das Telefon sie freigibt, sonst Aufnahme mit Verschiebung). Das Zahnrad oben rechts öffnet die Einstellungen: Aufnahmemodus (Auto / zwei Kameras / schnelles Umschalten / Verschiebung), Kamerapaar, Dateiformate, Ausrichtung und Bericht. Das Vorschaubild des letzten Fotos unten links öffnet die Galerie. In der Galerie: Antippen = Bewegungsansicht; langes Drücken = mehrere Dateien auswählen (teilen, in SBS / Anaglyphe / getrennte L und R / MPO umwandeln, löschen). Die Umwandlung erzeugt neue Dateien, die Originale bleiben unverändert; Löschen ist endgültig (ab Android 11 kann das System um Bestätigung bitten).

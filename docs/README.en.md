@@ -80,6 +80,8 @@ The "Gallery / motion view" button on the main screen lists photos from Pictures
 
 **Honestly:** the depth map is estimated from two images of different lenses and is unreliable on plain surfaces and highlights; rendering runs on the CPU, a few frames per second on a phone (only the algorithm was tested, on a PC; not run on a device). This is a viewer, not an export: no video/GIF is produced.
 
+The depth map for Motion mode uses semi-global matching (SGM, census cost, ±1 px vertical tolerance); the disparity range is taken from the picture itself, and narrow strips with outlying depth are rejected and filled from their surroundings.
+
 ### 5.2. Start, settings and gallery
 
 The app opens straight on the camera image (the mode is chosen automatically: two cameras if the phone provides them, otherwise shift shooting). The gear at the top right opens settings: capture mode (auto / two cameras / fast switching / shift), camera pair, file formats, alignment and report. The thumbnail of the last photo at the bottom left opens the gallery. In the gallery: tap = motion view; press and hold = select several files (share, convert to SBS / anaglyph / separate L and R / MPO, delete). Conversion creates new files and leaves the originals unchanged; deletion is permanent (on Android 11+ the system may ask for confirmation).

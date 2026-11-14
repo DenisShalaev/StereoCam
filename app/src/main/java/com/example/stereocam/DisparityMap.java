@@ -23,47 +23,24 @@ final class DisparityMap {
 
     private DisparityMap() {}
 
+    /** Ergebnis einer SGM-Rechnung (Disparitaet in Pixeln dieser Aufloesung). */
+    private static final class Sgm { float[] fL, fR; boolean[] okL, okR; int valid; }
+
     /** rgbL, rgbR: ARGB, gleiche Groesse w x h. range: groesster |d| in Pixeln. */
     static Result compute(int[] rgbL, int[] rgbR, int w, int h, int range) {
-        float[] gl = norm(StereoAligner.gray(rgbL, w * h), w, h), gr = norm(StereoAligner.gray(rgbR, w * h), w, h);
-        final int N = w * h, R = 4;                                     // Fenster 9x9
-        float[] bestL = new float[N], bestR = new float[N], cPrev = new float[N], cCur = new float[N], cm1 = new float[N], cp1 = new float[N];
-        short[] dL = new short[N], dR = new short[N];
-        Arrays.fill(bestL, Float.MAX_VALUE); Arrays.fill(bestR, Float.MAX_VALUE);
-        double[] sat = new double[(w + 1) * (h + 1)]; float[] ad = new float[N];
-        Arrays.fill(cPrev, Float.MAX_VALUE);
-        for (int d = -range; d <= range; d++) {
-            for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
-                int xr = x + d; ad[y * w + x] = (xr < 0 || xr >= w) ? 1.5f : Math.min(1.5f, Math.abs(gl[y * w + x] - gr[y * w + xr]));
-            }
-            for (int y = 0; y < h; y++) { double rs = 0; for (int x = 0; x < w; x++) { rs += ad[y * w + x]; sat[(y + 1) * (w + 1) + x + 1] = sat[y * (w + 1) + x + 1] + rs; } }
-            for (int y = 0; y < h; y++) {
-                int y0 = Math.max(0, y - R), y1 = Math.min(h - 1, y + R);
-                for (int x = 0; x < w; x++) {
-                    int x0 = Math.max(0, x - R), x1 = Math.min(w - 1, x + R);
-                    double s = sat[(y1 + 1) * (w + 1) + x1 + 1] - sat[y0 * (w + 1) + x1 + 1] - sat[(y1 + 1) * (w + 1) + x0] + sat[y0 * (w + 1) + x0];
-                    float c = (float) (s / ((x1 - x0 + 1) * (y1 - y0 + 1))); int i = y * w + x; cCur[i] = c;
-                    if (dL[i] == d - 1 && bestL[i] != Float.MAX_VALUE) cp1[i] = c;
-                    if (c < bestL[i]) { bestL[i] = c; dL[i] = (short) d; cm1[i] = cPrev[i]; cp1[i] = Float.MAX_VALUE; }
-                    int xr = x + d; if (xr >= 0 && xr < w) { int j = y * w + xr; if (c < bestR[j]) { bestR[j] = c; dR[j] = (short) d; } }
-                }
-            }
-            float[] t = cPrev; cPrev = cCur; cCur = t;
-        }
-        float[] fL = new float[N], fR = new float[N];
-        for (int i = 0; i < N; i++) {
-            float sub = 0, a = cm1[i], b = bestL[i], c = cp1[i];
-            if (a != Float.MAX_VALUE && c != Float.MAX_VALUE) { float den = a - 2 * b + c; if (den > 1e-6f) sub = Math.max(-0.5f, Math.min(0.5f, 0.5f * (a - c) / den)); }
-            fL[i] = dL[i] + sub; fR[i] = dR[i];
-        }
-        // Links-Rechts-Pruefung
-        boolean[] okL = new boolean[N], okR = new boolean[N]; int valid = 0;
-        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
-            int i = y * w + x, xr = Math.round(x + fL[i]);
-            if (xr >= 0 && xr < w && Math.abs(fR[y * w + xr] - fL[i]) <= 1.5f && bestL[i] < 0.9f) { okL[i] = true; valid++; }
-            int xl = Math.round(x - fR[i]);
-            if (xl >= 0 && xl < w && Math.abs(fL[y * w + xl] - fR[i]) <= 1.5f && bestR[i] < 0.9f) okR[i] = true;
-        }
+        final int N = w * h;
+        float[] gl = norm(StereoAligner.gray(rgbL, N), w, h), gr = norm(StereoAligner.gray(rgbR, N), w, h);
+        // 1) grober Durchlauf (1/3 Aufloesung, voller Bereich): liefert die tatsaechlich vorkommenden Disparitaeten (2 %..98 %)
+        int cw = Math.max(32, w / 3), ch = Math.max(24, h / 3), cr = Math.max(2, range / 3 + 1);
+        int[] l3 = StereoAligner.resample(rgbL, w, h, 0, 0, w, h, cw, ch), r3 = StereoAligner.resample(rgbR, w, h, 0, 0, w, h, cw, ch);
+        Sgm c = sgm(norm(StereoAligner.gray(l3, cw * ch), cw, ch), norm(StereoAligner.gray(r3, cw * ch), cw, ch), cw, ch, -cr, cr);
+        float[] vals = new float[cw * ch]; int nv = 0; for (int i = 0; i < cw * ch; i++) if (c.okL[i]) vals[nv++] = c.fL[i];
+        int lo = -range, hi = range;
+        if (nv > 200) { Arrays.sort(vals, 0, nv); float k = (float) w / cw; lo = Math.max(-range, (int) Math.floor(vals[(int) (0.02 * (nv - 1))] * k) - 3); hi = Math.min(range, (int) Math.ceil(vals[(int) (0.98 * (nv - 1))] * k) + 3); if (hi - lo < 8) { int m = (lo + hi) / 2; lo = Math.max(-range, m - 4); hi = Math.min(range, m + 4); } }
+        // 2) feiner Durchlauf nur im gefundenen Bereich
+        Sgm f = sgm(gl, gr, w, h, lo, hi);
+        float[] fL = f.fL, fR = f.fR; boolean[] okL = f.okL, okR = f.okR; int valid = f.valid;
+        rejectStrips(fL, okL, w, h); rejectStrips(fR, okR, w, h);
         fill(fL, okL, w, h); fill(fR, okR, w, h);
         fL = median(fL, w, h); fR = median(fR, w, h);
         // Kantenerhaltende Glaettung (gewichteter Guided Filter, Leitbild = jeweiliges Bild): beseitigt Streifen und Ausreisser
@@ -78,6 +55,77 @@ final class DisparityMap {
         Arrays.sort(cen); r.centerMedian = cen[cen.length / 2];
         float[] all = fL.clone(); Arrays.sort(all); r.min = all[(int) (0.02 * (N - 1))]; r.max = all[(int) (0.98 * (N - 1))];
         return r;
+    }
+
+    /** Semi-Global Matching: Census(5x5)+Differenz als Kosten, Pfadaggregation in 4 Richtungen, Links-Rechts-Pruefung. d = xR - xL in [dmin, dmax]. */
+    private static Sgm sgm(float[] gl, float[] gr, int w, int h, int dmin, int dmax) {
+        final int D = dmax - dmin + 1, N = w * h;
+        int[] cl = census(gl, w, h), cr = census(gr, w, h);
+        byte[] C = new byte[N * D];
+        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
+            int p = y * w + x, base = p * D;
+            for (int k = 0; k < D; k++) {
+                int xr = x + dmin + k;
+                if (xr < 0 || xr >= w) { C[base + k] = (byte) 255; continue; }
+                float bestc = 9f;                                                   // kleiner vertikaler Versatz (Objektivverzeichnung, Restfehler der Ausrichtung) wird toleriert
+                for (int dy = -1; dy <= 1; dy++) {
+                    int yy = y + dy; if (yy < 0 || yy >= h) continue;
+                    float ham = Integer.bitCount(cl[p] ^ cr[yy * w + xr]) / 24f, ad = Math.min(1.5f, Math.abs(gl[p] - gr[yy * w + xr])) / 1.5f;
+                    float cc = 0.7f * ham + 0.3f * ad + (dy == 0 ? 0f : 0.04f); if (cc < bestc) bestc = cc;
+                }
+                C[base + k] = (byte) Math.round(255f * Math.min(1f, bestc));
+            }
+        }
+        short[] S = new short[N * D];
+        final int P1 = 10, P2 = 60;
+        int[] prev = new int[D], cur = new int[D];
+        for (int dir = 0; dir < 4; dir++) {
+            int lines = dir < 2 ? h : w, len = dir < 2 ? w : h;
+            for (int ln = 0; ln < lines; ln++) {
+                Arrays.fill(prev, 0); int pPrev = -1;
+                for (int i = 0; i < len; i++) {
+                    int pos = (dir == 0 || dir == 2) ? i : len - 1 - i;
+                    int p = dir < 2 ? ln * w + pos : pos * w + ln, base = p * D;
+                    int minPrev = Integer.MAX_VALUE; for (int k = 0; k < D; k++) if (prev[k] < minPrev) minPrev = prev[k];
+                    int p2 = P2; if (pPrev >= 0) { float dI = Math.abs(gl[p] - gl[pPrev]); p2 = Math.max(P1 * 2, Math.round(P2 / (1f + 4f * dI))); }
+                    int mn = Integer.MAX_VALUE;
+                    for (int k = 0; k < D; k++) {
+                        int best = prev[k]; if (k > 0 && prev[k - 1] + P1 < best) best = prev[k - 1] + P1; if (k < D - 1 && prev[k + 1] + P1 < best) best = prev[k + 1] + P1; if (minPrev + p2 < best) best = minPrev + p2;
+                        int v = (C[base + k] & 255) + best - minPrev; cur[k] = v; if (v < mn) mn = v;
+                    }
+                    for (int k = 0; k < D; k++) { S[base + k] += (short) cur[k]; }
+                    int[] t = prev; prev = cur; cur = t; pPrev = p;
+                }
+            }
+        }
+        // Gewinner (links) mit Subpixel; Gewinner (rechts) aus demselben Volumen
+        Sgm r = new Sgm(); r.fL = new float[N]; r.fR = new float[N]; r.okL = new boolean[N]; r.okR = new boolean[N];
+        int[] kL = new int[N], kR = new int[N]; int[] bestR = new int[N]; Arrays.fill(bestR, Integer.MAX_VALUE);
+        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
+            int p = y * w + x, base = p * D, bk = 0, bv = Integer.MAX_VALUE;
+            for (int k = 0; k < D; k++) { int v = S[base + k]; if (v < bv) { bv = v; bk = k; } int xr = x + dmin + k; if (xr >= 0 && xr < w && v < bestR[y * w + xr]) { bestR[y * w + xr] = v; kR[y * w + xr] = k; } }
+            kL[p] = bk; float sub = 0;
+            if (bk > 0 && bk < D - 1) { float a = S[base + bk - 1], b = bv, c = S[base + bk + 1], den = a - 2 * b + c; if (den > 1e-3f) sub = Math.max(-0.5f, Math.min(0.5f, 0.5f * (a - c) / den)); }
+            r.fL[p] = dmin + bk + sub;
+        }
+        for (int i = 0; i < N; i++) r.fR[i] = dmin + kR[i];
+        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
+            int i = y * w + x, xr = Math.round(x + r.fL[i]);
+            if (xr >= 0 && xr < w && Math.abs(r.fR[y * w + xr] - r.fL[i]) <= 1.5f && kL[i] > 0 && kL[i] < D - 1 + (D < 3 ? 2 : 0)) { r.okL[i] = true; r.valid++; }
+            int xl = Math.round(x - r.fR[i]);
+            if (xl >= 0 && xl < w && Math.abs(r.fL[y * w + xl] - r.fR[i]) <= 1.5f) r.okR[i] = true;
+        }
+        return r;
+    }
+
+    private static int[] census(float[] g, int w, int h) {
+        int[] o = new int[w * h];
+        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
+            float c = g[y * w + x]; int bits = 0;
+            for (int j = -2; j <= 2; j++) for (int i = -2; i <= 2; i++) { if (i == 0 && j == 0) continue; int xx = Math.max(0, Math.min(w - 1, x + i)), yy = Math.max(0, Math.min(h - 1, y + j)); bits = (bits << 1) | (g[yy * w + xx] < c ? 1 : 0); }
+            o[y * w + x] = bits;
+        }
+        return o;
     }
 
     /** Bildweise skalieren (bilinear) - fuer die Darstellung in hoeherer Aufloesung; Disparitaetswerte werden mitskaliert. */
@@ -143,6 +191,17 @@ final class DisparityMap {
         float[] ma = box(a, w, h, r), mb = box(b, w, h, r), o = new float[N];
         for (int i = 0; i < N; i++) o[i] = ma[i] * I[i] + mb[i];
         return o;
+    }
+
+    /** Verwirft gueltige Werte, die stark vom Median ihrer 11x11-Umgebung abweichen: schmale Streifen mit falscher (z. B. umgekehrter) Tiefe. Echte Objekte (breiter als ~6 px) bleiben. */
+    private static void rejectStrips(float[] m, boolean[] ok, int w, int h) {
+        boolean[] bad = new boolean[w * h]; float[] t = new float[121];
+        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
+            int i = y * w + x; if (!ok[i]) continue; int n = 0;
+            for (int j = -5; j <= 5; j++) for (int k = -5; k <= 5; k++) { int xx = Math.max(0, Math.min(w - 1, x + k)), yy = Math.max(0, Math.min(h - 1, y + j)); t[n++] = m[yy * w + xx]; }
+            Arrays.sort(t, 0, n); if (Math.abs(m[i] - t[n / 2]) > Math.max(2.5f, 0.02f * w)) bad[i] = true;
+        }
+        for (int i = 0; i < w * h; i++) if (bad[i]) ok[i] = false;
     }
 
     private static float[] median(float[] m, int w, int h) {
