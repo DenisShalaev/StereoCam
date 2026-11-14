@@ -48,6 +48,31 @@ final class Ui {
         return row;
     }
 
+    /** Dialog im gemeinsamen Stil (dunkle Karte, runde Ecken, Akzent). */
+    static final class Dlg extends android.app.AlertDialog.Builder {
+        private final Context ctx;
+        Dlg(Context c) { super(c, android.R.style.Theme_DeviceDefault_Dialog_Alert); ctx = c; }
+        @Override public android.app.AlertDialog show() {
+            android.app.AlertDialog dlg = create(); dlg.show();
+            if (dlg.getWindow() != null) dlg.getWindow().setBackgroundDrawable(new android.graphics.drawable.InsetDrawable(round(ctx, 16, CARD, EDGE), dp(ctx, 12)));
+            int tid = ctx.getResources().getIdentifier("alertTitle", "id", "android");
+            TextView t = tid != 0 ? dlg.findViewById(tid) : null; if (t != null) t.setTextColor(TEXT);
+            TextView m = dlg.findViewById(android.R.id.message); if (m != null) m.setTextColor(0xFFCBD5E1);
+            for (int w : new int[] {android.app.AlertDialog.BUTTON_POSITIVE, android.app.AlertDialog.BUTTON_NEGATIVE, android.app.AlertDialog.BUTTON_NEUTRAL}) {
+                Button b = dlg.getButton(w); if (b != null) { b.setTextColor(ACCENT); b.setAllCaps(false); }
+            }
+            android.widget.ListView lv = dlg.getListView();
+            if (lv != null) { lv.setDivider(new android.graphics.drawable.ColorDrawable(EDGE)); lv.setDividerHeight(Math.max(1, dp(ctx, 1))); }
+            return dlg;
+        }
+    }
+
+    /** Kleiner Textknopf (Chip) fuer Leisten. */
+    static TextView chip(Context c, CharSequence s, boolean primary) {
+        TextView t = text(c, s, 13, primary ? 0xFF0B1220 : TEXT); t.setGravity(Gravity.CENTER);
+        t.setBackground(round(c, 18, primary ? ACCENT : BG, primary ? 0 : EDGE)); t.setPadding(dp(c, 12), dp(c, 8), dp(c, 12), dp(c, 8)); return t;
+    }
+
     static View space(Context c, int h) { View v = new View(c); v.setLayoutParams(new LinearLayout.LayoutParams(1, dp(c, h))); return v; }
     static int alpha(int color, int a) { return Color.argb(a, Color.red(color), Color.green(color), Color.blue(color)); }
 }

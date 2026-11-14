@@ -28,13 +28,13 @@ public class WiggleActivity extends Activity {
     private ImageView image; private TextView status;
     private WiggleRenderer.Scene scene; private Bitmap frame; private int[] buf;
     private volatile boolean playing = true, alive = true, busy;
-    private volatile int ampIdx = 2, perIdx = 1, shape = WigglePath.LINE;
+    private volatile int ampIdx = 1, perIdx = 1, shape = WigglePath.LINE;
     private long t0; private double pausedAt; private double fpsAvg;
     private final List<TextView> ampChips = new ArrayList<>(), perChips = new ArrayList<>(), shapeChips = new ArrayList<>();
 
     @Override protected void onCreate(Bundle b) {
         super.onCreate(b);
-        ampIdx = Prefs.getInt(this, "wig_amp", 2); perIdx = Prefs.getInt(this, "wig_per", 1); shape = Prefs.getInt(this, "wig_shape", 0);
+        ampIdx = Prefs.getInt(this, "wig_amp2", 1); perIdx = Prefs.getInt(this, "wig_per", 1); shape = Prefs.getInt(this, "wig_shape", 0);
         LinearLayout root = new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setBackgroundColor(Ui.BG);
         root.setOnApplyWindowInsetsListener((v, in) -> { v.setPadding(in.getSystemWindowInsetLeft(), in.getSystemWindowInsetTop(), in.getSystemWindowInsetRight(), in.getSystemWindowInsetBottom()); return in; });
         FrameLayout box = new FrameLayout(this);
@@ -45,7 +45,7 @@ public class WiggleActivity extends Activity {
         root.addView(box, new LinearLayout.LayoutParams(-1, 0, 1));
 
         LinearLayout card = Ui.card(this);
-        card.addView(label(R.string.wig_amp)); card.addView(chips(ampChips, new String[] {"×1", "×2", "×3", "×4", "×6"}, ampIdx, i -> { ampIdx = i; Prefs.setInt(this, "wig_amp", i); }));
+        card.addView(label(R.string.wig_amp)); card.addView(chips(ampChips, new String[] {"×1", "×2", "×3", "×4", "×6"}, ampIdx, i -> { ampIdx = i; Prefs.setInt(this, "wig_amp2", i); }));
         card.addView(label(R.string.wig_speed)); card.addView(chips(perChips, new String[] {getString(R.string.wig_fast), getString(R.string.wig_mid), getString(R.string.wig_slow)}, perIdx, i -> { retime(PERIODS[i]); perIdx = i; Prefs.setInt(this, "wig_per", i); }));
         card.addView(label(R.string.wig_path)); card.addView(chips(shapeChips, new String[] {getString(R.string.wig_line), getString(R.string.wig_circle)}, shape, i -> { shape = i; Prefs.setInt(this, "wig_shape", i); }));
         card.addView(Ui.space(this, 6)); card.addView(Ui.text(this, getString(R.string.wig_hint), 12, Ui.GREY));

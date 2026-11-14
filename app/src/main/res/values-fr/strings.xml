@@ -68,4 +68,22 @@
     <string name="wig_line">Aller-retour</string>
     <string name="wig_circle">Autour du sujet</string>
     <string name="wig_hint">Touchez l’image pour mettre en pause. L’amplitude réelle n’est que de quelques degrés ; les valeurs plus grandes sont calculées à partir d’une estimation de profondeur et montrent des artefacts sur les bords.</string>
+    <string name="set_title">Réglages</string>
+    <string name="mode_title">Mode de prise de vue</string>
+    <string name="mode_auto">Automatique (deux caméras si le téléphone le permet, sinon décalage)</string>
+    <string name="mode_dual">Deux caméras à la fois</string>
+    <string name="mode_lens">Changement rapide d’objectif (l’un après l’autre)</string>
+    <string name="mode_shift">Décalage avec une caméra</string>
+    <string name="perm_grant">Autoriser la caméra</string>
+    <string name="gal_all">Tout</string>
+    <string name="gal_share">Partager</string>
+    <string name="gal_convert">Convertir</string>
+    <string name="gal_delete">Supprimer</string>
+    <string name="gal_cancel">Annuler</string>
+    <string name="gal_selected">%1$d sélectionnée(s)</string>
+    <string name="gal_delete_confirm">Supprimer définitivement %1$d fichier(s) ?</string>
+    <string name="gal_delete_failed">Certains fichiers n’ont pas pu être supprimés.</string>
+    <string name="gal_converting">Conversion…</string>
+    <string name="gal_converted">Terminé : %1$d converti(s). Les originaux restent inchangés.</string>
+    <string name="gal_conv_failed">Échec de la conversion : %1$s</string>
 </resources>

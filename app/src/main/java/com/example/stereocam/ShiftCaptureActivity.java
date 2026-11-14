@@ -62,7 +62,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
     private float minFocusDioptre = 0; private boolean aeLockOk = false;
     private final MediaActionSound sound = new MediaActionSound();
     private boolean busy = false, closed = false;
-    private android.net.Uri lastUri;
+    private android.net.Uri lastUri; private String cfgAtStart = "";
 
     // Zustand der Aufnahme
     private byte[] shot1; private int rot1; private float[] r1;           // erstes Bild, seine Drehung, Sensorlage
@@ -83,7 +83,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
         root.addOnLayoutChangeListener((v, l, t, r, bt, ol, ot, or, ob) -> fit());
 
         status = Ui.text(this, getString(R.string.shift_step1), 14, Ui.TEXT); status.setShadowLayer(4, 0, 1, 0xFF000000); status.setGravity(Gravity.CENTER);
-        FrameLayout.LayoutParams sp = new FrameLayout.LayoutParams(-1, -2, Gravity.TOP); sp.topMargin = Ui.dp(this, 12); sp.leftMargin = sp.rightMargin = Ui.dp(this, 12);
+        FrameLayout.LayoutParams sp = new FrameLayout.LayoutParams(-1, -2, Gravity.TOP); sp.topMargin = Ui.dp(this, 12); sp.leftMargin = sp.rightMargin = Ui.dp(this, 64);
         root.addView(status, sp);
 
         // Bedienfeld unten: Winkel, Abstand/Verschiebung, Regler
@@ -108,19 +108,20 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
 
         reset = Ui.text(this, getString(R.string.shift_reset), 13, Ui.TEXT); reset.setBackground(Ui.round(this, 18, Ui.alpha(Ui.BG, 200), Ui.EDGE));
         reset.setPadding(Ui.dp(this, 14), Ui.dp(this, 8), Ui.dp(this, 14), Ui.dp(this, 8)); reset.setVisibility(View.GONE);
-        FrameLayout.LayoutParams rp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.END); rp.rightMargin = Ui.dp(this, 24); rp.bottomMargin = Ui.dp(this, 42);
+        FrameLayout.LayoutParams rp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.START); rp.leftMargin = Ui.dp(this, 24); rp.bottomMargin = Ui.dp(this, 42);
         root.addView(reset, rp); reset.setOnClickListener(v -> resetShots());
 
         TextView swap = Ui.text(this, getString(R.string.swap_eyes), 13, Ui.TEXT); swap.setBackground(Ui.round(this, 18, Ui.alpha(Ui.BG, 200), Ui.EDGE));
         swap.setPadding(Ui.dp(this, 14), Ui.dp(this, 8), Ui.dp(this, 14), Ui.dp(this, 8));
-        FrameLayout.LayoutParams wp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.END); wp.rightMargin = Ui.dp(this, 24); wp.bottomMargin = Ui.dp(this, 90);
+        FrameLayout.LayoutParams wp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.START); wp.leftMargin = Ui.dp(this, 24); wp.bottomMargin = Ui.dp(this, 90);
         root.addView(swap, wp);
         swap.setOnClickListener(v -> { Prefs.set(this, Prefs.SWAP, !Prefs.get(this, Prefs.SWAP)); updateDist(); updateStatus(); });
 
-        thumb = new ImageView(this); thumb.setScaleType(ImageView.ScaleType.CENTER_CROP); thumb.setBackground(Ui.round(this, 12, Ui.CARD, Ui.EDGE)); thumb.setVisibility(View.GONE);
-        FrameLayout.LayoutParams tp = new FrameLayout.LayoutParams(Ui.dp(this, 60), Ui.dp(this, 60), Gravity.BOTTOM | Gravity.START); tp.leftMargin = Ui.dp(this, 24); tp.bottomMargin = Ui.dp(this, 30);
+        thumb = new ImageView(this); thumb.setScaleType(ImageView.ScaleType.CENTER_CROP); thumb.setBackground(Ui.round(this, 12, Ui.CARD, Ui.EDGE)); thumb.setVisibility(View.VISIBLE);
+        FrameLayout.LayoutParams tp = new FrameLayout.LayoutParams(Ui.dp(this, 60), Ui.dp(this, 60), Gravity.BOTTOM | Gravity.END); tp.rightMargin = Ui.dp(this, 24); tp.bottomMargin = Ui.dp(this, 30);
         root.addView(thumb, tp);
-        thumb.setOnClickListener(v -> { if (lastUri != null) startActivity(new Intent(Intent.ACTION_VIEW).setDataAndType(lastUri, getContentResolver().getType(lastUri)).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)); });
+        thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
+        Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);
         root.setOnApplyWindowInsetsListener((v, in) -> { v.setPadding(in.getSystemWindowInsetLeft(), in.getSystemWindowInsetTop(), in.getSystemWindowInsetRight(), in.getSystemWindowInsetBottom()); return in; });
         updateDist(); updateStatus();
     }
@@ -142,7 +143,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
     // ------------------------------------------------------------------ Lebenszyklus
 
     @Override protected void onResume() {
-        super.onResume(); closed = false;
+        super.onResume(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
         ht = new HandlerThread("cam"); ht.start(); bg = new Handler(ht.getLooper());
         Sensor rv = sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         if (rv != null) sm.registerListener(this, rv, SensorManager.SENSOR_DELAY_GAME);
@@ -318,7 +319,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
         angles.setText(R.string.shift_angles_wait); updateStatus(); startPreviewLocked();
     }
 
-    private void showThumb(android.net.Uri u) { if (u == null) return; try { thumb.setImageURI(null); thumb.setImageURI(u); thumb.setVisibility(View.VISIBLE); } catch (Exception ignored) {} }
+    private void showThumb(android.net.Uri u) { if (u == null) return; Chrome.loadLatest(this, thumb); }
 
     private void closeCamera() {
         closed = true;

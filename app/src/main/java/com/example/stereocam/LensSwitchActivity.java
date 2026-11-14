@@ -52,7 +52,7 @@ public class LensSwitchActivity extends Activity {
     private CameraDevice cam; private CameraCaptureSession sess; private ImageReader reader; private Surface pv;
     private Size previewSize = new Size(1280, 960); private int logicalOrient = 90;
     private final MediaActionSound sound = new MediaActionSound();
-    private boolean busy = false, closed = false; private android.net.Uri lastUri;
+    private boolean busy = false, closed = false; private android.net.Uri lastUri; private String cfgAtStart = "";
 
     private Range<Float> zoomRange; private String refId; private float equivRef = 0;
     private volatile String lastActive; private volatile String waitFor; private volatile int okCount;
@@ -74,19 +74,20 @@ public class LensSwitchActivity extends Activity {
         tv = new TextureView(this); root.addView(tv, new FrameLayout.LayoutParams(-1, -1, Gravity.CENTER));
         root.addOnLayoutChangeListener((v, l, t, r, bt, ol, ot, or, ob) -> fit());
         status = Ui.text(this, getString(R.string.switch_hold), 13, Ui.TEXT); status.setShadowLayer(4, 0, 1, 0xFF000000); status.setGravity(Gravity.CENTER);
-        FrameLayout.LayoutParams sp = new FrameLayout.LayoutParams(-1, -2, Gravity.TOP); sp.topMargin = Ui.dp(this, 12); sp.leftMargin = sp.rightMargin = Ui.dp(this, 12); root.addView(status, sp);
+        FrameLayout.LayoutParams sp = new FrameLayout.LayoutParams(-1, -2, Gravity.TOP); sp.topMargin = Ui.dp(this, 12); sp.leftMargin = sp.rightMargin = Ui.dp(this, 64); root.addView(status, sp);
 
         shutter = new View(this); shutter.setBackground(Ui.round(this, 36, Ui.alpha(Ui.TEXT, 235), Ui.ACCENT));
         FrameLayout.LayoutParams sh = new FrameLayout.LayoutParams(Ui.dp(this, 72), Ui.dp(this, 72), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL); sh.bottomMargin = Ui.dp(this, 24);
         root.addView(shutter, sh); shutter.setOnClickListener(v -> shoot());
 
-        thumb = new ImageView(this); thumb.setScaleType(ImageView.ScaleType.CENTER_CROP); thumb.setBackground(Ui.round(this, 12, Ui.CARD, Ui.EDGE)); thumb.setVisibility(View.GONE);
-        FrameLayout.LayoutParams tp = new FrameLayout.LayoutParams(Ui.dp(this, 60), Ui.dp(this, 60), Gravity.BOTTOM | Gravity.START); tp.leftMargin = Ui.dp(this, 24); tp.bottomMargin = Ui.dp(this, 30); root.addView(thumb, tp);
-        thumb.setOnClickListener(v -> { if (lastUri != null) startActivity(new Intent(Intent.ACTION_VIEW).setDataAndType(lastUri, getContentResolver().getType(lastUri)).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)); });
+        thumb = new ImageView(this); thumb.setScaleType(ImageView.ScaleType.CENTER_CROP); thumb.setBackground(Ui.round(this, 12, Ui.CARD, Ui.EDGE)); thumb.setVisibility(View.VISIBLE);
+        FrameLayout.LayoutParams tp = new FrameLayout.LayoutParams(Ui.dp(this, 60), Ui.dp(this, 60), Gravity.BOTTOM | Gravity.END); tp.rightMargin = Ui.dp(this, 24); tp.bottomMargin = Ui.dp(this, 30); root.addView(thumb, tp);
+        thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
+        Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);
 
         TextView swap = Ui.text(this, getString(R.string.swap_eyes), 13, Ui.TEXT); swap.setBackground(Ui.round(this, 18, Ui.alpha(Ui.BG, 200), Ui.EDGE));
         swap.setPadding(Ui.dp(this, 14), Ui.dp(this, 8), Ui.dp(this, 14), Ui.dp(this, 8));
-        FrameLayout.LayoutParams wp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.END); wp.rightMargin = Ui.dp(this, 24); wp.bottomMargin = Ui.dp(this, 42); root.addView(swap, wp);
+        FrameLayout.LayoutParams wp = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.START); wp.leftMargin = Ui.dp(this, 24); wp.bottomMargin = Ui.dp(this, 42); root.addView(swap, wp);
         swap.setOnClickListener(v -> { boolean s = !Prefs.get(this, Prefs.SWAP); Prefs.set(this, Prefs.SWAP, s); say(getString(s ? R.string.swapped_on : R.string.swapped_off)); });
         root.setOnApplyWindowInsetsListener((v, in) -> { v.setPadding(in.getSystemWindowInsetLeft(), in.getSystemWindowInsetTop(), in.getSystemWindowInsetRight(), in.getSystemWindowInsetBottom()); return in; });
         if (Build.VERSION.SDK_INT < 30) say(getString(R.string.switch_need_api));
@@ -99,7 +100,7 @@ public class LensSwitchActivity extends Activity {
     }
 
     @Override protected void onResume() {
-        super.onResume(); closed = false;
+        super.onResume(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
         ht = new HandlerThread("cam"); ht.start(); bg = new Handler(ht.getLooper());
         if (tv.isAvailable()) openCamera(); else tv.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override public void onSurfaceTextureAvailable(SurfaceTexture s, int w, int h) { openCamera(); }
@@ -267,7 +268,7 @@ public class LensSwitchActivity extends Activity {
 
     private void fail(String msg) { busy = false; ui.post(() -> { shutter.setAlpha(1f); say(msg); }); setZoomPreview(zA); }
 
-    private void showThumb(android.net.Uri u) { if (u == null) return; try { thumb.setImageURI(null); thumb.setImageURI(u); thumb.setVisibility(View.VISIBLE); } catch (Exception ignored) {} }
+    private void showThumb(android.net.Uri u) { if (u == null) return; Chrome.loadLatest(this, thumb); }
 
     private void closeCamera() {
         closed = true;

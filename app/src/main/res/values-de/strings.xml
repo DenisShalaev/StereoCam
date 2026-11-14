@@ -68,4 +68,22 @@
     <string name="wig_line">Hin und her</string>
     <string name="wig_circle">Um das Motiv</string>
     <string name="wig_hint">Zum Anhalten das Bild antippen. Der echte Ausschlag beträgt nur wenige Grad; größere Werte werden aus einer Tiefenschätzung berechnet und zeigen Artefakte an Kanten.</string>
+    <string name="set_title">Einstellungen</string>
+    <string name="mode_title">Aufnahmemodus</string>
+    <string name="mode_auto">Automatisch (zwei Kameras, wenn das Telefon es erlaubt, sonst Verschiebung)</string>
+    <string name="mode_dual">Zwei Kameras gleichzeitig</string>
+    <string name="mode_lens">Schnelles Linsenumschalten (nacheinander)</string>
+    <string name="mode_shift">Verschiebung mit einer Kamera</string>
+    <string name="perm_grant">Kamera erlauben</string>
+    <string name="gal_all">Alle</string>
+    <string name="gal_share">Teilen</string>
+    <string name="gal_convert">Umwandeln</string>
+    <string name="gal_delete">Löschen</string>
+    <string name="gal_cancel">Abbrechen</string>
+    <string name="gal_selected">%1$d ausgewählt</string>
+    <string name="gal_delete_confirm">%1$d Datei(en) endgültig löschen?</string>
+    <string name="gal_delete_failed">Einige Dateien ließen sich nicht löschen.</string>
+    <string name="gal_converting">Umwandlung…</string>
+    <string name="gal_converted">Fertig: %1$d umgewandelt. Die Originale bleiben unverändert.</string>
+    <string name="gal_conv_failed">Umwandlung fehlgeschlagen: %1$s</string>
 </resources>

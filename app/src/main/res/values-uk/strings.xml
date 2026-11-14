@@ -68,4 +68,22 @@
     <string name="wig_line">Туди-назад</string>
     <string name="wig_circle">Навколо об’єкта</string>
     <string name="wig_hint">Торкніться картинки, щоб зупинити. Реальний розмах — лише кілька градусів; більші значення рахуються за оцінкою глибини й дають артефакти на краях.</string>
+    <string name="set_title">Налаштування</string>
+    <string name="mode_title">Режим зйомки</string>
+    <string name="mode_auto">Автоматично (дві камери, якщо телефон дозволяє, інакше зі зсувом)</string>
+    <string name="mode_dual">Дві камери одночасно</string>
+    <string name="mode_lens">Швидке перемикання об’єктивів (по черзі)</string>
+    <string name="mode_shift">Зсув з однією камерою</string>
+    <string name="perm_grant">Дозволити камеру</string>
+    <string name="gal_all">Усі</string>
+    <string name="gal_share">Надіслати</string>
+    <string name="gal_convert">Конвертувати</string>
+    <string name="gal_delete">Видалити</string>
+    <string name="gal_cancel">Скасувати</string>
+    <string name="gal_selected">Вибрано: %1$d</string>
+    <string name="gal_delete_confirm">Видалити безповоротно файлів: %1$d?</string>
+    <string name="gal_delete_failed">Частину файлів видалити не вдалося.</string>
+    <string name="gal_converting">Конвертація…</string>
+    <string name="gal_converted">Готово: сконвертовано %1$d. Оригінали не змінено.</string>
+    <string name="gal_conv_failed">Не вдалося конвертувати: %1$s</string>
 </resources>

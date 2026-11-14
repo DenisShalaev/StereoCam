@@ -137,7 +137,7 @@ final class Processor {
     }
 
     /** Speichert unter Pictures/StereoCam (MediaStore ab Android 10; sonst direkt im Dateisystem). */
-    private static Uri save(Context ctx, String name, String mime, byte[] data) throws Exception {
+    static Uri save(Context ctx, String name, String mime, byte[] data) throws Exception {
         if (Build.VERSION.SDK_INT >= 29) {
             ContentResolver cr = ctx.getContentResolver();
             ContentValues v = new ContentValues();

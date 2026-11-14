@@ -66,6 +66,12 @@ final class DisparityMap {
         }
         fill(fL, okL, w, h); fill(fR, okR, w, h);
         fL = median(fL, w, h); fR = median(fR, w, h);
+        // Kantenerhaltende Glaettung (gewichteter Guided Filter, Leitbild = jeweiliges Bild): beseitigt Streifen und Ausreisser
+        float[] wl = new float[N], wr = new float[N]; for (int i = 0; i < N; i++) { wl[i] = okL[i] ? 1f : 0.2f; wr[i] = okR[i] ? 1f : 0.2f; }
+        float[] gL = scale01(StereoAligner.gray(rgbL, N)), gR = scale01(StereoAligner.gray(rgbR, N));
+        int rad = Math.max(3, w / 60);
+        fL = guided(fL, wl, gL, w, h, rad, 0.0025f); fL = guided(fL, null, gL, w, h, rad, 0.0025f);
+        fR = guided(fR, wr, gR, w, h, rad, 0.0025f); fR = guided(fR, null, gR, w, h, rad, 0.0025f);
         Result r = new Result(); r.w = w; r.h = h; r.dL = fL; r.dR = fR; r.validPercent = (int) (100L * valid / N);
         float[] cen = new float[(w / 2) * (h / 2)]; int k = 0;
         for (int y = h / 4; y < h / 4 + h / 2; y++) for (int x = w / 4; x < w / 4 + w / 2; x++) cen[k++] = fL[y * w + x];
@@ -110,6 +116,33 @@ final class DisparityMap {
                 m[y * w + x] = Float.isNaN(a) ? (Float.isNaN(b) ? 0 : b) : Float.isNaN(b) ? a : Math.max(a, b);
             }
         }
+    }
+
+    private static float[] scale01(float[] g) { float[] o = new float[g.length]; for (int i = 0; i < g.length; i++) o[i] = g[i] / 255f; return o; }
+
+    private static float[] box(float[] a, int w, int h, int r) {
+        double[] s = new double[(w + 1) * (h + 1)];
+        for (int y = 0; y < h; y++) { double rs = 0; for (int x = 0; x < w; x++) { rs += a[y * w + x]; s[(y + 1) * (w + 1) + x + 1] = s[y * (w + 1) + x + 1] + rs; } }
+        float[] o = new float[w * h];
+        for (int y = 0; y < h; y++) { int y0 = Math.max(0, y - r), y1 = Math.min(h - 1, y + r);
+            for (int x = 0; x < w; x++) { int x0 = Math.max(0, x - r), x1 = Math.min(w - 1, x + r);
+                o[y * w + x] = (float) ((s[(y1 + 1) * (w + 1) + x1 + 1] - s[y0 * (w + 1) + x1 + 1] - s[(y1 + 1) * (w + 1) + x0] + s[y0 * (w + 1) + x0]) / ((x1 - x0 + 1) * (y1 - y0 + 1))); } }
+        return o;
+    }
+
+    /** Gewichteter Guided Filter (He et al.): p Eingabe, wgt Gewichte (null = 1), I Leitbild 0..1. */
+    static float[] guided(float[] p, float[] wgt, float[] I, int w, int h, int r, float eps) {
+        int N = w * h; float[] ww = new float[N], wi = new float[N], wp = new float[N], wii = new float[N], wip = new float[N];
+        for (int i = 0; i < N; i++) { float k = wgt == null ? 1f : wgt[i]; ww[i] = k; wi[i] = k * I[i]; wp[i] = k * p[i]; wii[i] = k * I[i] * I[i]; wip[i] = k * I[i] * p[i]; }
+        float[] mw = box(ww, w, h, r), mi = box(wi, w, h, r), mp = box(wp, w, h, r), mii = box(wii, w, h, r), mip = box(wip, w, h, r);
+        float[] a = new float[N], b = new float[N];
+        for (int i = 0; i < N; i++) {
+            float W = Math.max(mw[i], 1e-6f), mI = mi[i] / W, mP = mp[i] / W, var = mii[i] / W - mI * mI, cov = mip[i] / W - mI * mP;
+            a[i] = cov / (var + eps); b[i] = mP - a[i] * mI;
+        }
+        float[] ma = box(a, w, h, r), mb = box(b, w, h, r), o = new float[N];
+        for (int i = 0; i < N; i++) o[i] = ma[i] * I[i] + mb[i];
+        return o;
     }
 
     private static float[] median(float[] m, int w, int h) {

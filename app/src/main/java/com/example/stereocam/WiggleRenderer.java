@@ -50,11 +50,9 @@ final class WiggleRenderer {
                 for (int it = 0; it < 4; it++) { float d = samp(s.dR, w, h, xr, yr); xr = X + (1 - t) * d; yr = Y - v * d; }
                 float dr = samp(s.dR, w, h, xr, yr);
                 double errR = Math.max(Math.abs(xr - (1 - t) * dr - X), Math.abs(yr + v * dr - Y)) + out(xr, yr, w, h);
-                boolean okL = errL < 1.0, okR = errR < 1.0; int c;
-                if (okL && okR) c = mix(StereoAligner.bilinear(s.left, w, h, xl, yl), StereoAligner.bilinear(s.right, w, h, xr, yr), tc);
-                else if (okL) c = StereoAligner.bilinear(s.left, w, h, xl, yl);
-                else if (okR) c = StereoAligner.bilinear(s.right, w, h, xr, yr);
-                else c = errL <= errR ? StereoAligner.bilinear(s.left, w, h, xl, yl) : StereoAligner.bilinear(s.right, w, h, xr, yr);
+                int cl = StereoAligner.bilinear(s.left, w, h, xl, yl), cr = StereoAligner.bilinear(s.right, w, h, xr, yr);
+                double eL = errL / 0.8, eR = errR / 0.8, wL = (1 - tc) * Math.exp(-eL * eL) + 1e-4, wR = tc * Math.exp(-eR * eR) + 1e-4;
+                int c = mix(cl, cr, wR / (wL + wR));
                 out[y * w + x] = c;
             }
         });

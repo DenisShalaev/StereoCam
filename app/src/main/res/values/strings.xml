@@ -53,7 +53,7 @@
     <string name="swapped_on">Eyes swapped: left and right are exchanged</string>
     <string name="swapped_off">Eyes in normal order</string>
     <string name="gal_title">Stereo photos</string>
-    <string name="gal_intro">Photos taken with StereoCam. Tap one to watch it as camera motion on the flat screen.</string>
+    <string name="gal_intro">Photos taken with StereoCam. Tap one to watch it as camera motion; press and hold to select several.</string>
     <string name="gal_open">Open a file…</string>
     <string name="gal_empty">No stereo photos yet. Take one, or open a file.</string>
     <string name="gal_start">Gallery / motion view</string>
@@ -68,4 +68,22 @@
     <string name="wig_line">Back and forth</string>
     <string name="wig_circle">Around the subject</string>
     <string name="wig_hint">Tap the picture to pause. The real swing is only a few degrees; larger values are computed from a depth estimate and show artifacts at edges.</string>
+    <string name="set_title">Settings</string>
+    <string name="mode_title">Capture mode</string>
+    <string name="mode_auto">Automatic (two cameras if the phone allows, otherwise shift)</string>
+    <string name="mode_dual">Two cameras at once</string>
+    <string name="mode_lens">Fast lens switching (one after another)</string>
+    <string name="mode_shift">Shift with one camera</string>
+    <string name="perm_grant">Allow camera</string>
+    <string name="gal_all">All</string>
+    <string name="gal_share">Share</string>
+    <string name="gal_convert">Convert</string>
+    <string name="gal_delete">Delete</string>
+    <string name="gal_cancel">Cancel</string>
+    <string name="gal_selected">%1$d selected</string>
+    <string name="gal_delete_confirm">Delete %1$d file(s) permanently?</string>
+    <string name="gal_delete_failed">Some files could not be deleted.</string>
+    <string name="gal_converting">Converting…</string>
+    <string name="gal_converted">Done: %1$d converted. The originals are unchanged.</string>
+    <string name="gal_conv_failed">Conversion failed: %1$s</string>
 </resources>

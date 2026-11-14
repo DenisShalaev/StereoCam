@@ -16,12 +16,14 @@
         android:localeConfig="@xml/locales_config"
         android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
 
-        <activity android:name=".ProbeActivity" android:exported="true">
+        <activity android:name=".LaunchActivity" android:exported="true" android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ProbeActivity" android:exported="false" />
 
         <activity android:name=".DualCaptureActivity" android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout" />
