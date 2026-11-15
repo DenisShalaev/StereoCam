@@ -175,8 +175,10 @@ public class DualCaptureActivity extends Activity {
         } catch (Exception e) { return p.best; }
     }
 
+    private volatile int gen;
     private void startSession() {
         if (cam == null || closed) return;
+        final int my = ++gen;                                   // nur die zuletzt gestartete Sitzung darf uebernommen werden (sonst passen ImageReader und Sitzung nicht zusammen)
         try {
             if (sess != null) { sess.close(); sess = null; }
             if (rdA != null) rdA.close(); if (rdB != null) rdB.close();
@@ -192,7 +194,7 @@ public class DualCaptureActivity extends Activity {
             Executor ex = r -> bg.post(r);
             SessionConfiguration sc = new SessionConfiguration(SessionConfiguration.SESSION_REGULAR, outs, ex, new CameraCaptureSession.StateCallback() {
                 @Override public void onConfigured(CameraCaptureSession s) {
-                    if (closed || cam == null) return; sess = s; pvS = pv;
+                    if (closed || cam == null) return; if (my != gen) { try { s.close(); } catch (Throwable ignore) {} return; } sess = s; pvS = pv;
                     try {
                         focus.setCharacteristics(((CameraManager) getSystemService(CAMERA_SERVICE)).getCameraCharacteristics(pair.logicalId));
                         CaptureRequest.Builder rb = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); rb.addTarget(pv);
@@ -204,6 +206,7 @@ public class DualCaptureActivity extends Activity {
                     } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
                 }
                 @Override public void onConfigureFailed(CameraCaptureSession s) {
+                    if (my != gen) return;
                     if (level + 1 < CAPS.length) { level++; startSession(); } else switchFallback();
                 }
             });
@@ -267,7 +270,7 @@ public class DualCaptureActivity extends Activity {
             sess.capture(b.build(), stillCb, bg);
             say(getString(R.string.cap_processing));
             bg.postDelayed(() -> { if (busy && (gotA == null || gotB == null)) { busy = false; sayUi(getString(R.string.cap_missing)); ui.post(() -> shutter.setAlpha(1f)); } }, 9000);
-        } catch (Exception e) { busy = false; shutter.setAlpha(1f); say(getString(R.string.cap_error, e.toString())); }
+        } catch (Exception e) { busy = false; ui.post(() -> shutter.setAlpha(1f)); say(getString(R.string.cap_error, e.toString())); if (e instanceof IllegalArgumentException) ui.post(this::startSession); }
     }
 
     // Experiment (Einstellungen): Zoomfaktor der logischen Kamera auf das Minimum (z. B. 0,5x) setzen. Ohne das liefert das Telefon im
