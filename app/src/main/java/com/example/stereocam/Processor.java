@@ -67,7 +67,7 @@ final class Processor {
             try {
                 double cur = StereoAligner.pairScore(pa, wa, ha, cropA, pb, wb, hb, cropB);
                 double[] g = StereoAligner.searchCrop(pa, wa, ha, pb, wb, hb);
-                if (g[2] > cur + 0.05 && g[2] > 0.35 && (g[1] < 0.97)) {
+                if (g[2] > cur + 0.05 && g[2] > 0.35 && (g[1] < 0.97 || g[2] > cur + 0.25)) {   // fast gleicher Bildwinkel: nur bei klarem Gewinn uebernehmen
                     cropA = g[0] == 0 ? g[1] : 1; cropB = g[0] == 1 ? g[1] : 1;
                     note.append(String.format(Locale.ROOT, "crop searched: %s cropped to %.3f (ncc %.2f -> %.2f)\n", g[0] == 0 ? "A" : "B", g[1], cur, g[2]));
                 } else note.append(String.format(Locale.ROOT, "crop check: current ncc %.2f, search best %.2f at %.3f - kept\n", cur, g[2], g[1]));
