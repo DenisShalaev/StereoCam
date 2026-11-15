@@ -113,6 +113,10 @@ final class Processor {
                 if (W != rect[2] - rect[0] || H != rect[3] - rect[1]) { int[] r3 = {0, 0, W, H}; left = cropTL(left, rect[2] - rect[0], W, H); right = cropTL(right, rect[2] - rect[0], W, H); }
             }
         }
+        try {   // Anteil des Endbildes am Sucherbild merken (fuer die Rahmen-Anzeige im Sucher)
+            double cm = in.sameCamera ? 1 : Math.min(cropA, cropB);
+            Prefs.setStr(ctx, in.sameCamera ? Prefs.FRAME_SHIFT : Prefs.FRAME_DUAL, String.format(Locale.ROOT, "%.4f,%.4f,%.4f", (double) W / tw, (double) H / th, cm));
+        } catch (Throwable ignore) {}
         if (Prefs.get(ctx, Prefs.COLOR)) {
             int[] sh = ColorMatch.apply(left, right, W, H);
             out.align = out.align + " | colour match: R " + sh[0] + " G " + sh[1] + " B " + sh[2];

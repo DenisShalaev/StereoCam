@@ -244,3 +244,11 @@ Vorerst leer. Haben Sie StereoCam auf Ihrem Telefon getestet, senden Sie den Ber
 - [Every Camera, Every Angle on Android — GameChanger Tech Blog](https://tech.gc.com/every-camera-every-angle-on-android/)
 - [Telephoto access via third party application — Samsung Developer Forums](https://forum.developer.samsung.com/t/telephoto-access-via-third-party-application/42137)
 - [Camera2 API Issue: Physical Camera fails via Logical Camera Flow … POCO X8 Pro](https://android-overflow.vercel.app/thread/79931897)
+
+**Rahmen des Endbilds (Build 36).** Der Sucher dunkelt nun alles ab, was nicht im gespeicherten Foto landet, und zeichnet einen Rahmen: Ergebnis = Bildwinkel der engeren Kamera abzüglich der beim Angleichen entfernten Ränder. Die Größe stammt aus den letzten Aufnahmen (vor dem ersten Foto geschätzt); abschaltbar in den Einstellungen. Im Objektivwechsel-Modus ist der Rahmen nur näherungsweise. Nicht auf einem Gerät getestet.
+
+**Rahmen: weiche Abdunklung und Schalter (Build 37).** Außerhalb des Rahmens wird es ab dem Rand weich grau. Auf dem Aufnahmebildschirm gibt es einen neuen Rahmen-Knopf (unter Raster und Wasserwaage). Raster (Drittel / Goldener Schnitt) und Wasserwaage werden nun im Rahmen gezeichnet, damit sich das Endbild gestalten lässt. Nicht auf einem Gerät getestet.
+
+**Gleicher Fokus für beide Kameras (Build 38).** Das Aufnahmeprotokoll zeigt: bei Autofokus und Mindestzoom bleibt die Hauptkamera viele Aufnahmen lang auf alter Entfernung (1,16 / 1,36 m), während die Ultraweitwinkelkamera neu fokussiert (0,09…inf); das macht ferne Bildteile der Hauptkamera unscharf. Mit dem neuen Schalter werden beide Kameras kurz vor der Aufnahme auf die Entfernung der Vorschau festgelegt (ca. 0,45 s Pause), danach läuft der Autofokus weiter. Im Protokoll steht „AF synced at … m“. Vermutung aus dem Protokoll, nicht auf einem Gerät getestet.
+
+**Artefakt bei starkem Zoom (Build 39).** Im Cardboard-Modus mit Linsenkorrektur klappten die Bildränder ab etwa 1,2× Zoom zurück (die Verzerrungsfunktion ist nicht monoton); unten erschien eine gespiegelte Falte mit gewelltem Rand. Jenseits dieses Radius läuft die Verzerrung nun linear weiter, die Falte entfällt. Nicht auf einem Gerät getestet.

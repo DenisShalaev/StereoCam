@@ -170,5 +170,12 @@
     <string name="gal_select">Seleccionar</string>
     <string name="zoomx_t">Captura doble: campo completo de la ultra gran angular (zoom mínimo)</string>
     <string name="zoomx_d">Pide al teléfono el zoom mínimo (p. ej. 0,5x). Si en modo doble ambas imágenes tienen casi el mismo campo, la ultra gran angular puede dar así todo su campo. Pruébalo y compara el registro.</string>
+    <string name="frame_t">Mostrar el marco de la imagen final en el visor</string>
+    <string name="frame_d">La foto guardada solo muestra el área dentro del marco (campo de la cámara más cerrada menos los bordes perdidos al alinear). El exterior se oscurece. El tamaño sale de tus últimas capturas; antes de la primera foto es una estimación.</string>
+    <string name="cd_frame">Marco de la imagen final: sí / no</string>
+    <string name="frame_on">Marco activado: cuadrícula y nivel siguen el marco</string>
+    <string name="frame_off">Marco desactivado</string>
+    <string name="syncaf_t">Captura doble: mismo enfoque para ambas cámaras</string>
+    <string name="syncaf_d">Con autoenfoque puede que solo una cámara reenfoque y la otra imagen salga borrosa. Justo antes de la captura se fijan ambas cámaras a la distancia de la vista previa. No afecta al enfoque manual.</string>
     <string name="shotlog_none">Aún no hay capturas registradas</string>
 </resources>

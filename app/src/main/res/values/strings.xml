@@ -170,5 +170,12 @@
     <string name="gal_select">Select</string>
     <string name="zoomx_t">Dual capture: full ultrawide view (minimum zoom)</string>
     <string name="zoomx_d">Requests the lowest zoom (e.g. 0.5x) from the phone. If both frames show almost the same field of view in two-camera mode, this may give the ultrawide camera its full view. Try it and compare the shot log.</string>
+    <string name="frame_t">Show final-frame outline in the viewfinder</string>
+    <string name="frame_d">The saved photo shows only the area inside the frame (the narrower camera’s view minus the edges lost in alignment). The area outside is dimmed. The frame size is taken from your last shots, so it is an estimate until the first photo.</string>
+    <string name="cd_frame">Final-frame outline: on / off</string>
+    <string name="frame_on">Frame on: grid and level now follow the frame</string>
+    <string name="frame_off">Frame off</string>
+    <string name="syncaf_t">Dual capture: same focus for both cameras</string>
+    <string name="syncaf_d">With autofocus only one camera may actually refocus, so the other frame can come out blurry. Just before the shot both cameras are fixed at the distance the preview shows. Has no effect with manual focus.</string>
     <string name="shotlog_none">No shots logged yet</string>
 </resources>

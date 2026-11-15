@@ -101,7 +101,7 @@ public class LensSwitchActivity extends Activity {
     }
 
     @Override protected void onResume() {
-        super.onResume(); if (compose != null) compose.listen(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
+        super.onResume(); if (compose != null) { compose.listen(); compose.showFrame(1, 1); } if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
         ht = new HandlerThread("cam"); ht.start(); bg = new Handler(ht.getLooper());
         if (tv.isAvailable()) openCamera(); else tv.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override public void onSurfaceTextureAvailable(SurfaceTexture s, int w, int h) { openCamera(); }
@@ -272,7 +272,7 @@ public class LensSwitchActivity extends Activity {
         new Thread(() -> {
             try {
                 Processor.Output o = Processor.run(this, in);
-                ui.post(() -> { say(getString(R.string.cap_saved, o.summary) + "\n" + getString(R.string.switch_info, String.valueOf(lens), String.valueOf(dtMs)) + (o.align.isEmpty() ? "" : "\n" + o.align)); lastUri = o.preview; showThumb(o.preview); });
+                ui.post(() -> { say(getString(R.string.cap_saved, o.summary) + "\n" + getString(R.string.switch_info, String.valueOf(lens), String.valueOf(dtMs)) + (o.align.isEmpty() ? "" : "\n" + o.align)); if (compose != null) { compose.showFrame(1, 1); } lastUri = o.preview; showThumb(o.preview); });
             } catch (Throwable t) { ui.post(() -> say(getString(R.string.cap_error, t.toString()))); }
             finally { busy = false; ui.post(() -> shutter.setAlpha(1f)); setZoomPreview(zA); }
         }, "process").start();

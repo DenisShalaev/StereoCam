@@ -170,5 +170,12 @@
     <string name="gal_select">Sélectionner</string>
     <string name="zoomx_t">Capture double : champ complet de l’ultra grand-angle (zoom minimal)</string>
     <string name="zoomx_d">Demande le zoom minimal (p. ex. 0,5x) au téléphone. Si les deux images ont presque le même champ en mode double, la caméra ultra grand-angle peut ainsi donner tout son champ. À essayer, puis comparer le journal.</string>
+    <string name="frame_t">Afficher le cadre de l’image finale dans le viseur</string>
+    <string name="frame_d">La photo enregistrée ne montre que la zone dans le cadre (champ de la caméra la plus serrée moins les bords perdus à l’alignement). L’extérieur est assombri. La taille vient de vos dernières prises ; c’est une estimation avant la première photo.</string>
+    <string name="cd_frame">Cadre de l’image finale : oui / non</string>
+    <string name="frame_on">Cadre activé : grille et niveau suivent le cadre</string>
+    <string name="frame_off">Cadre désactivé</string>
+    <string name="syncaf_t">Capture double : même mise au point pour les deux caméras</string>
+    <string name="syncaf_d">En autofocus, une seule caméra peut réellement refaire la mise au point, l’autre image peut donc être floue. Juste avant la prise, les deux caméras sont réglées sur la distance de l’aperçu. Sans effet en mise au point manuelle.</string>
     <string name="shotlog_none">Aucune prise enregistrée</string>
 </resources>

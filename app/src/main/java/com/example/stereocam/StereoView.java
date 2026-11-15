@@ -20,6 +20,7 @@ final class StereoView extends View {
     private final Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG | Paint.ANTI_ALIAS_FLAG);
     private static final float K1 = 0.09f, K2 = 0.14f;   // sanfte Tonnenverzerrung (Naeherung, keine Kalibrierung einer bestimmten Brille)
     private static final int MESH = 24;
+    private static final float RMAX = 1.2f;              // r * norm / (1 + K1 r^2 + K2 r^4) steigt nur bis ~1,2 (1 - K1 r^2 - 3 K2 r^4 = 0)
     private final float[] verts = new float[(MESH + 1) * (MESH + 1) * 2];
     private final float[] src = new float[(MESH + 1) * (MESH + 1) * 2];
 
@@ -85,6 +86,10 @@ final class StereoView extends View {
             float px = dst.left + dst.width() * x / MESH, py = dst.top + dst.height() * y / MESH;
             src[i] = b.getWidth() * x / (float) MESH; src[i + 1] = b.getHeight() * y / (float) MESH;
             float dx = (px - ecx) / half, dy = (py - ecy) / half, r2 = dx * dx + dy * dy, f = norm / (1f + K1 * r2 + K2 * r2 * r2);
+            if (r2 > RMAX * RMAX) {   // jenseits des Maximums der Abbildung faltet sich das Netz zurueck (Zoom!): dort linear mit kleiner Steigung fortsetzen
+                float r = (float) Math.sqrt(r2), g = RMAX * norm / (1f + K1 * RMAX * RMAX + K2 * RMAX * RMAX * RMAX * RMAX) + (r - RMAX) * 0.15f;
+                f = g / r;
+            }
             verts[i] = ecx + dx * half * f; verts[i + 1] = ecy + dy * half * f; i += 2;
         }
         c.drawBitmapMesh(b, MESH, MESH, verts, 0, null, 0, paint);

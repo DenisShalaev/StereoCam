@@ -109,7 +109,7 @@ public class DualCaptureActivity extends Activity {
     }
 
     @Override protected void onResume() {
-        super.onResume(); if (compose != null) compose.listen(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
+        super.onResume(); if (compose != null) { compose.listen(); compose.showFrame(0, 1.0 / pair.ratio()); } if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
         ht = new HandlerThread("cam"); ht.start(); bg = new Handler(ht.getLooper());
         if (tv.isAvailable()) openCamera(); else tv.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override public void onSurfaceTextureAvailable(SurfaceTexture s, int w, int h) { openCamera(); }
@@ -229,9 +229,31 @@ public class DualCaptureActivity extends Activity {
 
     // ------------------------------------------------------------------ Aufnahme
 
+    private volatile String syncNote = "";
     private void shoot() {
         if (busy || sess == null || cam == null) return;
-        busy = true; gotA = gotB = null; shutter.setAlpha(0.4f);
+        busy = true; gotA = gotB = null; shutter.setAlpha(0.4f); syncNote = "";
+        float dp = compose != null ? compose.diopter() : -1;
+        if (Prefs.get(this, Prefs.SYNCAF) && focus != null && !focus.isManual() && dp >= 0 && pvS != null) {
+            // Autofokus: bei Mindestzoom fokussiert nur die aktive (Ultraweitwinkel-)Kamera nach; die Hauptkamera bleibt auf altem Fokus.
+            // Daher beide Kameras vor der Aufnahme auf dieselbe Entfernung festlegen.
+            try {
+                CaptureRequest.Builder rb = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); rb.addTarget(pvS);
+                rb.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
+                rb.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF); rb.set(CaptureRequest.LENS_FOCUS_DISTANCE, dp); applyZoom(rb);
+                sess.setRepeatingRequest(rb.build(), compose.callback(), bg);
+                syncNote = String.format(java.util.Locale.ROOT, " AF synced at %.2f m;", dp > 0.01f ? 1f / dp : 99f);
+                final float dpf = dp;
+                ui.postDelayed(() -> shoot2(dpf), 450);
+                ui.postDelayed(this::refocus, 3500);
+                return;
+            } catch (Exception e) { syncNote = ""; }
+        }
+        shoot2(-1);
+    }
+
+    private void shoot2(float lockDiopter) {
+        if (sess == null || cam == null) { busy = false; ui.post(() -> shutter.setAlpha(1f)); return; }
         try {
             CaptureRequest.Builder b = cam.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             b.addTarget(rdA.getSurface()); b.addTarget(rdB.getSurface());
@@ -239,6 +261,7 @@ public class DualCaptureActivity extends Activity {
             b.set(CaptureRequest.JPEG_QUALITY, (byte) 95);
             b.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
             focus.apply(b, false); applyZoom(b);
+            if (lockDiopter >= 0) { b.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF); b.set(CaptureRequest.LENS_FOCUS_DISTANCE, lockDiopter); }
             sound.play(MediaActionSound.SHUTTER_CLICK);
             resLatch = new java.util.concurrent.CountDownLatch(1); capFocalA = capFocalB = capFocusA = capFocusB = -1; capZoom = "";
             sess.capture(b.build(), stillCb, bg);
@@ -284,7 +307,7 @@ public class DualCaptureActivity extends Activity {
             sb.append(String.format(java.util.Locale.ROOT, " %s: f %.2f mm (static %.2f), focus %s, min focus %s;", k == 0 ? "A" : "B", f, c.focalMm, fd > 0.01f ? String.format(java.util.Locale.ROOT, "%.2f m", 1 / fd) : (fd >= 0 ? "inf" : "?"), c.minFocusDioptre > 0 ? String.format(java.util.Locale.ROOT, "%.2f m", 1 / c.minFocusDioptre) : "fixed"));
             if (f > 0 && c.focalMm > 0 && f / c.focalMm > 0.5f && f / c.focalMm < 2f && Math.abs(f / c.focalMm - 1) > 0.01f) { if (k == 0) in.equivA = c.equiv35 * f / c.focalMm; else in.equivB = c.equiv35 * f / c.focalMm; }
         }
-        sb.append(capZoom).append(';');
+        sb.append(syncNote).append(capZoom).append(';');
         return sb.toString();
     }
 
@@ -309,7 +332,7 @@ public class DualCaptureActivity extends Activity {
                 try { resLatch.await(1500, java.util.concurrent.TimeUnit.MILLISECONDS); } catch (InterruptedException ignored) {}
                 in.info = capInfo(in);
                 Processor.Output o = Processor.run(this, in);
-                ui.post(() -> { say(getString(R.string.cap_saved, o.summary) + (o.align.isEmpty() ? "" : "\n" + o.align)); lastUri = o.preview; showThumb(o.preview); });
+                ui.post(() -> { say(getString(R.string.cap_saved, o.summary) + (o.align.isEmpty() ? "" : "\n" + o.align)); if (compose != null) { compose.showFrame(0, 1.0 / pair.ratio()); } lastUri = o.preview; showThumb(o.preview); });
             } catch (Throwable t) { ui.post(() -> say(getString(R.string.cap_error, t.toString()))); }
             finally { busy = false; ui.post(() -> shutter.setAlpha(1f)); }
         }, "process").start();

@@ -170,5 +170,12 @@
     <string name="gal_select">Seleziona</string>
     <string name="zoomx_t">Scatto doppio: campo completo dell’ultragrandangolare (zoom minimo)</string>
     <string name="zoomx_d">Chiede al telefono lo zoom minimo (es. 0,5x). Se in modalità doppia le due immagini hanno quasi lo stesso campo, l’ultragrandangolare può così dare tutto il suo campo. Provalo e confronta il registro.</string>
+    <string name="frame_t">Mostra il riquadro dell’immagine finale nel mirino</string>
+    <string name="frame_d">La foto salvata mostra solo l’area nel riquadro (campo della camera più stretta meno i bordi persi nell’allineamento). L’esterno è oscurato. La dimensione deriva dagli ultimi scatti: prima della prima foto è una stima.</string>
+    <string name="cd_frame">Riquadro immagine finale: sì / no</string>
+    <string name="frame_on">Riquadro attivo: griglia e livella seguono il riquadro</string>
+    <string name="frame_off">Riquadro disattivato</string>
+    <string name="syncaf_t">Scatto doppio: stessa messa a fuoco per entrambe le camere</string>
+    <string name="syncaf_d">Con l’autofocus può rifocalizzare solo una camera, così l’altra immagine può risultare sfocata. Subito prima dello scatto entrambe le camere vengono fissate alla distanza dell’anteprima. Nessun effetto con messa a fuoco manuale.</string>
     <string name="shotlog_none">Nessuno scatto registrato</string>
 </resources>
