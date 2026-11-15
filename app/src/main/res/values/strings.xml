@@ -166,5 +166,9 @@
     <string name="sort_name">Name (A–Z)</string>
     <string name="sort_size">File size</string>
     <string name="share_shotlog">Share shot log</string>
+    <string name="gal_actions">Actions</string>
+    <string name="gal_select">Select</string>
+    <string name="zoomx_t">Dual capture: minimum zoom (experiment)</string>
+    <string name="zoomx_d">Requests the lowest zoom (e.g. 0.5x) from the phone. If both frames show almost the same field of view in two-camera mode, this may give the ultrawide camera its full view. Try it and compare the shot log.</string>
     <string name="shotlog_none">No shots logged yet</string>
 </resources>

@@ -87,7 +87,7 @@ public class DualCaptureActivity extends Activity {
         FrameLayout.LayoutParams sh = new FrameLayout.LayoutParams(Ui.dp(this, 72), Ui.dp(this, 72), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL); sh.bottomMargin = Ui.dp(this, 24);
         root.addView(shutter, sh); shutter.setOnClickListener(v -> shoot());
 
-        thumb = new ImageView(this); thumb.setScaleType(ImageView.ScaleType.CENTER_CROP); thumb.setBackground(Ui.round(this, 12, Ui.CARD, Ui.EDGE)); thumb.setVisibility(View.VISIBLE);
+        thumb = new ImageView(this); thumb.setScaleType(ImageView.ScaleType.CENTER_CROP); thumb.setBackground(Ui.round(this, 12, Ui.CARD, Ui.EDGE)); thumb.setClipToOutline(true); thumb.setVisibility(View.VISIBLE);
         FrameLayout.LayoutParams tp = new FrameLayout.LayoutParams(Ui.dp(this, 60), Ui.dp(this, 60), Gravity.BOTTOM | Gravity.START); tp.leftMargin = Ui.dp(this, 24); tp.bottomMargin = Ui.dp(this, 30);
         root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
@@ -198,7 +198,7 @@ public class DualCaptureActivity extends Activity {
                         CaptureRequest.Builder rb = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); rb.addTarget(pv);
                         rb.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
                         rb.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);   // bei einigen Geraeten (z. B. Xiaomi/POCO) bricht die Sitzung mit Stabilisierung auf physischen Kameras ab
-                        focus.apply(rb, false);
+                        focus.apply(rb, false); applyZoom(rb);
                         s.setRepeatingRequest(rb.build(), compose.callback(), bg);
                         sayUi(getString(R.string.cap_mode, String.valueOf(level + 1), usedA.getWidth() + "x" + usedA.getHeight(), usedB.getWidth() + "x" + usedB.getHeight()));
                     } catch (Exception e) { sayUi(getString(R.string.cap_error, e.toString())); }
@@ -219,7 +219,7 @@ public class DualCaptureActivity extends Activity {
         try {
             CaptureRequest.Builder rb = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); rb.addTarget(pvS);
             rb.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
-            boolean trig = focus.takeTrigger(); focus.apply(rb, false); sess.setRepeatingRequest(rb.build(), compose.callback(), bg);
+            boolean trig = focus.takeTrigger(); focus.apply(rb, false); applyZoom(rb); sess.setRepeatingRequest(rb.build(), compose.callback(), bg);
             if (trig) {
                 CaptureRequest.Builder t = cam.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW); t.addTarget(pvS);
                 t.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF); focus.apply(t, true); sess.capture(t.build(), null, bg);
@@ -238,13 +238,24 @@ public class DualCaptureActivity extends Activity {
             b.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
             b.set(CaptureRequest.JPEG_QUALITY, (byte) 95);
             b.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
-            focus.apply(b, false);
+            focus.apply(b, false); applyZoom(b);
             sound.play(MediaActionSound.SHUTTER_CLICK);
-            resLatch = new java.util.concurrent.CountDownLatch(1); capFocalA = capFocalB = capFocusA = capFocusB = -1;
+            resLatch = new java.util.concurrent.CountDownLatch(1); capFocalA = capFocalB = capFocusA = capFocusB = -1; capZoom = "";
             sess.capture(b.build(), stillCb, bg);
             say(getString(R.string.cap_processing));
             bg.postDelayed(() -> { if (busy && (gotA == null || gotB == null)) { busy = false; sayUi(getString(R.string.cap_missing)); ui.post(() -> shutter.setAlpha(1f)); } }, 9000);
         } catch (Exception e) { busy = false; shutter.setAlpha(1f); say(getString(R.string.cap_error, e.toString())); }
+    }
+
+    // Experiment (Einstellungen): Zoomfaktor der logischen Kamera auf das Minimum (z. B. 0,5x) setzen. Ohne das liefert das Telefon im
+    // Zwei-Kamera-Modus offenbar auch fuer die Ultraweitwinkelkamera nur den Bildausschnitt des Zoomfaktors 1,0 (Log: beide Bilder fast gleicher Bildwinkel).
+    private volatile String capZoom = "";
+    private void applyZoom(CaptureRequest.Builder rb) {
+        try {
+            if (!Prefs.get(this, Prefs.ZOOMMIN) || android.os.Build.VERSION.SDK_INT < 30) return;
+            android.util.Range<Float> rg = ((CameraManager) getSystemService(CAMERA_SERVICE)).getCameraCharacteristics(pair.logicalId).get(android.hardware.camera2.CameraCharacteristics.CONTROL_ZOOM_RATIO_RANGE);
+            if (rg != null) rb.set(CaptureRequest.CONTROL_ZOOM_RATIO, rg.getLower());
+        } catch (Throwable ignored) {}
     }
 
     // Aufnahmedaten der Einzelkameras (Brennweite und Fokusentfernung laut Ergebnis): der Bildwinkel aendert sich mit dem Fokus ("Focus Breathing"),
@@ -257,6 +268,11 @@ public class DualCaptureActivity extends Activity {
                 android.hardware.camera2.CaptureResult ra = m.get(pair.a.id), rb = m.get(pair.b.id);
                 if (ra != null) { Float f = ra.get(android.hardware.camera2.CaptureResult.LENS_FOCAL_LENGTH), fd = ra.get(android.hardware.camera2.CaptureResult.LENS_FOCUS_DISTANCE); capFocalA = f == null ? -1 : f; capFocusA = fd == null ? -1 : fd; }
                 if (rb != null) { Float f = rb.get(android.hardware.camera2.CaptureResult.LENS_FOCAL_LENGTH), fd = rb.get(android.hardware.camera2.CaptureResult.LENS_FOCUS_DISTANCE); capFocalB = f == null ? -1 : f; capFocusB = fd == null ? -1 : fd; }
+                StringBuilder z = new StringBuilder();
+                Float zr = res.get(android.hardware.camera2.CaptureResult.CONTROL_ZOOM_RATIO); z.append(" zoom ").append(zr == null ? "?" : String.format(java.util.Locale.ROOT, "%.2f", zr)).append(Prefs.get(DualCaptureActivity.this, Prefs.ZOOMMIN) ? " (min requested)" : "");
+                android.graphics.Rect cl = res.get(android.hardware.camera2.CaptureResult.SCALER_CROP_REGION); if (cl != null) z.append("; logical crop ").append(cl.width()).append("x").append(cl.height());
+                for (int k = 0; k < 2; k++) { android.hardware.camera2.CaptureResult cr = k == 0 ? ra : rb; if (cr == null) continue; android.graphics.Rect c = cr.get(android.hardware.camera2.CaptureResult.SCALER_CROP_REGION); if (c != null) z.append(k == 0 ? "; A crop " : "; B crop ").append(c.width()).append("x").append(c.height()); }
+                capZoom = z.toString();
             } catch (Throwable ignored) {}
             resLatch.countDown();
         }
@@ -268,6 +284,7 @@ public class DualCaptureActivity extends Activity {
             sb.append(String.format(java.util.Locale.ROOT, " %s: f %.2f mm (static %.2f), focus %s, min focus %s;", k == 0 ? "A" : "B", f, c.focalMm, fd > 0.01f ? String.format(java.util.Locale.ROOT, "%.2f m", 1 / fd) : (fd >= 0 ? "inf" : "?"), c.minFocusDioptre > 0 ? String.format(java.util.Locale.ROOT, "%.2f m", 1 / c.minFocusDioptre) : "fixed"));
             if (f > 0 && c.focalMm > 0 && f / c.focalMm > 0.5f && f / c.focalMm < 2f && Math.abs(f / c.focalMm - 1) > 0.01f) { if (k == 0) in.equivA = c.equiv35 * f / c.focalMm; else in.equivB = c.equiv35 * f / c.focalMm; }
         }
+        sb.append(capZoom).append(';');
         return sb.toString();
     }
 

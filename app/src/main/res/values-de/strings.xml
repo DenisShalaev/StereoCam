@@ -166,5 +166,9 @@
     <string name="sort_name">Name (A–Z)</string>
     <string name="sort_size">Dateigröße</string>
     <string name="share_shotlog">Aufnahmeprotokoll senden</string>
+    <string name="gal_actions">Aktionen</string>
+    <string name="gal_select">Auswählen</string>
+    <string name="zoomx_t">Zwei-Kamera-Aufnahme: minimaler Zoom (Experiment)</string>
+    <string name="zoomx_d">Fordert den kleinsten Zoom (z. B. 0,5x) vom Telefon an. Zeigen beide Bilder im Zwei-Kamera-Modus fast denselben Bildwinkel, kann die Ultraweitwinkelkamera so ihren vollen Bildwinkel liefern. Ausprobieren und das Aufnahmeprotokoll vergleichen.</string>
     <string name="shotlog_none">Noch keine Aufnahmen protokolliert</string>
 </resources>

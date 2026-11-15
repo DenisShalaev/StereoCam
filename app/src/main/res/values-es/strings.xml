@@ -166,5 +166,9 @@
     <string name="sort_name">Nombre (A–Z)</string>
     <string name="sort_size">Tamaño del archivo</string>
     <string name="share_shotlog">Enviar registro de capturas</string>
+    <string name="gal_actions">Acciones</string>
+    <string name="gal_select">Seleccionar</string>
+    <string name="zoomx_t">Captura doble: zoom mínimo (experimento)</string>
+    <string name="zoomx_d">Pide al teléfono el zoom mínimo (p. ej. 0,5x). Si en modo doble ambas imágenes tienen casi el mismo campo, la ultra gran angular puede dar así todo su campo. Pruébalo y compara el registro.</string>
     <string name="shotlog_none">Aún no hay capturas registradas</string>
 </resources>

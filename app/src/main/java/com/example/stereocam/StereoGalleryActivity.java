@@ -59,9 +59,7 @@ public class StereoGalleryActivity extends Activity {
         bar.setBackgroundColor(Ui.CARD); bar.setPadding(p, Ui.dp(this, 8), p, Ui.dp(this, 8));
         count = Ui.text(this, "", 14, Ui.TEXT); bar.addView(count, new LinearLayout.LayoutParams(0, -2, 1));
         bar.addView(barBtn(R.string.gal_all, v -> { sel.clear(); for (StereoItems.Item it : items) sel.add(it.uri); refreshSel(); }));
-        bar.addView(barBtn(R.string.gal_share, v -> shareSel()));
-        bar.addView(barBtn(R.string.gal_convert, v -> convertDialog()));
-        bar.addView(barBtn(R.string.gal_delete, v -> confirmDelete()));
+        bar.addView(barBtn(R.string.gal_actions, v -> actionMenu()));
         bar.addView(barBtn(R.string.gal_cancel, v -> endSelect()));
         page.addView(bar);
 
@@ -116,7 +114,7 @@ public class StereoGalleryActivity extends Activity {
             tx.addView(Ui.text(this, it.name, 14, Ui.TEXT)); tx.addView(Ui.text(this, df.format(new Date(it.date)) + String.format(java.util.Locale.US, "  \u00B7  %.1f MB", it.size / 1048576.0), 12, Ui.GREY));
             row.addView(tx, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
             row.setOnClickListener(v -> { if (selecting) toggle(it.uri); else open(it.uri, it.name); });
-            row.setOnLongClickListener(v -> { if (!selecting) { selecting = true; sel.clear(); } toggle(it.uri); return true; });
+            row.setOnLongClickListener(v -> { if (selecting) toggle(it.uri); else { sel.clear(); sel.add(it.uri); actionMenu(); } return true; });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2); lp.bottomMargin = Ui.dp(this, 8); list.addView(row, lp);
             pool.execute(() -> {
                 try {
@@ -152,13 +150,26 @@ public class StereoGalleryActivity extends Activity {
         startActivity(Intent.createChooser(s, null));
     }
 
-    private void convertDialog() {
-        if (sel.isEmpty()) return;
-        String[] names = {getString(R.string.fmt_sbs_t), getString(R.string.fmt_ana_t), getString(R.string.fmt_pair_t), getString(R.string.fmt_mpo_t), getString(R.string.exp_gif), getString(R.string.exp_mp4), getString(R.string.lenti_menu)};
-        new Ui.Dlg(this).setTitle(getString(R.string.gal_convert)).setItems(names, (d, w) -> {
-            if (w == 6) { StereoItems.Item it = chosen().get(0); startActivity(new Intent(this, LentiActivity.class).setData(it.uri).putExtra("name", it.name)); endSelect(); }
-            else convert(w);
+    /** Aktionen fuer die gewaehlten Dateien als Fenster (wie in StereoPano); ausserhalb des Auswahlmodus gilt es fuer die lang gedrueckte Datei. */
+    private void actionMenu() {
+        final List<StereoItems.Item> c = chosen(); if (c.isEmpty()) return;
+        final boolean single = c.size() == 1;
+        final List<String> names = new ArrayList<>(); final List<Integer> ids = new ArrayList<>();       // id: -1 teilen, 0..5 umwandeln, 6 Raster, -2 loeschen, -3 auswaehlen
+        names.add(getString(R.string.gal_share)); ids.add(-1);
+        int[] fm = {R.string.fmt_sbs_t, R.string.fmt_ana_t, R.string.fmt_pair_t, R.string.fmt_mpo_t, R.string.exp_gif, R.string.exp_mp4};
+        for (int k = 0; k < fm.length; k++) { names.add(getString(fm[k])); ids.add(k); }
+        if (single) { names.add(getString(R.string.lenti_menu)); ids.add(6); }
+        names.add(getString(R.string.gal_delete)); ids.add(-2);
+        if (!selecting) { names.add(getString(R.string.gal_select)); ids.add(-3); }
+        android.app.AlertDialog dlg = new Ui.Dlg(this).setTitle(single ? c.get(0).name : getString(R.string.gal_selected, c.size())).setItems(names.toArray(new String[0]), (d, w) -> {
+            int id = ids.get(w);
+            if (id == -1) shareSel();
+            else if (id == -2) confirmDelete();
+            else if (id == 6) { StereoItems.Item it = c.get(0); startActivity(new Intent(this, LentiActivity.class).setData(it.uri).putExtra("name", it.name)); if (selecting) endSelect(); }
+            else if (id == -3) { selecting = true; fill(); }
+            else convert(id);
         }).show();
+        dlg.setOnDismissListener(x -> { if (!selecting) sel.clear(); });
     }
 
     private void convert(final int kind) {

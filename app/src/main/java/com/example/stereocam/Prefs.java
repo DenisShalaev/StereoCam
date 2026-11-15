@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 /** Einstellungen (SharedPreferences). */
 final class Prefs {
     static final String MPO = "fmt_mpo", SBS = "fmt_sbs", VRJPG = "fmt_vrjpg", ANAGLYPH = "fmt_anaglyph", PAIR = "fmt_pair",
-            SWAP = "swap_eyes", ALIGN = "auto_align", PAIR_KEY = "pair_key", MODE = "capture_mode", CONV = "convergence", DIST = "shift_dist", COLOR = "color_match";
+            SWAP = "swap_eyes", ALIGN = "auto_align", PAIR_KEY = "pair_key", MODE = "capture_mode", CONV = "convergence", DIST = "shift_dist", COLOR = "color_match", ZOOMMIN = "dual_zoom_min";
     private Prefs() {}
     private static SharedPreferences sp(Context c) { return c.getSharedPreferences("stereocam", Context.MODE_PRIVATE); }
     static boolean get(Context c, String k) {

@@ -166,5 +166,9 @@
     <string name="sort_name">Nome (A–Z)</string>
     <string name="sort_size">Dimensione del file</string>
     <string name="share_shotlog">Invia il registro degli scatti</string>
+    <string name="gal_actions">Azioni</string>
+    <string name="gal_select">Seleziona</string>
+    <string name="zoomx_t">Scatto doppio: zoom minimo (esperimento)</string>
+    <string name="zoomx_d">Chiede al telefono lo zoom minimo (es. 0,5x). Se in modalità doppia le due immagini hanno quasi lo stesso campo, l’ultragrandangolare può così dare tutto il suo campo. Provalo e confronta il registro.</string>
     <string name="shotlog_none">Nessuno scatto registrato</string>
 </resources>
