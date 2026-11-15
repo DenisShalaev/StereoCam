@@ -66,6 +66,8 @@ public class ProbeActivity extends Activity {
         rep.addView(reportView);
         Button share = Ui.pill(this, R.string.share_report, false); share.setOnClickListener(v -> shareReport());
         rep.addView(Ui.space(this, 8)); rep.addView(share);
+        Button logBtn = Ui.pill(this, R.string.share_shotlog, false); logBtn.setOnClickListener(v -> shareShotLog());
+        rep.addView(Ui.space(this, 8)); rep.addView(logBtn);
         root.addView(rep);
 
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) requestPermissions(perms(), 1); else scan();
@@ -112,6 +114,12 @@ public class ProbeActivity extends Activity {
         modeBox.addView(g);
         modeBox.addView(Ui.text(this, getString(R.string.switch_intro), 12, Ui.GREY)); modeBox.addView(Ui.space(this, 4));
         modeBox.addView(Ui.text(this, getString(R.string.shift_intro), 12, Ui.GREY));
+    }
+
+    private void shareShotLog() {
+        String t = ShotLog.read(this);
+        if (t.isEmpty()) { android.widget.Toast.makeText(this, R.string.shotlog_none, android.widget.Toast.LENGTH_SHORT).show(); return; }
+        startActivity(Intent.createChooser(new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, t).putExtra(Intent.EXTRA_SUBJECT, "StereoCam shot log"), null));
     }
 
     private void shareReport() {

@@ -92,7 +92,7 @@ public class DualCaptureActivity extends Activity {
         root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
         Chrome.gear(this, root); cfgAtStart = Chrome.cfg(this);
-        focus = new FocusControl(this, root, tv, this::refocus); compose = new ComposeOverlay(this, root, tv); compose.setBaselineMm(baseMm);
+        focus = new FocusControl(this, root, tv, this::refocus); compose = new ComposeOverlay(this, root, tv); compose.setBaselineMm(baseMm); compose.setMinFocusM(Math.max(pair.a.minFocusDioptre > 0 ? 1 / pair.a.minFocusDioptre : 0, pair.b.minFocusDioptre > 0 ? 1 / pair.b.minFocusDioptre : 0));
 
         TextView swap = Ui.text(this, getString(R.string.swap_eyes), 13, Ui.TEXT); swap.setBackground(Ui.round(this, 18, Ui.alpha(Ui.BG, 200), Ui.EDGE));
         swap.setPadding(Ui.dp(this, 14), Ui.dp(this, 8), Ui.dp(this, 14), Ui.dp(this, 8));
@@ -240,10 +240,35 @@ public class DualCaptureActivity extends Activity {
             b.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF);
             focus.apply(b, false);
             sound.play(MediaActionSound.SHUTTER_CLICK);
-            sess.capture(b.build(), null, bg);
+            resLatch = new java.util.concurrent.CountDownLatch(1); capFocalA = capFocalB = capFocusA = capFocusB = -1;
+            sess.capture(b.build(), stillCb, bg);
             say(getString(R.string.cap_processing));
             bg.postDelayed(() -> { if (busy && (gotA == null || gotB == null)) { busy = false; sayUi(getString(R.string.cap_missing)); ui.post(() -> shutter.setAlpha(1f)); } }, 9000);
         } catch (Exception e) { busy = false; shutter.setAlpha(1f); say(getString(R.string.cap_error, e.toString())); }
+    }
+
+    // Aufnahmedaten der Einzelkameras (Brennweite und Fokusentfernung laut Ergebnis): der Bildwinkel aendert sich mit dem Fokus ("Focus Breathing"),
+    // unterhalb der Naheinstellgrenze einer Kamera kann das Telefon auf Zuschnitt der anderen ausweichen.
+    private volatile float capFocalA = -1, capFocalB = -1, capFocusA = -1, capFocusB = -1; private volatile java.util.concurrent.CountDownLatch resLatch = new java.util.concurrent.CountDownLatch(1);
+    private final android.hardware.camera2.CameraCaptureSession.CaptureCallback stillCb = new android.hardware.camera2.CameraCaptureSession.CaptureCallback() {
+        @Override public void onCaptureCompleted(android.hardware.camera2.CameraCaptureSession s, CaptureRequest r, android.hardware.camera2.TotalCaptureResult res) {
+            try {
+                java.util.Map<String, android.hardware.camera2.CaptureResult> m = res.getPhysicalCameraResults();
+                android.hardware.camera2.CaptureResult ra = m.get(pair.a.id), rb = m.get(pair.b.id);
+                if (ra != null) { Float f = ra.get(android.hardware.camera2.CaptureResult.LENS_FOCAL_LENGTH), fd = ra.get(android.hardware.camera2.CaptureResult.LENS_FOCUS_DISTANCE); capFocalA = f == null ? -1 : f; capFocusA = fd == null ? -1 : fd; }
+                if (rb != null) { Float f = rb.get(android.hardware.camera2.CaptureResult.LENS_FOCAL_LENGTH), fd = rb.get(android.hardware.camera2.CaptureResult.LENS_FOCUS_DISTANCE); capFocalB = f == null ? -1 : f; capFocusB = fd == null ? -1 : fd; }
+            } catch (Throwable ignored) {}
+            resLatch.countDown();
+        }
+    };
+    private String capInfo(Processor.Input in) {
+        StringBuilder sb = new StringBuilder("capture data: pair " + pair.key() + ", " + (focus != null && focus.isManual() ? "manual focus" : "autofocus") + ";");
+        for (int k = 0; k < 2; k++) {
+            DualProbe.Phys c = k == 0 ? pair.a : pair.b; float f = k == 0 ? capFocalA : capFocalB, fd = k == 0 ? capFocusA : capFocusB;
+            sb.append(String.format(java.util.Locale.ROOT, " %s: f %.2f mm (static %.2f), focus %s, min focus %s;", k == 0 ? "A" : "B", f, c.focalMm, fd > 0.01f ? String.format(java.util.Locale.ROOT, "%.2f m", 1 / fd) : (fd >= 0 ? "inf" : "?"), c.minFocusDioptre > 0 ? String.format(java.util.Locale.ROOT, "%.2f m", 1 / c.minFocusDioptre) : "fixed"));
+            if (f > 0 && c.focalMm > 0 && f / c.focalMm > 0.5f && f / c.focalMm < 2f && Math.abs(f / c.focalMm - 1) > 0.01f) { if (k == 0) in.equivA = c.equiv35 * f / c.focalMm; else in.equivB = c.equiv35 * f / c.focalMm; }
+        }
+        return sb.toString();
     }
 
     private void got(ImageReader r, boolean isA) {
@@ -264,6 +289,8 @@ public class DualCaptureActivity extends Activity {
         in.aIsLeft = Processor.aIsLeft(pair, rot) ^ Prefs.get(this, Prefs.SWAP);
         new Thread(() -> {
             try {
+                try { resLatch.await(1500, java.util.concurrent.TimeUnit.MILLISECONDS); } catch (InterruptedException ignored) {}
+                in.info = capInfo(in);
                 Processor.Output o = Processor.run(this, in);
                 ui.post(() -> { say(getString(R.string.cap_saved, o.summary) + (o.align.isEmpty() ? "" : "\n" + o.align)); lastUri = o.preview; showThumb(o.preview); });
             } catch (Throwable t) { ui.post(() -> say(getString(R.string.cap_error, t.toString()))); }

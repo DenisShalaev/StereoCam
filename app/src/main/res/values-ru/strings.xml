@@ -165,4 +165,6 @@
     <string name="sort_date_old">Дата (сначала старые)</string>
     <string name="sort_name">Имя (А–Я)</string>
     <string name="sort_size">Размер файла</string>
+    <string name="share_shotlog">Отправить журнал съёмок</string>
+    <string name="shotlog_none">Журнал пуст: снимков ещё нет</string>
 </resources>

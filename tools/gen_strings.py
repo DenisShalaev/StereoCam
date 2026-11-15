@@ -167,6 +167,8 @@ S = {
 'sort_date_old': ['Date (oldest first)', 'Datum (älteste zuerst)', "Date (plus ancien d'abord)", 'Data (prima i più vecchi)', 'Fecha (más antiguos primero)', 'Дата (сначала старые)', 'Датою (спершу старі)'],
 'sort_name': ['Name (A–Z)', 'Name (A–Z)', 'Nom (A–Z)', 'Nome (A–Z)', 'Nombre (A–Z)', 'Имя (А–Я)', 'Назвою (А–Я)'],
 'sort_size': ['File size', 'Dateigröße', 'Taille du fichier', 'Dimensione del file', 'Tamaño del archivo', 'Размер файла', 'Розміром файлу'],
+'share_shotlog': ['Share shot log', 'Aufnahmeprotokoll senden', 'Envoyer le journal des prises', 'Invia il registro degli scatti', 'Enviar registro de capturas', 'Отправить журнал съёмок', 'Надіслати журнал зйомок'],
+'shotlog_none': ['No shots logged yet', 'Noch keine Aufnahmen protokolliert', 'Aucune prise enregistrée', 'Nessuno scatto registrato', 'Aún no hay capturas registradas', 'Журнал пуст: снимков ещё нет', 'Журнал порожній: знімків ще немає'],
 }
 LANGS = ['en','de','fr','it','es','ru','uk']; DIRS = {'en':'values'}
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'app', 'src', 'main', 'res')

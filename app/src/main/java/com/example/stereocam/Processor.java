@@ -27,6 +27,7 @@ final class Processor {
         int rotA, rotB;                  // noetige Drehung im Uhrzeigersinn (Grad), damit das Bild aufrecht steht
         float equivA, equivB;            // kleinbildaequivalente Brennweiten
         boolean aIsLeft = true;          // aus Pose und Bildschirmdrehung
+        String info = "";               // Aufnahmedaten (Brennweite, Fokusentfernung je Kamera) fuer den Bericht
         boolean sameCamera;              // zwei Aufnahmen derselben Kamera (Schiebemodus): kein Bildwinkelabgleich noetig
     }
 
@@ -51,7 +52,7 @@ final class Processor {
         // 1) Bildwinkel angleichen: die weitwinkligere Kamera wird mittig auf den Bildwinkel der anderen zugeschnitten
         double fa = in.equivA > 0 ? in.equivA : 1, fb = in.equivB > 0 ? in.equivB : 1;
         double cropA = fa < fb ? fa / fb : 1, cropB = fb < fa ? fb / fa : 1;           // Anteil des Bildes, der bleibt
-        StringBuilder note = new StringBuilder();
+        StringBuilder note = new StringBuilder(); if (!in.info.isEmpty()) note.append(in.info).append('\n');
         if (Math.abs(fa / fb - 1) > 0.03 && in.equivA > 0 && in.equivB > 0) {         // Brennweiten-Verhaeltnis aus den Bildern selbst nachpruefen
             try {
                 boolean aWide = fa < fb; double nom = aWide ? cropA : cropB;
@@ -71,6 +72,16 @@ final class Processor {
                     note.append(String.format(Locale.ROOT, "crop searched: %s cropped to %.3f (ncc %.2f -> %.2f)\n", g[0] == 0 ? "A" : "B", g[1], cur, g[2]));
                 } else note.append(String.format(Locale.ROOT, "crop check: current ncc %.2f, search best %.2f at %.3f - kept\n", cur, g[2], g[1]));
             } catch (Throwable e) { note.append("crop search failed: ").append(e).append('\n'); }
+        }
+        // 1c) Feinabgleich des Massstabs mit hoeher aufgeloesten Hochpassbildern (kleine Fehler, z. B. Focus Breathing, fallen bei 128 px kaum auf)
+        if (!in.sameCamera && Math.min(cropA, cropB) < 0.98) {
+            try {
+                double[] f = StereoAligner.fineCrop(pa, wa, ha, cropA, pb, wb, hb, cropB);
+                if (f[1] > f[2] + 0.01 && f[1] > 0.2 && Math.abs(f[0] - (f[3] == 0 ? cropA : cropB)) > 0.002) {
+                    note.append(String.format(Locale.ROOT, "scale refined %s %.4f -> %.4f (hp-ncc %.3f -> %.3f)\n", f[3] == 0 ? "A" : "B", f[3] == 0 ? cropA : cropB, f[0], f[2], f[1]));
+                    if (f[3] == 0) cropA = f[0]; else cropB = f[0];
+                } else note.append(String.format(Locale.ROOT, "scale check: hp-ncc %.3f, best %.3f - kept\n", f[2], f[1]));
+            } catch (Throwable e) { note.append("scale refine failed: ").append(e).append('\n'); }
         }
         double aw = wa * cropA, ah = ha * cropA, bw = wb * cropB, bh = hb * cropB;
         // Seitenverhaeltnis angleichen (falls Sensoren verschieden)
@@ -107,6 +118,7 @@ final class Processor {
             out.align = out.align + " | colour match: R " + sh[0] + " G " + sh[1] + " B " + sh[2];
         }
         write(ctx, left, right, W, H, out);
+        ShotLog.add(ctx, "mode " + Prefs.str(ctx, Prefs.MODE) + (in.sameCamera ? " (shift)" : "") + " | " + out.align);
         return out;
     }
 

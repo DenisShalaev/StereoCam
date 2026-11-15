@@ -165,4 +165,6 @@
     <string name="sort_date_old">Date (oldest first)</string>
     <string name="sort_name">Name (A–Z)</string>
     <string name="sort_size">File size</string>
+    <string name="share_shotlog">Share shot log</string>
+    <string name="shotlog_none">No shots logged yet</string>
 </resources>

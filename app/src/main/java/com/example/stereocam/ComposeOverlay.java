@@ -57,6 +57,9 @@ final class ComposeOverlay {
     private FrameLayout.LayoutParams ipl;
     /** Abstand der Info-Zeile vom unteren Rand (dp), damit sie ueber dem Ausloeser und anderen Bedienelementen bleibt. */
     void setInfoBottomDp(int dp) { ipl.bottomMargin = Ui.dp(act, dp); info.setLayoutParams(ipl); }
+    private double minFocusM = 0;
+    /** Naheinstellgrenze der schlechteren Kamera (m): naeher kann mindestens eine Kamera nicht scharf stellen, ihr Bildwinkel weicht dann ab. */
+    void setMinFocusM(double m) { minFocusM = m; }
     void setBaselineMm(double mm) { baselineMm = mm; }
 
     // ------------------------------------------------------------------ Sensor
@@ -97,7 +100,7 @@ final class ComposeOverlay {
     }
     private void showInfo() {
         if (focusM <= 0) { info.setVisibility(View.GONE); return; }
-        double minM = (Double.isNaN(baselineMm) ? 20 : baselineMm) * 15 / 1000.0;
+        double minM = Math.max(minFocusM, (Double.isNaN(baselineMm) ? 20 : baselineMm) * 15 / 1000.0);
         String dist = focusM < 10 ? String.format(Locale.US, "%.2f", focusM) : String.format(Locale.US, "%.0f", focusM);
         info.setText(focusM < minM ? act.getString(R.string.compose_near_fmt, dist, (int) Math.round(minM * 100)) : act.getString(R.string.compose_focus_fmt, dist));
         info.setTextColor(focusM < minM ? 0xFFFFB74D : Ui.TEXT); info.setVisibility(View.VISIBLE);
