@@ -168,7 +168,7 @@
     <string name="share_shotlog">Envoyer le journal des prises</string>
     <string name="gal_actions">Actions</string>
     <string name="gal_select">Sélectionner</string>
-    <string name="zoomx_t">Capture double : zoom minimal (expérience)</string>
+    <string name="zoomx_t">Capture double : champ complet de l’ultra grand-angle (zoom minimal)</string>
     <string name="zoomx_d">Demande le zoom minimal (p. ex. 0,5x) au téléphone. Si les deux images ont presque le même champ en mode double, la caméra ultra grand-angle peut ainsi donner tout son champ. À essayer, puis comparer le journal.</string>
     <string name="shotlog_none">Aucune prise enregistrée</string>
 </resources>

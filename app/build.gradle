@@ -7,8 +7,8 @@ android {
         applicationId 'com.example.stereocam'
         minSdk 28            // Camera2: physische Kameras einzeln ansprechbar (Android 9)
         targetSdk 34
-        versionCode 33
-        versionName "33"
+        versionCode 35
+        versionName "35"
         resourceConfigurations += ["en", "de", "fr", "it", "es", "ru", "uk"]
     }
     compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }

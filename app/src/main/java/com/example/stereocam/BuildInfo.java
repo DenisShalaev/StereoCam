@@ -1,6 +1,6 @@
 package com.example.stereocam;
 
 final class BuildInfo {
-    static final int NUMBER = 33;
+    static final int NUMBER = 35;
     private BuildInfo() {}
 }

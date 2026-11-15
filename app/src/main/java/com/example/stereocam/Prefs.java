@@ -10,7 +10,7 @@ final class Prefs {
     private Prefs() {}
     private static SharedPreferences sp(Context c) { return c.getSharedPreferences("stereocam", Context.MODE_PRIVATE); }
     static boolean get(Context c, String k) {
-        boolean def = k.equals(MPO) || k.equals(SBS) || k.equals(ALIGN) || k.equals(COLOR);
+        boolean def = k.equals(MPO) || k.equals(SBS) || k.equals(ALIGN) || k.equals(COLOR) || k.equals(ZOOMMIN);
         return sp(c).getBoolean(k, def);
     }
     static void set(Context c, String k, boolean v) { sp(c).edit().putBoolean(k, v).apply(); }

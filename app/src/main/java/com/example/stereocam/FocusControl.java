@@ -25,7 +25,6 @@ import java.util.Locale;
 final class FocusControl {
     interface Callback { void changed(); }
     /** Entfernung, ab der (gemessen am Samsung Galaxy Fold) der Bildwinkel beider Kameras bei Handfokus auseinanderlaufen kann. */
-    static final float FAR_LIMIT_M = 0.35f;
 
     private final Activity act; private final Callback cb; private final TextureView tv;
     private boolean manual; private float diopter;                         // manuelle Entfernung in 1/m
@@ -109,10 +108,6 @@ final class FocusControl {
             RectF chip = new RectF(0, 0, Ui.dp(ctx, 44), Ui.dp(ctx, 34)); c.drawRoundRect(chip, Ui.dp(ctx, 17), Ui.dp(ctx, 17), p);
             p.setColor(manual ? Ui.TEXT : 0xFF0B1220); p.setTextSize(Ui.dp(ctx, 13)); p.setTextAlign(Paint.Align.CENTER); c.drawText("AF", chip.centerX(), chip.centerY() + Ui.dp(ctx, 5), p);
             p.setColor(Ui.alpha(Ui.TEXT, 140)); p.setStrokeWidth(Ui.dp(ctx, 3)); c.drawLine(cx, t, cx, b, p);
-            if (minFocus > 0 && minFocus > 1f / FAR_LIMIT_M) {                              // ab ca. 0,35 m Entfernung und weiter: bei manchem Telefon stimmt der Bildwinkel beider Kameras nicht mehr ueberein
-                float yl = t + (b - t) * (1f / FAR_LIMIT_M) / minFocus; p.setColor(0xFFFFB74D); p.setStrokeWidth(Ui.dp(ctx, 3)); c.drawLine(cx, t, cx, yl, p);
-                p.setStrokeWidth(Ui.dp(ctx, 2)); c.drawLine(cx - Ui.dp(ctx, 8), yl, cx + Ui.dp(ctx, 8), yl, p);
-            }
             if (manual && minFocus > 0) {
                 float f = Math.max(0, Math.min(1, diopter / minFocus)), y = t + (b - t) * f;
                 p.setColor(Ui.ACCENT); c.drawCircle(cx, y, Ui.dp(ctx, 11), p);
