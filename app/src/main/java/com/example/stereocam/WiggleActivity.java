@@ -46,7 +46,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
     private StereoView view; private TextView status; private LinearLayout bar, panel;
     private ImageView exportBtn, modeBtn, playBtn, tuneBtn, gyroBtn, halfBtn, lensBtn;
     private boolean sysShown; private float planeAdj; private LinearLayout planeCard; private TextView planeLabel; private android.widget.SeekBar planeBar;
-    private volatile WiggleRenderer.Scene scene; private volatile Bitmap frame; private Bitmap left, right; private volatile int[] buf;
+    private WiggleRenderer.Scene scene; private Bitmap frame, left, right; private int[] buf;
     private volatile boolean playing = true, alive = true, busy, paused;
     private volatile int depthPct = 100;
     private volatile int ampIdx = 1, perIdx = 1, shape = WigglePath.LINE;
@@ -115,7 +115,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         bar.addView(btn(R.drawable.ic_center, R.string.cd_center, v -> { view.reset(); baseYaw = Float.NaN; }));
         bar.addView(btn(R.drawable.ic_settings, R.string.set_title, v -> startActivity(new Intent(this, ProbeActivity.class))));
         root.addView(bar, new FrameLayout.LayoutParams(-1, -2, Gravity.TOP));
-        bar.addOnLayoutChangeListener((v, l, t, r, bot, ol, ot, or, obot) -> { if (r - l != or - ol) fitBar(); });
+        bar.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> { if (r - l != or - ol) fitBar(); });
 
         panel = Ui.card(this); panel.setVisibility(View.GONE);
         panel.addView(label(R.string.wig_amp)); panel.addView(chips(ampChips, new String[] {"×1", "×2", "×3", "×4", "×6"}, ampIdx, i -> { ampIdx = i; Prefs.setInt(this, "wig_amp2", i); }));
@@ -150,10 +150,10 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         if (android.os.Build.VERSION.SDK_INT >= 30) getWindow().setDecorFitsSystemWindows(false);
         android.view.WindowManager.LayoutParams wlp = getWindow().getAttributes(); wlp.layoutInDisplayCutoutMode = android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES; getWindow().setAttributes(wlp);
         setContentView(root);
-        bar.setOnApplyWindowInsetsListener((v, insets) -> {
-            int l = Math.max(insets.getStableInsetLeft(), insets.getSystemWindowInsetLeft()), t = Math.max(insets.getStableInsetTop(), insets.getSystemWindowInsetTop()), r = Math.max(insets.getStableInsetRight(), insets.getSystemWindowInsetRight());
-            android.view.DisplayCutout dc = insets.getDisplayCutout(); if (dc != null) { l = Math.max(l, dc.getSafeInsetLeft()); t = Math.max(t, dc.getSafeInsetTop()); r = Math.max(r, dc.getSafeInsetRight()); }
-            v.setPadding(l + Ui.dp(this, 8), t + Ui.dp(this, 8), r + Ui.dp(this, 8), Ui.dp(this, 8)); return insets; });
+        bar.setOnApplyWindowInsetsListener((v, in) -> {
+            int l = Math.max(in.getStableInsetLeft(), in.getSystemWindowInsetLeft()), t = Math.max(in.getStableInsetTop(), in.getSystemWindowInsetTop()), r = Math.max(in.getStableInsetRight(), in.getSystemWindowInsetRight());
+            android.view.DisplayCutout dc = in.getDisplayCutout(); if (dc != null) { l = Math.max(l, dc.getSafeInsetLeft()); t = Math.max(t, dc.getSafeInsetTop()); r = Math.max(r, dc.getSafeInsetRight()); }
+            v.setPadding(l + Ui.dp(this, 8), t + Ui.dp(this, 8), r + Ui.dp(this, 8), Ui.dp(this, 8)); return in; });
         showSystemBars(false);
         view.setHalf(half); view.setLens(lens); applyMode(false);
         load();
@@ -279,7 +279,6 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         if (uris.isEmpty()) { status.setText(R.string.wig_not_stereo); return; }
         final Uri u = uris.get(index); final String name = names.get(index); final int myGen = gen;
         worker.execute(() -> {
-            if (myGen != gen) return;
             String err = null;
             try {
                 byte[] data = StereoFile.readAll(this, u);
@@ -287,15 +286,14 @@ public class WiggleActivity extends Activity implements SensorEventListener {
                 if (myGen != gen) return;
                 if (p == null) err = getString(R.string.wig_not_stereo);
                 else {
-                    if (myGen != gen) return;
                     left = p.left; right = p.right;
                     int w = left.getWidth(), h = left.getHeight(); int[] l = new int[w * h], r = new int[w * h];
                     left.getPixels(l, 0, w, 0, 0, w, h); right.getPixels(r, 0, w, 0, 0, w, h);
                     WiggleRenderer.Scene sc = WiggleRenderer.build(l, r, w, h, 600);
                     if (myGen != gen) return;
-                    int[] nb = new int[sc.w * sc.h]; Bitmap nf = Bitmap.createBitmap(sc.w, sc.h, Bitmap.Config.ARGB_8888); buf = nb; frame = nf; scene = sc;
+                    buf = new int[sc.w * sc.h]; frame = Bitmap.createBitmap(sc.w, sc.h, Bitmap.Config.ARGB_8888); scene = sc;
                 }
-            } catch (Throwable e) { err = getString(R.string.cap_error, e instanceof OutOfMemoryError ? "out of memory" : String.valueOf(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName())); }
+            } catch (Throwable e) { err = getString(R.string.cap_error, String.valueOf(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName())); }
             final String fe = err;
             ui.post(() -> {
                 if (myGen != gen) return;
@@ -322,20 +320,11 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         if (!alive || !playing || scene == null || busy || mode != StereoView.MOTION) return;
         busy = true;
         final double sec = (now() - t0) / 1000.0; final double amp = AMPS[ampIdx]; final int sh = shape; final double per = period(); final float dk = depthPct / 100f;
-        // Momentaufnahme der Daten auf dem UI-Thread: beim Blaettern wird scene auf null gesetzt, waehrend dieser Job noch laeuft
-        final WiggleRenderer.Scene sc = scene; final int[] b = buf; final Bitmap fr = frame; final int myGen = gen;
-        if (sc == null || b == null || fr == null || b.length < sc.w * sc.h) { busy = false; return; }
         worker.execute(() -> {
-            boolean ok = false;
-            try {
-                if (myGen == gen) {
-                    double[] tv = WigglePath.at(sec, per, amp, sh);
-                    WiggleRenderer.render(sc, tv[0], tv[1], b, dk);
-                    if (!fr.isRecycled()) { fr.setPixels(b, 0, sc.w, 0, 0, sc.w, sc.h); ok = true; }
-                }
-            } catch (Throwable ignored) { }
-            final boolean done = ok;
-            ui.post(() -> { busy = false; if (done && myGen == gen) { view.setSingle(fr); tick(); } });
+            double[] tv = WigglePath.at(sec, per, amp, sh);
+            WiggleRenderer.render(scene, tv[0], tv[1], buf, dk);
+            frame.setPixels(buf, 0, scene.w, 0, 0, scene.w, scene.h);
+            ui.post(() -> { view.setSingle(frame); busy = false; tick(); });
         });
     }
 

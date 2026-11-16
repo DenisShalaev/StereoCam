@@ -6,11 +6,11 @@ import android.content.SharedPreferences;
 /** Einstellungen (SharedPreferences). */
 final class Prefs {
     static final String MPO = "fmt_mpo", SBS = "fmt_sbs", VRJPG = "fmt_vrjpg", ANAGLYPH = "fmt_anaglyph", PAIR = "fmt_pair",
-            SWAP = "swap_eyes", ALIGN = "auto_align", PAIR_KEY = "pair_key", MODE = "capture_mode", CONV = "convergence", DIST = "shift_dist", COLOR = "color_match", ZOOMMIN = "dual_zoom_min", FRAME = "show_frame", SYNCAF = "dual_sync_af", FRAME_DUAL = "frame_dual", FRAME_SHIFT = "frame_shift";
+            SWAP = "swap_eyes", ALIGN = "auto_align", PAIR_KEY = "pair_key", MODE = "capture_mode", CONV = "convergence", DIST = "shift_dist", COLOR = "color_match";
     private Prefs() {}
     private static SharedPreferences sp(Context c) { return c.getSharedPreferences("stereocam", Context.MODE_PRIVATE); }
     static boolean get(Context c, String k) {
-        boolean def = k.equals(MPO) || k.equals(SBS) || k.equals(ALIGN) || k.equals(COLOR) || k.equals(ZOOMMIN) || k.equals(FRAME) || k.equals(SYNCAF);
+        boolean def = k.equals(MPO) || k.equals(SBS) || k.equals(ALIGN) || k.equals(COLOR);
         return sp(c).getBoolean(k, def);
     }
     static void set(Context c, String k, boolean v) { sp(c).edit().putBoolean(k, v).apply(); }

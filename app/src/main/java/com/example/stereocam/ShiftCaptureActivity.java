@@ -117,7 +117,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
         root.addView(swap, wp);
         swap.setOnClickListener(v -> { Prefs.set(this, Prefs.SWAP, !Prefs.get(this, Prefs.SWAP)); updateDist(); updateStatus(); });
 
-        thumb = new ImageView(this); thumb.setScaleType(ImageView.ScaleType.CENTER_CROP); thumb.setBackground(Ui.round(this, 12, Ui.CARD, Ui.EDGE)); thumb.setClipToOutline(true); thumb.setVisibility(View.VISIBLE);
+        thumb = new ImageView(this); thumb.setScaleType(ImageView.ScaleType.CENTER_CROP); thumb.setBackground(Ui.round(this, 12, Ui.CARD, Ui.EDGE)); thumb.setVisibility(View.VISIBLE);
         FrameLayout.LayoutParams tp = new FrameLayout.LayoutParams(Ui.dp(this, 60), Ui.dp(this, 60), Gravity.BOTTOM | Gravity.START); tp.leftMargin = Ui.dp(this, 24); tp.bottomMargin = Ui.dp(this, 30);
         root.addView(thumb, tp);
         thumb.setOnClickListener(v -> startActivity(new Intent(this, StereoGalleryActivity.class)));
@@ -144,7 +144,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
     // ------------------------------------------------------------------ Lebenszyklus
 
     @Override protected void onResume() {
-        super.onResume(); if (compose != null) { compose.listen(); compose.showFrame(2, 1); } if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
+        super.onResume(); if (compose != null) compose.listen(); if (Chrome.restartIfChanged(this, cfgAtStart)) return; Chrome.loadLatest(this, thumb); closed = false;
         ht = new HandlerThread("cam"); ht.start(); bg = new Handler(ht.getLooper());
         Sensor rv = sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         if (rv != null) sm.registerListener(this, rv, SensorManager.SENSOR_DELAY_GAME);
@@ -306,7 +306,7 @@ public class ShiftCaptureActivity extends Activity implements SensorEventListene
             new Thread(() -> {
                 try {
                     Processor.Output o = Processor.run(this, in);
-                    ui.post(() -> { say(getString(R.string.cap_saved, o.summary) + (o.align.isEmpty() ? "" : "\n" + o.align)); if (compose != null) { compose.showFrame(2, 1); } lastUri = o.preview; showThumb(o.preview); });
+                    ui.post(() -> { say(getString(R.string.cap_saved, o.summary) + (o.align.isEmpty() ? "" : "\n" + o.align)); lastUri = o.preview; showThumb(o.preview); });
                 } catch (Throwable t) { ui.post(() -> say(getString(R.string.cap_error, t.toString()))); }
                 finally { ui.post(() -> { resetShots(); busy = false; shutter.setAlpha(1f); }); }
             }, "process").start();

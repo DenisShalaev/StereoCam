@@ -58,9 +58,6 @@ public class ProbeActivity extends Activity {
         fmt.addView(Ui.space(this, 6));
         fmt.addView(row(Prefs.ALIGN, R.string.align_t, R.string.align_d));
         fmt.addView(row(Prefs.COLOR, R.string.color_t, R.string.color_d));
-        fmt.addView(row(Prefs.ZOOMMIN, R.string.zoomx_t, R.string.zoomx_d));
-        fmt.addView(row(Prefs.FRAME, R.string.frame_t, R.string.frame_d));
-        fmt.addView(row(Prefs.SYNCAF, R.string.syncaf_t, R.string.syncaf_d));
         root.addView(fmt); root.addView(Ui.space(this, 12));
 
         LinearLayout rep = Ui.card(this);
@@ -69,8 +66,6 @@ public class ProbeActivity extends Activity {
         rep.addView(reportView);
         Button share = Ui.pill(this, R.string.share_report, false); share.setOnClickListener(v -> shareReport());
         rep.addView(Ui.space(this, 8)); rep.addView(share);
-        Button logBtn = Ui.pill(this, R.string.share_shotlog, false); logBtn.setOnClickListener(v -> shareShotLog());
-        rep.addView(Ui.space(this, 8)); rep.addView(logBtn);
         root.addView(rep);
 
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) requestPermissions(perms(), 1); else scan();
@@ -117,12 +112,6 @@ public class ProbeActivity extends Activity {
         modeBox.addView(g);
         modeBox.addView(Ui.text(this, getString(R.string.switch_intro), 12, Ui.GREY)); modeBox.addView(Ui.space(this, 4));
         modeBox.addView(Ui.text(this, getString(R.string.shift_intro), 12, Ui.GREY));
-    }
-
-    private void shareShotLog() {
-        String t = ShotLog.read(this);
-        if (t.isEmpty()) { android.widget.Toast.makeText(this, R.string.shotlog_none, android.widget.Toast.LENGTH_SHORT).show(); return; }
-        startActivity(Intent.createChooser(new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, t).putExtra(Intent.EXTRA_SUBJECT, "StereoCam shot log"), null));
     }
 
     private void shareReport() {

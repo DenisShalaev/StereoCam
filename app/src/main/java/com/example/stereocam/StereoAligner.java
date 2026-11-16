@@ -273,51 +273,6 @@ final class StereoAligner {
         return bestShiftNcc(gray(resample(src, sw, sh, (sw - cw) / 2, (sh - ch) / 2, cw, ch, tw, th), tw * th), ref, tw, th, 12, 3);
     }
 
-    /**
-     * Feinabgleich des Massstabs: der weitwinklige Zuschnitt wird in +-6 % um den aktuellen Wert mit Hochpassbildern (unabhaengig von Helligkeit
-     * und Unschaerfe) hoeher aufgeloest verglichen. Grobe Stufe 160 px, feine Stufe 320 px.
-     * @return {anteil, score, scoreAktuell, welches (0 = a, 1 = b)}
-     */
-    static double[] fineCrop(int[] a, int aw, int ah, double ca, int[] b, int bw, int bh, double cb) {
-        boolean varyA = ca <= cb; double base = varyA ? ca : cb;
-        int[] w = varyA ? a : b, n = varyA ? b : a; int ww = varyA ? aw : bw, wh = varyA ? ah : bh, nw = varyA ? bw : aw, nh = varyA ? bh : ah; double cn = varyA ? cb : ca;
-        double[] best = {base, -2, -2, varyA ? 0 : 1};
-        double lo = base * 0.94, hi = Math.min(1.0, base * 1.06);
-        int[] sizes = {160, 320};
-        double centre = base, span = (hi - lo) / 2, step = base * 0.012;
-        for (int stage = 0; stage < 2; stage++) {
-            int tw = sizes[stage], th = Math.max(16, (int) Math.round((double) tw * nh / nw));
-            float[] ref = highPass(gray(resample(n, nw, nh, (nw - nw * cn) / 2, (nh - nh * cn) / 2, nw * cn, nh * cn, tw, th), tw * th), tw, th);
-            int mx = stage == 0 ? 12 : 8, my = stage == 0 ? 3 : 2;
-            double bs = -2, bf = centre;
-            for (double fr = Math.max(0.2, centre - span); fr <= Math.min(1.0, centre + span) + 1e-9; fr += step) {
-                double cw = ww * fr, ch = wh * fr;
-                float[] g = highPass(gray(resample(w, ww, wh, (ww - cw) / 2, (wh - ch) / 2, cw, ch, tw, th), tw * th), tw, th);
-                double sc = bestShiftNcc(g, ref, tw, th, mx, my);
-                if (sc > bs) { bs = sc; bf = fr; }
-                if (stage == 1 && Math.abs(fr - base) < base * 0.0011) best[2] = sc;
-            }
-            centre = bf; best[0] = bf; best[1] = bs; span = step * 1.1; step = base * 0.002;
-        }
-        if (best[2] < -1) {                                                    // aktueller Wert nicht genau auf dem Raster: separat bewerten
-            int tw = 320, th = Math.max(16, (int) Math.round((double) tw * nh / nw));
-            float[] ref = highPass(gray(resample(n, nw, nh, (nw - nw * cn) / 2, (nh - nh * cn) / 2, nw * cn, nh * cn, tw, th), tw * th), tw, th);
-            double cw = ww * base, ch = wh * base;
-            best[2] = bestShiftNcc(highPass(gray(resample(w, ww, wh, (ww - cw) / 2, (wh - ch) / 2, cw, ch, tw, th), tw * th), tw, th), ref, tw, th, 8, 2);
-        }
-        return best;
-    }
-
-    /** Hochpass: Bild minus Boxfilter (Radius 4). */
-    static float[] highPass(float[] g, int w, int h) {
-        float[] t = new float[g.length], o = new float[g.length]; int r = 4;
-        for (int y = 0; y < h; y++) { double s = 0; for (int x = -r; x <= r; x++) s += g[y * w + Math.max(0, Math.min(w - 1, x))];
-            for (int x = 0; x < w; x++) { t[y * w + x] = (float) (s / (2 * r + 1)); s += g[y * w + Math.min(w - 1, x + r + 1)] - g[y * w + Math.max(0, x - r)]; } }
-        for (int x = 0; x < w; x++) { double s = 0; for (int y = -r; y <= r; y++) s += t[Math.max(0, Math.min(h - 1, y)) * w + x];
-            for (int y = 0; y < h; y++) { o[y * w + x] = g[y * w + x] - (float) (s / (2 * r + 1)); s += t[Math.min(h - 1, y + r + 1) * w + x] - t[Math.max(0, y - r) * w + x]; } }
-        return o;
-    }
-
     /** Aehnlichkeit (NCC) zweier Bilder bei gegebenen Zuschnittanteilen (mittig). */
     static double pairScore(int[] a, int aw, int ah, double ca, int[] b, int bw, int bh, double cb) {
         final int tw = 128, th = Math.max(16, (int) Math.round(128.0 * bh / bw));

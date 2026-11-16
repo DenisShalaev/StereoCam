@@ -165,17 +165,4 @@
     <string name="sort_date_old">Datum (älteste zuerst)</string>
     <string name="sort_name">Name (A–Z)</string>
     <string name="sort_size">Dateigröße</string>
-    <string name="share_shotlog">Aufnahmeprotokoll senden</string>
-    <string name="gal_actions">Aktionen</string>
-    <string name="gal_select">Auswählen</string>
-    <string name="zoomx_t">Zwei-Kamera-Aufnahme: voller Ultraweitwinkel-Bildwinkel (minimaler Zoom)</string>
-    <string name="zoomx_d">Fordert den kleinsten Zoom (z. B. 0,5x) vom Telefon an. Zeigen beide Bilder im Zwei-Kamera-Modus fast denselben Bildwinkel, kann die Ultraweitwinkelkamera so ihren vollen Bildwinkel liefern. Ausprobieren und das Aufnahmeprotokoll vergleichen.</string>
-    <string name="frame_t">Rahmen des Endbilds im Sucher anzeigen</string>
-    <string name="frame_d">Das gespeicherte Foto zeigt nur den Bereich im Rahmen (Bildwinkel der engeren Kamera abzüglich der Ränder, die beim Angleichen wegfallen). Außerhalb ist abgedunkelt. Die Rahmengröße stammt aus den letzten Aufnahmen und ist bis zum ersten Foto eine Schätzung.</string>
-    <string name="cd_frame">Rahmen des Endbilds: an / aus</string>
-    <string name="frame_on">Rahmen an: Raster und Wasserwaage richten sich nach dem Rahmen</string>
-    <string name="frame_off">Rahmen aus</string>
-    <string name="syncaf_t">Zwei-Kamera-Aufnahme: gleicher Fokus für beide Kameras</string>
-    <string name="syncaf_d">Beim Autofokus fokussiert u. U. nur eine Kamera nach, das andere Bild kann dann unscharf werden. Kurz vor der Aufnahme werden beide Kameras auf die Entfernung der Vorschau festgelegt. Wirkt nicht bei manuellem Fokus.</string>
-    <string name="shotlog_none">Noch keine Aufnahmen protokolliert</string>
 </resources>

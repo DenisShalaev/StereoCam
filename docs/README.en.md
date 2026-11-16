@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [Deutsch](README.de.md)
 
-> **Status: build 40.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
+> **Status: build 27.** According to the author the app is installed and works on a Google Pixel 9. Individual functions (tap to focus, MP4 export, lenticular print, the depth map on varied scenes) have not been tested in detail; the build environment has no Android SDK, so the author builds the packages in Android Studio. Translations have not been reviewed by native speakers.
 
 ## 1. What it is
 
@@ -132,20 +132,6 @@ The vertical manual-focus slider and the "AF" button are now on the left (its he
 
 Cameras have "focus breathing": the field of view changes slightly with the focus distance, and each camera has its own near focus limit; closer than that the phone may substitute a crop of the other camera. So the frames match in scale at some distances and not at others. What was done: (1) at capture time the actual focal length and focus distance of each camera are read, and the focal length from the camera's result is used instead of the nominal one; (2) the data go into the alignment report ("capture data: A: f … focus … min focus …"), so it can be seen at which distances the failure happens; (3) the image-based field-of-view search (5.11) now tolerates a larger parallax shift (up to ±9 % of the width); (4) the warning above the shutter takes the near focus limit of the worse of the two cameras into account. Advice: for shots closer than about 0.5 m focus manually at one distance for both cameras (slider on the left). Not tested on a device; reports from different distances will allow the limits to be set more precisely.
 
-**Update after the measurement on the Galaxy Fold (build 40).** Experiments showed that with manual focus beyond about 0.35 m the scale of the two frames diverges (closer, they match). Therefore (1) the part of the focus slider "farther than 0.35 m" is marked amber with a tick; the limit is a constant found on the Galaxy Fold and may be different on other phones; (2) after the field of view is determined, a precise scale search on more detailed images (the high-frequency part of the frame, 0.2 % steps, ±6 % range) was added: on a synthetic pair a 5 % error in the nominal value is corrected to within ±0.1 %; the alignment report shows "scale refined …" / "scale check … kept". Autofocus has not been tested. Not tested on a device.
-
-**Shot log (build 40).** In settings, below the report, there is a "Share shot log" button: the log (the last 300 shots) holds one line per shot — mode, camera pair, manual or autofocus, the actual focal lengths and focus distances of the cameras, the found and refined field of view. It lets the exact distance and reason of the scale mismatch be found from shots at different distances; please send it whole. The file is kept only inside the app and contains technical values, no pictures and no location.
-
-**Zoom experiment (build 40).** A Pixel 9 log showed that in two-camera mode the ultrawide frame has almost the same field of view as the main one, even with focus at infinity (the search gave a crop of 0.91–0.99 instead of ~0.51); lens-switch mode is fine. Hypothesis: the phone delivers the ultrawide physical stream cropped to zoom 1.0. Settings now have a switch “Dual capture: minimum zoom (experiment)” (off by default) that requests the minimum zoom of the logical camera. The shot log now has “zoom …; logical crop …; A crop …; B crop …”. Whether it helps is unknown; not tested on a device.
-
-**Zoom confirmed (build 40).** A Pixel 9 log confirmed the hypothesis: without the minimum zoom the ultrawide stream arrived cropped in two-camera mode (crop 2047×1542 instead of the full frame); with minimum zoom (0.51) the full frame 4031×3024 arrives and the nominal scale ~0.52 fits at once (ncc up to 0.94), so the image-based scale search is no longer needed. The switch is therefore on by default and named “full ultrawide view (minimum zoom)”. Not tested on other phones.
-
-**The 0.35 m limit is removed (build 40).** With the minimum zoom the scale mismatch no longer occurs, so the amber “farther than 0.35 m” segment and tick on the focus slider are gone.
-
-**Gallery (build 40).** File actions now open in a pop-up window as in StereoPano: a long press on a file opens it (share, formats, lenticular print, delete, select); in selection mode the bar keeps the counter, “All”, “Actions” and “Cancel”. The last-shot thumbnail on the capture screens now has rounded corners. Not tested on a device.
-
-**Finding from the log (build 40).** In a Pixel 9 log (pair 0:2+3, autofocus) the ultrawide frame had almost the same field of view as the main camera (the search cropped the main one to 0.92–0.98 instead of the expected ~0.51 for the ultrawide), and at about 1 m the cameras focused at different distances (1.01 and 1.20 m); alignment failed because the found scale 0.982 was rejected by a 0.97 threshold. The threshold is relaxed: the search result is accepted when it is clearly better than the current one (NCC gain > 0.25). The cause of the differing fields of view in two-camera mode is not yet proven. Not tested on a device.
-
 ## 6. Tips for good stereo
 
 - The baseline is fixed, so choose your distance accordingly: a good stereo pair has the subject no closer than about 30× the baseline.
@@ -244,13 +230,3 @@ If you tested StereoCam on your phone, send the report ("Share report" in settin
 - [Every Camera, Every Angle on Android — GameChanger Tech Blog](https://tech.gc.com/every-camera-every-angle-on-android/)
 - [Telephoto access via third party application — Samsung Developer Forums](https://forum.developer.samsung.com/t/telephoto-access-via-third-party-application/42137)
 - [Camera2 API Issue: Physical Camera fails via Logical Camera Flow … POCO X8 Pro](https://android-overflow.vercel.app/thread/79931897)
-
-**Final-frame outline (build 40).** The viewfinder now dims everything that will not be in the saved photo and draws a frame: the result is the narrower camera's field of view minus the edges removed by alignment. The frame size is taken from your last shots (an estimate before the first photo); it can be switched off in settings. In lens-switch mode the frame is approximate. Not tested on a device.
-
-**Frame: soft shading and a button (build 40).** Outside the frame a grey shade fades in smoothly from its edge. A new frame button on the capture screen (below grid and level) switches it on and off. The grid (thirds / golden ratio) and the level are now drawn inside the frame so you compose the final picture. Not tested on a device.
-
-**Same focus for both cameras (build 40).** The shot log shows that with autofocus and minimum zoom the main camera stays at an old distance for many shots in a row (1.16 / 1.36 m) while the ultrawide refocuses (0.09…inf), which blurs the far parts of the main camera frame. With the new switch on, just before the shot both cameras are fixed at the distance shown by the preview (about 0.45 s pause) and autofocus resumes afterwards. The log says “AF synced at … m”. This is a hypothesis from the log, not tested on a device.
-
-**Artefact at high zoom (build 40).** In Cardboard mode with lens correction, zooming beyond about 1.2× folded the image edges back (the distortion function is not monotonic) and a mirrored fold with a scalloped edge appeared at the bottom. Beyond that radius the distortion now continues linearly, so there is no fold. Not tested on a device.
-
-**“unconfigured Input/Output Surface” error (build 40).** Suspected cause: when the session was restarted quickly (for example after changing a setting) an older session could be confirmed after the new one and overwrite it, so the shot was requested into buffers that are not part of it. Only the most recently started session is now accepted, and on this error the session restarts automatically (press the shutter again). A hypothesis, not tested on a device.

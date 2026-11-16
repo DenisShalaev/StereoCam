@@ -67,21 +67,11 @@ final class Processor {
             try {
                 double cur = StereoAligner.pairScore(pa, wa, ha, cropA, pb, wb, hb, cropB);
                 double[] g = StereoAligner.searchCrop(pa, wa, ha, pb, wb, hb);
-                if (g[2] > cur + 0.05 && g[2] > 0.35 && (g[1] < 0.97 || g[2] > cur + 0.25)) {   // fast gleicher Bildwinkel: nur bei klarem Gewinn uebernehmen
+                if (g[2] > cur + 0.05 && g[2] > 0.35 && (g[1] < 0.97)) {
                     cropA = g[0] == 0 ? g[1] : 1; cropB = g[0] == 1 ? g[1] : 1;
                     note.append(String.format(Locale.ROOT, "crop searched: %s cropped to %.3f (ncc %.2f -> %.2f)\n", g[0] == 0 ? "A" : "B", g[1], cur, g[2]));
                 } else note.append(String.format(Locale.ROOT, "crop check: current ncc %.2f, search best %.2f at %.3f - kept\n", cur, g[2], g[1]));
             } catch (Throwable e) { note.append("crop search failed: ").append(e).append('\n'); }
-        }
-        // 1c) Feinabgleich des Massstabs mit hoeher aufgeloesten Hochpassbildern (kleine Fehler, z. B. Focus Breathing, fallen bei 128 px kaum auf)
-        if (!in.sameCamera && Math.min(cropA, cropB) < 0.98) {
-            try {
-                double[] f = StereoAligner.fineCrop(pa, wa, ha, cropA, pb, wb, hb, cropB);
-                if (f[1] > f[2] + 0.01 && f[1] > 0.2 && Math.abs(f[0] - (f[3] == 0 ? cropA : cropB)) > 0.002) {
-                    note.append(String.format(Locale.ROOT, "scale refined %s %.4f -> %.4f (hp-ncc %.3f -> %.3f)\n", f[3] == 0 ? "A" : "B", f[3] == 0 ? cropA : cropB, f[0], f[2], f[1]));
-                    if (f[3] == 0) cropA = f[0]; else cropB = f[0];
-                } else note.append(String.format(Locale.ROOT, "scale check: hp-ncc %.3f, best %.3f - kept\n", f[2], f[1]));
-            } catch (Throwable e) { note.append("scale refine failed: ").append(e).append('\n'); }
         }
         double aw = wa * cropA, ah = ha * cropA, bw = wb * cropB, bh = hb * cropB;
         // Seitenverhaeltnis angleichen (falls Sensoren verschieden)
@@ -113,16 +103,11 @@ final class Processor {
                 if (W != rect[2] - rect[0] || H != rect[3] - rect[1]) { int[] r3 = {0, 0, W, H}; left = cropTL(left, rect[2] - rect[0], W, H); right = cropTL(right, rect[2] - rect[0], W, H); }
             }
         }
-        try {   // Anteil des Endbildes am Sucherbild merken (fuer die Rahmen-Anzeige im Sucher)
-            double cm = in.sameCamera ? 1 : Math.min(cropA, cropB);
-            Prefs.setStr(ctx, in.sameCamera ? Prefs.FRAME_SHIFT : Prefs.FRAME_DUAL, String.format(Locale.ROOT, "%.4f,%.4f,%.4f", (double) W / tw, (double) H / th, cm));
-        } catch (Throwable ignore) {}
         if (Prefs.get(ctx, Prefs.COLOR)) {
             int[] sh = ColorMatch.apply(left, right, W, H);
             out.align = out.align + " | colour match: R " + sh[0] + " G " + sh[1] + " B " + sh[2];
         }
         write(ctx, left, right, W, H, out);
-        ShotLog.add(ctx, "mode " + Prefs.str(ctx, Prefs.MODE) + (in.sameCamera ? " (shift)" : "") + " | " + out.align);
         return out;
     }
 

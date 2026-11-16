@@ -24,7 +24,6 @@ import java.util.Locale;
  */
 final class FocusControl {
     interface Callback { void changed(); }
-    /** Entfernung, ab der (gemessen am Samsung Galaxy Fold) der Bildwinkel beider Kameras bei Handfokus auseinanderlaufen kann. */
 
     private final Activity act; private final Callback cb; private final TextureView tv;
     private boolean manual; private float diopter;                         // manuelle Entfernung in 1/m
