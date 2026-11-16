@@ -2,7 +2,7 @@
 
 [Русский](README.ru.md) · [English](README.en.md)
 
-> **Stand: Build 27.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
+> **Stand: Build 28.** Laut Autor ist die App auf einem Google Pixel 9 installiert und funktioniert. Einzelne Funktionen (Tippfokus, MP4-Export, Rasterdruck, die Tiefenkarte bei verschiedenen Motiven) wurden nicht im Detail getestet; die Build-Umgebung hat kein Android SDK, der Autor baut die Pakete selbst in Android Studio. Die Übersetzungen wurden nicht von Muttersprachlern geprüft.
 
 ## 1. Was ist das?
 
@@ -131,6 +131,8 @@ Der senkrechte Regler für den manuellen Fokus und die Taste „AF“ sitzen jet
 ### 5.12 Autofokus und Bildwinkel der beiden Bilder
 
 Kameras zeigen „Focus Breathing“: Der Bildwinkel ändert sich leicht mit der Fokusentfernung, und jede Kamera hat ihre eigene Naheinstellgrenze; näher davor kann das Telefon einen Ausschnitt der anderen Kamera einsetzen. Deshalb passen die Bilder bei manchen Entfernungen im Maßstab zusammen und bei anderen nicht. Was gemacht wurde: (1) Bei der Aufnahme werden die tatsächliche Brennweite und Fokusentfernung jeder Kamera gelesen, und die Brennweite aus dem Ergebnis der Kamera ersetzt die nominale; (2) die Daten stehen im Ausrichtungsbericht („capture data: A: f … focus … min focus …“), so sieht man, bei welchen Entfernungen der Fehler auftritt; (3) die bildbasierte Bildwinkelsuche (5.11) toleriert nun eine größere Parallaxenverschiebung (bis ±9 % der Breite); (4) die Warnung über dem Auslöser berücksichtigt die Naheinstellgrenze der schlechteren der beiden Kameras. Rat: Für Aufnahmen näher als etwa 0,5 m manuell auf eine Entfernung für beide Kameras fokussieren (Regler links). Nicht auf einem Gerät geprüft; Berichte aus verschiedenen Entfernungen erlauben, die Grenzen genauer festzulegen.
+
+**Ergänzung nach der Messung am Galaxy Fold (Build 28).** Versuche zeigten: Bei Handfokus jenseits von etwa 0,35 m laufen die Maßstäbe der beiden Bilder auseinander (näher stimmen sie überein). Deshalb (1) ist der Teil des Fokusreglers „weiter als 0,35 m“ bernsteinfarben mit einer Marke gekennzeichnet; die Grenze ist eine am Galaxy Fold gefundene Konstante und kann bei anderen Telefonen anders liegen; (2) wurde nach der Bildwinkelbestimmung eine genaue Maßstabssuche auf detaillierteren Bildern (Hochfrequenzanteil, Schritte 0,2 %, Bereich ±6 %) ergänzt: An einem synthetischen Paar wird ein Fehler von 5 % im Nennwert auf ±0,1 % korrigiert; der Ausrichtungsbericht zeigt „scale refined …“ / „scale check … kept“. Der Autofokus wurde nicht getestet. Nicht auf einem Gerät geprüft.
 
 ## 6. Tipps für gutes Stereo
 

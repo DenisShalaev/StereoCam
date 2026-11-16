@@ -73,6 +73,16 @@ final class Processor {
                 } else note.append(String.format(Locale.ROOT, "crop check: current ncc %.2f, search best %.2f at %.3f - kept\n", cur, g[2], g[1]));
             } catch (Throwable e) { note.append("crop search failed: ").append(e).append('\n'); }
         }
+        // 1c) Feinabgleich des Massstabs mit hoeher aufgeloesten Hochpassbildern (kleine Fehler, z. B. Focus Breathing, fallen bei 128 px kaum auf)
+        if (!in.sameCamera && Math.min(cropA, cropB) < 0.98) {
+            try {
+                double[] f = StereoAligner.fineCrop(pa, wa, ha, cropA, pb, wb, hb, cropB);
+                if (f[1] > f[2] + 0.01 && f[1] > 0.2 && Math.abs(f[0] - (f[3] == 0 ? cropA : cropB)) > 0.002) {
+                    note.append(String.format(Locale.ROOT, "scale refined %s %.4f -> %.4f (hp-ncc %.3f -> %.3f)\n", f[3] == 0 ? "A" : "B", f[3] == 0 ? cropA : cropB, f[0], f[2], f[1]));
+                    if (f[3] == 0) cropA = f[0]; else cropB = f[0];
+                } else note.append(String.format(Locale.ROOT, "scale check: hp-ncc %.3f, best %.3f - kept\n", f[2], f[1]));
+            } catch (Throwable e) { note.append("scale refine failed: ").append(e).append('\n'); }
+        }
         double aw = wa * cropA, ah = ha * cropA, bw = wb * cropB, bh = hb * cropB;
         // Seitenverhaeltnis angleichen (falls Sensoren verschieden)
         double ra = aw / ah, rb = bw / bh;

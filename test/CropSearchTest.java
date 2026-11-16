@@ -27,3 +27,14 @@ public class CropSearchTest {
         System.out.println(ok ? "ALLE TESTS OK" : "FEHLER");
     }
 }
+class FineTest {
+    public static void main(String[] a) {
+        int W = 1600, H = 1200; int[] full = CropSearchTest.scene(W, H);
+        double f = 0.55; int bw = 800, bh = 600; int[] tele = StereoAligner.resample(full, W, H, (W - W * f) / 2 + 12, (H - H * f) / 2, W * f, H * f, bw, bh);
+        int[] wide = StereoAligner.resample(full, W, H, 0, 0, W, H, 800, 600);
+        for (double nom : new double[] {0.52, 0.575, 0.55}) {
+            long t0 = System.nanoTime(); double[] r = StereoAligner.fineCrop(wide, 800, 600, nom, tele, bw, bh, 1.0);
+            System.out.printf("nominal %.3f -> %.4f (soll %.3f) score %.3f vorher %.3f  [%d ms]%n", nom, r[0], f, r[1], r[2], (System.nanoTime() - t0) / 1000000);
+        }
+    }
+}
