@@ -165,4 +165,6 @@
     <string name="sort_date_old">Data (prima i più vecchi)</string>
     <string name="sort_name">Nome (A–Z)</string>
     <string name="sort_size">Dimensione del file</string>
+    <string name="share_shotlog">Invia il registro degli scatti</string>
+    <string name="shotlog_none">Nessuno scatto registrato</string>
 </resources>

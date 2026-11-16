@@ -165,4 +165,6 @@
     <string name="sort_date_old">Fecha (más antiguos primero)</string>
     <string name="sort_name">Nombre (A–Z)</string>
     <string name="sort_size">Tamaño del archivo</string>
+    <string name="share_shotlog">Enviar registro de capturas</string>
+    <string name="shotlog_none">Aún no hay capturas registradas</string>
 </resources>

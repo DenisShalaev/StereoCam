@@ -165,4 +165,6 @@
     <string name="sort_date_old">Датою (спершу старі)</string>
     <string name="sort_name">Назвою (А–Я)</string>
     <string name="sort_size">Розміром файлу</string>
+    <string name="share_shotlog">Надіслати журнал зйомок</string>
+    <string name="shotlog_none">Журнал порожній: знімків ще немає</string>
 </resources>

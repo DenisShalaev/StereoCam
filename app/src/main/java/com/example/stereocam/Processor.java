@@ -118,6 +118,7 @@ final class Processor {
             out.align = out.align + " | colour match: R " + sh[0] + " G " + sh[1] + " B " + sh[2];
         }
         write(ctx, left, right, W, H, out);
+        ShotLog.add(ctx, "mode " + Prefs.str(ctx, Prefs.MODE) + (in.sameCamera ? " (shift)" : "") + " | " + out.align);
         return out;
     }
 

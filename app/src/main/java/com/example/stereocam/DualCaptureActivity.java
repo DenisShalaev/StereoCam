@@ -262,7 +262,7 @@ public class DualCaptureActivity extends Activity {
         }
     };
     private String capInfo(Processor.Input in) {
-        StringBuilder sb = new StringBuilder("capture data:");
+        StringBuilder sb = new StringBuilder("capture data: pair " + pair.key() + ", " + (focus != null && focus.isManual() ? "manual focus" : "autofocus") + ";");
         for (int k = 0; k < 2; k++) {
             DualProbe.Phys c = k == 0 ? pair.a : pair.b; float f = k == 0 ? capFocalA : capFocalB, fd = k == 0 ? capFocusA : capFocusB;
             sb.append(String.format(java.util.Locale.ROOT, " %s: f %.2f mm (static %.2f), focus %s, min focus %s;", k == 0 ? "A" : "B", f, c.focalMm, fd > 0.01f ? String.format(java.util.Locale.ROOT, "%.2f m", 1 / fd) : (fd >= 0 ? "inf" : "?"), c.minFocusDioptre > 0 ? String.format(java.util.Locale.ROOT, "%.2f m", 1 / c.minFocusDioptre) : "fixed"));

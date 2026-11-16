@@ -165,4 +165,6 @@
     <string name="sort_date_old">Date (plus ancien d\'abord)</string>
     <string name="sort_name">Nom (A–Z)</string>
     <string name="sort_size">Taille du fichier</string>
+    <string name="share_shotlog">Envoyer le journal des prises</string>
+    <string name="shotlog_none">Aucune prise enregistrée</string>
 </resources>
