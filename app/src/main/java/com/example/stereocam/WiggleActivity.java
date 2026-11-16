@@ -115,7 +115,7 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         bar.addView(btn(R.drawable.ic_center, R.string.cd_center, v -> { view.reset(); baseYaw = Float.NaN; }));
         bar.addView(btn(R.drawable.ic_settings, R.string.set_title, v -> startActivity(new Intent(this, ProbeActivity.class))));
         root.addView(bar, new FrameLayout.LayoutParams(-1, -2, Gravity.TOP));
-        bar.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> { if (r - l != or - ol) fitBar(); });
+        bar.addOnLayoutChangeListener((v, l, t, r, bot, ol, ot, or, obot) -> { if (r - l != or - ol) fitBar(); });
 
         panel = Ui.card(this); panel.setVisibility(View.GONE);
         panel.addView(label(R.string.wig_amp)); panel.addView(chips(ampChips, new String[] {"×1", "×2", "×3", "×4", "×6"}, ampIdx, i -> { ampIdx = i; Prefs.setInt(this, "wig_amp2", i); }));
@@ -150,10 +150,10 @@ public class WiggleActivity extends Activity implements SensorEventListener {
         if (android.os.Build.VERSION.SDK_INT >= 30) getWindow().setDecorFitsSystemWindows(false);
         android.view.WindowManager.LayoutParams wlp = getWindow().getAttributes(); wlp.layoutInDisplayCutoutMode = android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES; getWindow().setAttributes(wlp);
         setContentView(root);
-        bar.setOnApplyWindowInsetsListener((v, in) -> {
-            int l = Math.max(in.getStableInsetLeft(), in.getSystemWindowInsetLeft()), t = Math.max(in.getStableInsetTop(), in.getSystemWindowInsetTop()), r = Math.max(in.getStableInsetRight(), in.getSystemWindowInsetRight());
-            android.view.DisplayCutout dc = in.getDisplayCutout(); if (dc != null) { l = Math.max(l, dc.getSafeInsetLeft()); t = Math.max(t, dc.getSafeInsetTop()); r = Math.max(r, dc.getSafeInsetRight()); }
-            v.setPadding(l + Ui.dp(this, 8), t + Ui.dp(this, 8), r + Ui.dp(this, 8), Ui.dp(this, 8)); return in; });
+        bar.setOnApplyWindowInsetsListener((v, insets) -> {
+            int l = Math.max(insets.getStableInsetLeft(), insets.getSystemWindowInsetLeft()), t = Math.max(insets.getStableInsetTop(), insets.getSystemWindowInsetTop()), r = Math.max(insets.getStableInsetRight(), insets.getSystemWindowInsetRight());
+            android.view.DisplayCutout dc = insets.getDisplayCutout(); if (dc != null) { l = Math.max(l, dc.getSafeInsetLeft()); t = Math.max(t, dc.getSafeInsetTop()); r = Math.max(r, dc.getSafeInsetRight()); }
+            v.setPadding(l + Ui.dp(this, 8), t + Ui.dp(this, 8), r + Ui.dp(this, 8), Ui.dp(this, 8)); return insets; });
         showSystemBars(false);
         view.setHalf(half); view.setLens(lens); applyMode(false);
         load();
